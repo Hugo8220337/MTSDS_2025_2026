@@ -1,0 +1,89 @@
+@startuml
+' Ficheiro: planeamento/candidaturas/sequencia/1_submissao_candidatura.puml
+title Diagrama de Sequência - Processo 1: Submissão da Candidatura
+
+actor "Candidato (Frontend)" as FE
+participant "Backend API" as BE
+database "Base de Dados" as DB
+participant "Email Service" as Email
+
+autonumber
+
+FE -> BE: POST /api/v1/auth/login
+activate BE
+BE -> DB: Verifica credenciais
+activate DB
+DB --> BE: Dados do utilizador
+deactivate DB
+BE --> FE: 200 OK (com token JWT)
+deactivate BE
+
+FE -> BE: GET /api/v1/concursos?abertos=true
+activate BE
+BE -> DB: Consulta Concursos e Fases
+activate DB
+DB --> BE: Lista de concursos
+deactivate DB
+BE --> FE: 200 OK (lista de concursos)
+deactivate BE
+
+FE -> BE: POST /api/v1/candidaturas\n(body: { "fase_id": X })
+activate BE
+BE -> DB: Cria Candidatura (estado='RASCUNHO')
+activate DB
+DB --> BE: ID da nova candidatura
+deactivate DB
+BE --> FE: 201 Created (candidatura_id)
+deactivate BE
+
+FE -> BE: GET /api/v1/concursos/{id}/documentos_requeridos
+activate BE
+BE -> DB: Consulta DocumentoRequerido
+activate DB
+DB --> BE: Lista de documentos
+deactivate DB
+BE --> FE: 200 OK (lista de documentos)
+deactivate BE
+
+loop Para cada documento
+    FE -> BE: POST /api/v1/candidaturas/{id}/documentos\n(multipart/form-data)
+    activate BE
+    BE -> DB: Cria DocumentoSubmetido (estado='PENDENTE')
+    activate DB
+    DB --> BE: ID do novo documento
+    deactivate DB
+    BE --> FE: 201 Created
+    deactivate BE
+end
+
+FE -> BE: POST /api/v1/candidaturas/{id}/opcoes\n(body: [{ "curso_id": Y, "ordem": 1 }])
+activate BE
+BE -> DB: Cria OpcaoCurso
+activate DB
+DB --> BE: IDs das novas opções
+deactivate DB
+BE --> FE: 201 Created
+deactivate BE
+
+FE -> BE: POST /api/v1/candidaturas/{id}/submit
+activate BE
+BE -> DB: Valida se todos os docs obrigatórios foram submetidos
+activate DB
+DB --> BE: Resultado da validação
+deactivate DB
+BE -> DB: Valida se está dentro do prazo (data_fim_candidatura)
+activate DB
+DB --> BE: Resultado da validação
+deactivate DB
+alt Se validação OK
+    BE -> DB: Atualiza Candidatura.estado para 'SUBMETIDA'
+    activate DB
+    DB --> BE: Confirmação da atualização
+    deactivate DB
+    BE -> Email: Envia email de confirmação
+    BE --> FE: 200 OK (candidatura submetida)
+else Se validação falhar
+    BE --> FE: 400 Bad Request (ex: "Faltam documentos obrigatórios")
+end
+deactivate BE
+@enduml
