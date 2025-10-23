@@ -12,10 +12,10 @@ table Concurso {
 }
 
 
-
 table Fase {
   id int [pk, increment]
   nome varchar(100) [not null, note: 'ex: 1ª Fase, 2ª Fase, Fase Única']
+  concurso_id int [ref: > Concurso.id]
   descricao text
   data_inicio_candidatura date
   data_fim_candidatura date
@@ -32,9 +32,9 @@ table Candidatura {
   utilizador_id int [ref: > Utilizador.id]
   fase_id int [ref: > Fase.id]
   origem varchar(20) [not null, default: 'LOCAL', note: 'Origem da candidatura (ex: LOCAL, DGES)']
-  estado varchar(50) [not null, note: 'ex: RASCUNHO, EM_ANALISE, VALIDADA, INVALIDADA, COLOCADO, NAO_COLOCADO, MATRICULADO']
+  estado varchar(50) [not null, note: 'ex: RASCUNHO, EM_ANALISE, VALIDADA, INVALIDADA, COLOCADO, NAO_COLOCADO, MATRICULADO, EXCLUIDO_POR_PREFERENCIA_SUPERIOR']
   data_submissao timestamp [default: `now()`]
-  nota_final_serica decimal(5,2) [note: 'calculada pelo sistema']
+  nota_final_sericao decimal(5,2) [note: 'calculada pelo sistema']
   
   note: 'Tabela de candidaturas dos utilizadores aos concursos'
 }
@@ -104,6 +104,7 @@ table Utilizador {
   data_nascimento date
   telefone varchar(20)
   ativo boolean [default: true]
+
   data_criacao timestamp [default: `now()`]
   data_ultima_atualizacao timestamp [default: `now()`]
   
