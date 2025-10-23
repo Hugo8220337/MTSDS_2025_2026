@@ -1,0 +1,140 @@
+//---------------------------------------------------------------
+// Estas tabelas são específicas do microserviço de candidaturas
+//---------------------------------------------------------------
+table Concurso {
+  id int [pk, increment]
+  ano_letivo varchar(9) [not null, note: 'ex: 2023/2024']
+  tipo varchar(50) [not null, note: 'ex: MESTRADO, M23, CTESP']
+  name varchar(255) [not null, note: 'ex: Mestrado em Engenharia Informática, Concurso Maiores de 23 anos']
+  editoral_url varchar(255) [note: 'link para o pdf das regras']
+
+  note: 'Tabela de concursos académicos para ingresso'
+}
+
+
+
+table Fase {
+  id int [pk, increment]
+  nome varchar(100) [not null, note: 'ex: 1ª Fase, 2ª Fase, Fase Única']
+  descricao text
+  data_inicio_candidatura date
+  data_fim_candidatura date
+  data_publicacao_resultados date
+  data_inicio_matricula date
+  data_fim_matricula date
+  vagas int [note: 'número de vagas disponíveis nesta fase']
+
+  note: 'Tabela de fases do processo académico'
+}
+
+table Candidatura {
+  id int [pk, increment]
+  utilizador_id int [ref: > Utilizador.id]
+  fase_id int [ref: > Fase.id]
+  origem varchar(20) [not null, default: 'LOCAL', note: 'Origem da candidatura (ex: LOCAL, DGES)']
+  estado varchar(50) [not null, note: 'ex: RASCUNHO, EM_ANALISE, VALIDADA, INVALIDADA, COLOCADO, NAO_COLOCADO, MATRICULADO']
+  data_submissao timestamp [default: `now()`]
+  nota_final_serica decimal(5,2) [note: 'calculada pelo sistema']
+  
+  note: 'Tabela de candidaturas dos utilizadores aos concursos'
+}
+
+table OpcaoCurso {
+  id int [pk, increment]
+  candidatura_id int [ref: > Candidatura.id]
+  curso_id int [ref: > Curso.id]
+  ordem_preferencia int [note: 'Para concursos que permitem várias opções (ex: 1ª opção, 2ª opção, ...)']
+  estado_opcao varchar(50) [note: 'ex: COLOCADO, NAO_COLOCADO, EXCLUIDO_VAGAS, EXCLUIDO_NAO_REUNIU_CONDICOES']
+
+  note: 'Tabela de opções de curso dentro de uma candidatura, permitindo múltiplas escolhas'
+}
+
+table DocumentoRequerido {
+  id int [pk, increment]
+  concurso_id int [ref: > Concurso.id] // Define o que este concurso exige
+  nome varchar(100) [not null, note: 'ex: Cartão Cidadão, Certificado de Habilitações, Curriculum Vitae, Carta de Motivação']
+  obrigatorio boolean [default: true, note: 'se é obrigatório ou opcional']
+
+  note: 'Tabela de documentos exigidos para cada concurso'
+}
+
+table DocumentoSubmetido {
+  id int [pk, increment]
+  candidatura_id int [ref: > Candidatura.id]
+  documento_requerido_id int [ref: > DocumentoRequerido.id]
+  url_ficheiro varchar(255) [not null, note: 'link para S3, Azure Blob, etc.']
+  estado_validacao varchar(50) [default: 'PENDENTE', note: 'ex: PENDENTE, VALIDADO, REJEITADO']
+  observacoes_validacao text [note: 'comentários do avaliador sobre o documento (ex: Documento ilegível, incompleto, etc.)']
+
+  note: 'Tabela de documentos submetidos pelos candidatos'
+}
+
+table CriterioSeriacao {
+  id int [pk, increment]
+  concurso_id int [ref: > Concurso.id]
+  nome varchar(100) [not null, note: 'ex: Média do curso, Avaliação Curricular, Entrevista']
+  peso_percentual decimal(5,2) [not null, note: 'peso percentual deste critério na avaliação final (ex: 0.60 para 60%)']
+
+  note: 'Tabela de critérios de seriação para cada concurso'
+}
+
+table NotaComponente {
+  id int [pk, increment]
+  candidatura_id int [ref: > Candidatura.id]
+  criterio_seriacao_id int [ref: > CriterioSeriacao.id]
+  valor_nota decimal(5,2) [not null, note: 'nota atribuída pelo \'admin_curso\' para este critério']
+
+  note: 'Tabela de notas por componente de seriação para cada candidatura'
+}
+
+
+
+
+//---------------------------------------------------------------
+// Estas tabelas vêm do microserviço de identidade / Utilizadores
+//---------------------------------------------------------------
+table Utilizador {
+  id int [pk, increment]
+  nome_completo varchar(255) [not null]
+  email varchar(255) [unique, not null, note: 'usado para login']
+  password_hash varchar(255) [not null]
+  nif varchar(20) [unique, note: 'Nº de Identificação Fiscal']
+  tipo_documento_id int [ref: > TipoDocumento.id, note: 'ex: Cartão Cidadão, Passaporte']
+  numero_documento_id varchar(50) [note: 'número do documento de identificação']
+  data_nascimento date
+  telefone varchar(20)
+  ativo boolean [default: true]
+  data_criacao timestamp [default: `now()`]
+  data_ultima_atualizacao timestamp [default: `now()`]
+  
+  note: 'Tabela central de utilizadores do sistema'
+}
+
+table TipoDocumento {
+  id int [pk, increment]
+  designacao varchar(100) [not null, note: 'ex: Cartão Cidadão, Passaporte, BI']
+  codigo varchar(10) [unique, not null, note: 'código interno do tipo de documento']
+  pais_origem varchar(100) [note: 'país que emite o documento (ex: Portugal, Brasil)']
+}
+
+
+//------------------------------------------------------
+// Estas tabelas vêm do microserviço de gestão académica
+//------------------------------------------------------
+table Escola {
+  id int [pk, increment]
+  nome varchar(255) [not null, note: 'ex: Escola Superior de Tecnologia e Gestão']
+  sigla varchar(20) [not null, note: 'ex: EE, EC']
+  descricao text
+}
+
+table Curso {
+  id int [pk, increment]
+  nome varchar(255) [not null, note: 'ex: Engenharia Informática']
+  escola_id int [ref: > Escola.id]
+  codigo_curso varchar(20) [not null, note: 'código interno do curso']
+  grau varchar(50) [not null, note: 'ex: Licenciatura, Mestrado, CTESP']
+  tipo_grau varchar(50) [not null, note: 'ex: Licenciatura, Mestrado, CTESP']
+
+  note: 'Tabela de cursos oferecidos pela instituição'
+}
