@@ -1,0 +1,69 @@
+@startuml
+' Título do Diagrama
+title Diagrama de Estados da Candidatura
+
+' Estilo
+skinparam state {
+  BackgroundColor #F5F5F5
+  BorderColor #333333
+  ArrowColor #333333
+  FontColor #333333
+}
+skinparam note {
+  BackgroundColor #FFFFE0
+  BorderColor #A9A9A9
+}
+
+' Estados
+state "RASCUNHO" as RASCUNHO
+state "SUBMETIDA" as SUBMETIDA
+state "VALIDADA" as VALIDADA
+state "INVALIDADA" as INVALIDADA
+state "COLOCADO" as COLOCADO
+state "NÃO COLOCADO" as NAO_COLOCADO
+state "MATRICULADO" as MATRICULADO
+
+' Estado inicial
+[*] --> RASCUNHO : Candidato inicia candidatura
+
+' Transições do fluxo principal (Candidaturas Locais)
+RASCUNHO --> SUBMETIDA : Candidato submete candidatura
+note on link
+  Verifica se todos os documentos
+  obrigatórios foram submetidos e
+  se está dentro do prazo.
+end note
+
+SUBMETIDA --> VALIDADA : Admin valida documentos
+SUBMETIDA --> INVALIDADA : Admin invalida candidatura
+note on link
+  Pelo menos um documento
+  obrigatório foi rejeitado.
+end note
+
+INVALIDADA --> RASCUNHO : Candidato notificado para corrigir
+note on link
+  Apenas se estiver dentro
+  do prazo de candidatura.
+end note
+
+VALIDADA --> COLOCADO : Algoritmo de seriação (obteve vaga)
+VALIDADA --> NAO_COLOCADO : Algoritmo de seriação (não obteve vaga)
+
+COLOCADO --> MATRICULADO : Candidato realiza matrícula
+note on link
+  Verifica se está dentro
+  do prazo de matrícula.
+end note
+
+' Fluxo de importação DGES
+state "Importação DGES" as DGES_IMPORT <<fork>>
+[*] --> DGES_IMPORT
+DGES_IMPORT --> COLOCADO : Importação de ficheiro de colocados (se DGES)
+
+' Estados Finais
+INVALIDADA --> [*]
+NAO_COLOCADO --> [*]
+MATRICULADO --> [*]
+
+@enduml
