@@ -1,0 +1,41 @@
+@startuml
+' Ficheiro: planeamento/candidaturas/sequencia/3_seriacao_colocacao.puml
+title Diagrama de Sequência - Processo 3: Seriação e Colocação
+
+actor "Diretor de Curso" as Diretor
+participant "Backend API" as BE
+database "Base de Dados" as DB
+actor "Admin (Back-office)" as Admin
+participant "Background Job" as Job
+
+Diretor -> BE: GET /api/v1/admin/cursos/{id}/candidaturas?estado=VALIDADA
+activate BE
+BE -> DB: Consulta candidaturas 'VALIDADA' para o curso
+BE -> Diretor: 200 OK (lista de candidatos)
+deactivate BE
+
+loop Para cada candidato
+    Diretor -> BE: POST /api/v1/admin/candidaturas/{id}/notas\n(body: [{ "criterio_id": A, "valor_nota": 18 }])
+    activate BE
+    BE -> DB: Cria registos em NotaComponente
+    BE -> Diretor: 201 Created
+    deactivate BE
+end
+
+Admin -> BE: POST /api/v1/admin/fases/{id}/iniciar-colocacao
+activate BE
+BE -> Job: Dispara tarefa de seriação
+activate Job
+BE -> Admin: 202 Accepted
+deactivate BE
+
+Job -> DB: Para cada candidatura 'VALIDADA', calcula a nota final\n(média ponderada de NotaComponente e CriterioSeriacao)
+Job -> DB: Atualiza Candidatura.nota_final_seriacao
+
+Job -> DB: Obtém todas as OpcaoCurso da fase, ordenadas por nota e preferência
+Job -> DB: Obtém o nº de vagas da Fase
+Job -> Job: Executa algoritmo de matching (colocação)
+Job -> DB: Atualiza Candidatura.estado para 'COLOCADO'/'NAO_COLOCADO'
+Job -> DB: Atualiza OpcaoCurso.estado_opcao
+deactivate Job
+@enduml
