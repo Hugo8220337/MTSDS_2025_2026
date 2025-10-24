@@ -8,7 +8,7 @@ Este ficheiro detalha os endpoints da API, com exemplos de pedidos e respostas J
 
 ### 1.1. Autenticação (Registo e Login)
 
-#### Registo de um novo utilizador
+#### Registo de um novo utilizador (Microserviço de Autenticação)
 Este pedido cria um novo registo na tabela `Utilizador`.
 
 ```http
@@ -37,7 +37,7 @@ Content-Type: application/json
 }
 ```
 
-#### Login de um utilizador existente
+#### Login de um utilizador existente (Microserviço Autenticação)
 Este pedido verifica as credenciais na tabela `Utilizador` e, se forem válidas, gera um token de autenticação.
 
 ```http
@@ -62,7 +62,7 @@ Content-Type: application/json
 Este pedido consulta as tabelas `Concurso` e `Fase` para devolver os concursos que têm fases de candidatura atualmente a decorrer.
 
 ```http
-GET /api/v1/concursos?abertos=true
+GET /api/v1/escolas/estg/concursos?abertos=true
 Authorization: Bearer <token>
 ```
 **Resposta:** `200 OK`
@@ -89,7 +89,7 @@ Authorization: Bearer <token>
 Este pedido cria um novo registo na tabela `Candidatura` com o estado `RASCUNHO`, associando o utilizador autenticado à fase escolhida.
 
 ```http
-POST /api/v1/candidaturas
+POST /api/v1/escolas/estg/candidaturas
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -116,7 +116,7 @@ Content-Type: application/json
 Este pedido consulta a tabela `DocumentoRequerido` para listar os documentos necessários para um determinado concurso.
 
 ```http
-GET /api/v1/concursos/1/documentos_requeridos
+GET /api/v1/escolas/estg/concursos/1/documentos_requeridos
 Authorization: Bearer <token>
 ```
 **Resposta:** `200 OK`
@@ -144,7 +144,7 @@ Authorization: Bearer <token>
 Este pedido cria um registo na tabela `DocumentoSubmetido`, associando o ficheiro enviado a uma candidatura e a um tipo de documento requerido.
 
 ```http
-POST /api/v1/candidaturas/101/documentos
+POST /api/v1/escolas/estg/candidaturas/101/documentos
 Authorization: Bearer <token>
 Content-Type: multipart/form-data; boundary=boundary
 
@@ -175,7 +175,7 @@ Content-Type: application/pdf
 Este pedido cria um ou mais registos na tabela `OpcaoCurso`, definindo as escolhas de curso do candidato e a sua ordem de preferência.
 
 ```http
-POST /api/v1/candidaturas/101/opcoes
+POST /api/v1/escolas/estg/candidaturas/101/opcoes
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -210,7 +210,7 @@ Content-Type: application/json
 Este pedido atualiza o registo na tabela `Candidatura`, alterando o seu estado de `RASCUNHO` para `SUBMETIDA`.
 
 ```http
-POST /api/v1/candidaturas/101/submit
+POST /api/v1/escolas/estg/candidaturas/101/submit
 Authorization: Bearer <token>
 ```
 **Resposta:** `200 OK`
@@ -236,7 +236,7 @@ Authorization: Bearer <token>
 Este pedido consulta a tabela `Candidatura` para encontrar todas as candidaturas com o estado `SUBMETIDA`, para que um administrador as possa rever.
 
 ```http
-GET /api/v1/admin/candidaturas?estado=SUBMETIDA
+GET /api/v1/admin/escolas/estg/candidaturas?estado=SUBMETIDA
 Authorization: Bearer <token>
 ```
 **Resposta:** `200 OK`
@@ -282,7 +282,7 @@ Content-Type: application/json
 Este pedido atualiza o `estado` de um registo na tabela `Candidatura` para `VALIDADA` ou `INVALIDADA`, após a análise de todos os documentos.
 
 ```http
-PUT /api/v1/admin/candidaturas/101
+PUT /api/v1/admin/escolas/estg/candidaturas/101
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -309,7 +309,7 @@ Content-Type: application/json
 Este pedido consulta as tabelas `Candidatura`, `OpcaoCurso` e `DocumentoSubmetido` para apresentar ao avaliador as candidaturas validadas de um curso específico.
 
 ```http
-GET /api/v1/admin/cursos/15/candidaturas?estado=VALIDADA
+GET /api/v1/admin/escolas/estg/curso/LEI/candidaturas?estado=VALIDADA
 Authorization: Bearer <token>
 ```
 **Resposta:** `200 OK`
@@ -330,7 +330,7 @@ Authorization: Bearer <token>
 Este pedido cria um ou mais registos na tabela `NotaComponente`, associando as notas de avaliação de um diretor de curso a uma candidatura.
 
 ```http
-POST /api/v1/admin/candidaturas/101/notas
+POST /api/v1/admin/escolas/estg/candidaturas/101/notas
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -399,7 +399,7 @@ Authorization: Bearer <token>
 Este pedido consulta as tabelas `Candidatura` e `OpcaoCurso` para mostrar ao candidato o seu resultado final.
 
 ```http
-GET /api/v1/candidaturas/101
+GET /api/v1/escolas/estg/candidaturas/101
 Authorization: Bearer <token>
 ```
 **Resposta:** `200 OK`
@@ -460,7 +460,7 @@ Authorization: Bearer <token>
 }
 ```
 
-#### Login de um utilizador existente
+#### Login de um utilizador existente (Microserviço de Autenticação)
 Este pedido verifica as credenciais na tabela `Utilizador` e, se forem válidas, gera um token de autenticação.
 
 ```http
@@ -485,7 +485,7 @@ Content-Type: application/json
 Este pedido consulta as tabelas `Concurso` e `Fase` para devolver os concursos que têm fases de candidatura atualmente a decorrer.
 
 ```http
-GET /api/v1/concursos?abertos=true
+GET /api/v1/escolas/estg/concursos?abertos=true
 Authorization: Bearer <token>
 ```
 **Resposta:** `200 OK`
@@ -512,7 +512,7 @@ Authorization: Bearer <token>
 Este pedido cria um novo registo na tabela `Candidatura` com o estado `RASCUNHO`, associando o utilizador autenticado à fase escolhida.
 
 ```http
-POST /api/v1/candidaturas
+POST /api/v1/escolas/estg/candidaturas
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -539,7 +539,7 @@ Content-Type: application/json
 Este pedido consulta a tabela `DocumentoRequerido` para listar os documentos necessários para um determinado concurso.
 
 ```http
-GET /api/v1/concursos/1/documentos_requeridos
+GET /api/v1/escolas/estg/concursos/1/documentos_requeridos
 Authorization: Bearer <token>
 ```
 **Resposta:** `200 OK`
@@ -567,7 +567,7 @@ Authorization: Bearer <token>
 Este pedido cria um registo na tabela `DocumentoSubmetido`, associando o ficheiro enviado a uma candidatura e a um tipo de documento requerido.
 
 ```http
-POST /api/v1/candidaturas/101/documentos
+POST /api/v1/escolas/estg/candidaturas/101/documentos
 Authorization: Bearer <token>
 Content-Type: multipart/form-data; boundary=boundary
 
@@ -598,7 +598,7 @@ Content-Type: application/pdf
 Este pedido cria um ou mais registos na tabela `OpcaoCurso`, definindo as escolhas de curso do candidato e a sua ordem de preferência.
 
 ```http
-POST /api/v1/candidaturas/101/opcoes
+POST /api/v1/escolas/estg/candidaturas/101/opcoes
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -633,7 +633,7 @@ Content-Type: application/json
 Este pedido atualiza o registo na tabela `Candidatura`, alterando o seu estado de `RASCUNHO` para `SUBMETIDA`.
 
 ```http
-POST /api/v1/candidaturas/101/submit
+POST /api/v1/escolas/estg/candidatura/101/submit
 Authorization: Bearer <token>
 ```
 **Resposta:** `200 OK`
@@ -659,7 +659,7 @@ Authorization: Bearer <token>
 Este pedido consulta a tabela `Candidatura` para encontrar todas as candidaturas com o estado `SUBMETIDA`, para que um administrador as possa rever.
 
 ```http
-GET /api/v1/admin/candidaturas?estado=SUBMETIDA
+GET /api/v1/admin/escolas/estg/candidaturas?estado=SUBMETIDA
 Authorization: Bearer <token>
 ```
 **Resposta:** `200 OK`
@@ -705,7 +705,7 @@ Content-Type: application/json
 Este pedido atualiza o `estado` de um registo na tabela `Candidatura` para `VALIDADA` ou `INVALIDADA`, após a análise de todos os documentos.
 
 ```http
-PUT /api/v1/admin/candidaturas/101
+PUT /api/v1/admin/escolas/estg/candidaturas/101
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -732,7 +732,7 @@ Content-Type: application/json
 Este pedido consulta as tabelas `Candidatura`, `OpcaoCurso` e `DocumentoSubmetido` para apresentar ao avaliador as candidaturas validadas de um curso específico.
 
 ```http
-GET /api/v1/admin/cursos/15/candidaturas?estado=VALIDADA
+GET /api/v1/admin/escolas/estg/cursos/15/candidaturas?estado=VALIDADA
 Authorization: Bearer <token>
 ```
 **Resposta:** `200 OK`
@@ -753,7 +753,7 @@ Authorization: Bearer <token>
 Este pedido cria um ou mais registos na tabela `NotaComponente`, associando as notas de avaliação de um diretor de curso a uma candidatura.
 
 ```http
-POST /api/v1/admin/candidaturas/101/notas
+POST /api/v1/admin/escolas/estg/candidaturas/101/notas
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -788,7 +788,7 @@ Content-Type: application/json
 Este pedido inicia um processo de fundo que lê as tabelas `Candidatura`, `NotaComponente` e `CriterioSeriacao` para calcular a `nota_final_sericao` e atualizar o estado em `Candidatura` e `OpcaoCurso`.
 
 ```http
-POST /api/v1/admin/fases/1/iniciar-colocacao
+POST /api/v1/admin/escolas/estg/fases/1/iniciar-colocacao
 Authorization: Bearer <token>
 ```
 **Resposta:** `202 Accepted`
@@ -822,7 +822,7 @@ Authorization: Bearer <token>
 Este pedido consulta as tabelas `Candidatura` e `OpcaoCurso` para mostrar ao candidato o seu resultado final.
 
 ```http
-GET /api/v1/candidaturas/101
+GET /api/v1/escolas/estg/candidaturas/101
 Authorization: Bearer <token>
 ```
 **Resposta:** `200 OK`
@@ -856,7 +856,7 @@ Authorization: Bearer <token>
 Este pedido atualiza o estado na tabela `Candidatura` para `MATRICULADO` e pode acionar outros processos, como a criação de um registo de aluno no sistema de gestão académica.
 
 ```http
-POST /api/v1/candidaturas/101/matricular
+POST /api/v1/escolas/estg/candidaturas/101/matricular
 Authorization: Bearer <token>
 ```
 **Resposta:** `200 OK`

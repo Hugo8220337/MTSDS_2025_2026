@@ -3,9 +3,11 @@
 //---------------------------------------------------------------
 table Concurso {
   id int [pk, increment]
+  escola_id int [ref: > Escola.id]
   ano_letivo varchar(9) [not null, note: 'ex: 2023/2024']
   tipo varchar(50) [not null, note: 'ex: MESTRADO, M23, CTESP']
   name varchar(255) [not null, note: 'ex: Mestrado em Engenharia Informática, Concurso Maiores de 23 anos']
+  sigla varchar(20) [not null, note: 'ex: MEI, LEI']
   editoral_url varchar(255) [note: 'link para o pdf das regras']
 
   note: 'Tabela de concursos académicos para ingresso'
@@ -93,7 +95,7 @@ table NotaComponente {
 //---------------------------------------------------------------
 // Estas tabelas vêm do microserviço de identidade / Utilizadores
 //---------------------------------------------------------------
-table Utilizador {
+table Utilizador_Microservico_Externo as Utilizador {
   id int [pk, increment]
   nome_completo varchar(255) [not null]
   email varchar(255) [unique, not null, note: 'usado para login']
@@ -111,7 +113,7 @@ table Utilizador {
   note: 'Tabela central de utilizadores do sistema'
 }
 
-table TipoDocumento {
+table TipoDocumento_Microservico_Externo as TipoDocumento {
   id int [pk, increment]
   designacao varchar(100) [not null, note: 'ex: Cartão Cidadão, Passaporte, BI']
   codigo varchar(10) [unique, not null, note: 'código interno do tipo de documento']
@@ -122,14 +124,14 @@ table TipoDocumento {
 //------------------------------------------------------
 // Estas tabelas vêm do microserviço de gestão académica
 //------------------------------------------------------
-table Escola {
+table Escola_Microservico_Externo as Escola {
   id int [pk, increment]
   nome varchar(255) [not null, note: 'ex: Escola Superior de Tecnologia e Gestão']
   sigla varchar(20) [not null, note: 'ex: EE, EC']
   descricao text
 }
 
-table Curso {
+table Curso_Microservico_Externo as Curso {
   id int [pk, increment]
   nome varchar(255) [not null, note: 'ex: Engenharia Informática']
   escola_id int [ref: > Escola.id]
