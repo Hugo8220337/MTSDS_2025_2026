@@ -1,0 +1,81 @@
+//-----------------------------------------------------------------
+// Tabelas para o Microserviço de Identidade e Autenticação
+// Responsável por gerir utilizadores, papéis, permissões e login.
+//-----------------------------------------------------------------
+
+table Utilizador {
+    id int [pk, increment]
+    nome_completo varchar(255) [not null]
+    email varchar(255) [unique, not null, note: 'usado para login antes de obter o email institucional, para quem faz pela DGES este campo é definido depois do institucional']
+    email_institucional varchar(255) [unique, note: 'ex: 8220125@estg.ipp.pt']
+    password_hash varchar(255) [not null]
+    nif varchar(20) [unique, note: 'Nº de Identificação Fiscal']
+    tipo_documento_id int [ref: > TipoDocumento.id, note: 'ex: Cartão Cidadão, Passaporte']
+    numero_documento_id varchar(50) [note: 'número do documento de identificação']
+    data_nascimento date
+    telefone varchar(20)
+    ativo boolean [default: true, not null]
+    email_verificado_em timestamp [note: 'Timestamp de quando o email foi verificado']
+
+    data_criacao timestamp [default: `now()`]
+    data_ultima_atualizacao timestamp [default: `now()`]
+
+    note: 'Tabela central de utilizadores do sistema'
+}
+
+table TipoDocumento {
+  id int [pk, increment]
+  designacao varchar(100) [not null, note: 'ex: Cartão Cidadão, Passaporte, BI']
+  codigo varchar(10) [unique, not null, note: 'código interno do tipo de documento']
+  pais_origem varchar(100) [note: 'país que emite o documento (ex: Portugal, Brasil)']
+  
+  note: 'Tabela de tipos de documentos de identificação'
+}
+
+table Papel {
+  id int [pk, increment]
+  nome varchar(50) [unique, not null, note: 'ex: ADMIN_SISTEMA, ADMIN_ESCOLA, DOCENTE, CANDIDATO']
+  descricao text
+  
+  note: 'Define os papéis (roles) que um utilizador pode ter no sistema'
+}
+
+table Permissao {
+  id int [pk, increment]
+  nome varchar(100) [unique, not null, note: 'ex: gerir-utilizadores, criar-candidatura, validar-documentos']
+  descricao text
+  
+  note: 'Define as permissões granulares para ações no sistema'
+}
+
+table UtilizadorPapel {
+  utilizador_id int [ref: > Utilizador.id]
+  papel_id int [ref: > Papel.id]
+  escola_id int [ref: > Escola.id, note: 'Contexto da escola. NULL para papéis globais (ex: ADMIN_SISTEMA)']
+  
+  indexes {
+    (utilizador_id, papel_id, escola_id) [pk]
+  }
+  
+  note: 'Associa utilizadores a papéis, opcionalmente num contexto de uma escola específica'
+}
+
+table PapelPermissao {
+  papel_id int [ref: > Papel.id]
+  permissao_id int [ref: > Permissao.id]
+  
+  indexes {
+    (papel_id, permissao_id) [pk]
+  }
+  
+  note: 'Associa permissões a papéis'
+}
+
+
+//------------------------------------------------------
+// Tabela externa vinda do microserviço de gestão académica
+//------------------------------------------------------
+table Escola_Microservico_Externo as Escola {
+  id int [pk, increment]
+  sigla varchar(20) [not null, note: 'ex: ESTG, ESE']
+}

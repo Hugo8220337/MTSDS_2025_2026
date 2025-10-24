@@ -16,8 +16,8 @@ POST /api/v1/auth/register
 Content-Type: application/json
 
 {
-  "nome_completo": "Ana Silva",
-  "email": "ana.silva@email.com",
+  "nome_completo": "Ana Ribeiro",
+  "email": "ana.ribaeiro@email.com",
   "password": "uma_password_forte_123",
   "nif": "285948372"
 }
@@ -27,8 +27,8 @@ Content-Type: application/json
 {
   "utilizador": {
     "id": 1,
-    "nome_completo": "Ana Silva",
-    "email": "ana.silva@email.com",
+    "nome_completo": "Ana Ribeiro",
+    "email": "ana.ribeiro@email.com",
     "nif": "285948372",
     "ativo": true,
     "data_criacao": "2025-10-23T10:00:00Z"
@@ -45,7 +45,7 @@ POST /api/v1/auth/login
 Content-Type: application/json
 
 {
-  "email": "ana.silva@email.com",
+  "email": "ana.ribeiro@email.com",
   "password": "uma_password_forte_123"
 }
 ```
@@ -248,7 +248,7 @@ Authorization: Bearer <token>
     "data_submissao": "2025-10-23T11:30:00Z",
     "utilizador": {
         "id": 1,
-        "nome_completo": "Ana Silva"
+        "nome_completo": "Ana Ribeiro"
     }
   }
 ]
@@ -317,7 +317,7 @@ Authorization: Bearer <token>
 [
   {
     "id": 101,
-    "utilizador": { "id": 1, "nome_completo": "Ana Silva" },
+    "utilizador": { "id": 1, "nome_completo": "Ana Ribeiro" },
     "documentos": [
       { "nome": "Certificado de Habilitações", "url": "..." },
       { "nome": "Curriculum Vitae", "url": "..." }
@@ -450,8 +450,8 @@ Authorization: Bearer <token>
 {
   "utilizador": {
     "id": 1,
-    "nome_completo": "Ana Silva",
-    "email": "ana.silva@email.com",
+    "nome_completo": "Ana Ribeiro",
+    "email": "ana.ribeiro@email.com",
     "nif": "285948372",
     "ativo": true,
     "data_criacao": "2025-10-23T10:00:00Z"
@@ -468,7 +468,7 @@ POST /api/v1/auth/login
 Content-Type: application/json
 
 {
-  "email": "ana.silva@email.com",
+  "email": "ana.ribeiro@email.com",
   "password": "uma_password_forte_123"
 }
 ```
@@ -671,7 +671,7 @@ Authorization: Bearer <token>
     "data_submissao": "2025-10-23T11:30:00Z",
     "utilizador": {
         "id": 1,
-        "nome_completo": "Ana Silva"
+        "nome_completo": "Ana Ribeiro"
     }
   }
 ]
@@ -740,7 +740,7 @@ Authorization: Bearer <token>
 [
   {
     "id": 101,
-    "utilizador": { "id": 1, "nome_completo": "Ana Silva" },
+    "utilizador": { "id": 1, "nome_completo": "Ana Ribeiro" },
     "documentos": [
       { "nome": "Certificado de Habilitações", "url": "..." },
       { "nome": "Curriculum Vitae", "url": "..." }
