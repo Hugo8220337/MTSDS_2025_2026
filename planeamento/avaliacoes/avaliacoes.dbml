@@ -1,0 +1,111 @@
+//--------------------------------------------------------------------
+// Tabelas para o Microserviço de Avaliações (v2 - Alinhado com Linguagem Ubíqua)
+// Responsável por gerir avaliações, classificações, pautas e revisões.
+//--------------------------------------------------------------------
+
+// --- Entidades Principais do Domínio de Avaliações ---
+
+table EscalaDeClassificacoes {
+  id int [pk, increment]
+  unidade_curricular_id int [not null, note: 'FK para UnidadeCurricular no serviço de Gestão Académica']
+  ano_letivo_id int [not null, note: 'FK para AnoLetivo no serviço de Gestão Académica']
+  descricao text [note: 'Descrição da escala, ex: 0.4*Freq + 0.6*Exame']
+  
+  indexes {
+    (unidade_curricular_id, ano_letivo_id) [unique]
+  }
+  
+  note: 'Define as regras que convertem pontuações em classificações finais para uma UC.'
+}
+
+table ComponenteAvaliacao {
+  id int [pk, increment]
+  escala_id int [ref: > EscalaDeClassificacoes.id, not null]
+  nome varchar(100) [not null, note: 'ex: Frequência, Exame, Trabalho Prático']
+  peso decimal(5,4) [not null, note: 'Peso da componente na classificação final (ex: 0.40 para 40%)']
+  
+  note: 'Define as diferentes partes que compõem a escala de classificações de uma UC.'
+}
+
+table Avaliacao {
+  id int [pk, increment]
+  componente_id int [ref: > ComponenteAvaliacao.id, not null]
+  titulo varchar(255) [not null, note: 'ex: 1º Teste, Entrega do Projeto, Apresentação']
+  data_realizacao date
+  
+  note: 'Um instrumento de avaliação específico (um teste, um trabalho) dentro de uma componente.'
+}
+
+table Classificacao {
+  id int [pk, increment]
+  avaliacao_id int [ref: > Avaliacao.id, not null]
+  inscricao_id int [not null, note: 'FK para a Inscrição no serviço de Gestão Académica. Contextualiza o aluno, a UC e o ano letivo.']
+  valor decimal(4,2) [not null]
+  docente_id_lancamento int [not null, note: 'FK para o Docente que lançou/alterou a classificação']
+  data_lancamento timestamp [default: `now()`]
+  
+  indexes {
+    (avaliacao_id, inscricao_id) [unique]
+  }
+  
+  note: 'Registo do resultado (nota) de um aluno numa avaliação específica.'
+}
+
+table Pauta {
+  id int [pk, increment]
+  unidade_curricular_id int [not null, note: 'FK para UnidadeCurricular']
+  ano_letivo_id int [not null, note: 'FK para AnoLetivo']
+  estado varchar(50) [not null, default: 'EM_PREPARACAO', note: 'ex: EM_PREPARACAO, PROVISORIA, PUBLICADA, FECHADA']
+  data_publicacao timestamp
+  
+  indexes {
+    (unidade_curricular_id, ano_letivo_id) [unique]
+  }
+  
+  note: 'Documento com as classificações dos alunos de uma turma para uma UC.'
+}
+
+table PedidoRevisaoClassificacao {
+  id int [pk, increment]
+  classificacao_id int [ref: > Classificacao.id, not null]
+  aluno_id int [not null, note: 'FK para o Aluno que faz o pedido']
+  justificacao_aluno text [not null]
+  resposta_docente text
+  estado varchar(50) [not null, default: 'SUBMETIDO', note: 'ex: SUBMETIDO, EM_ANALISE, ACEITE, RECUSADO']
+  data_pedido timestamp [default: `now()`]
+  
+  note: 'Regista o processo de um aluno pedir a revisão de uma classificação.'
+}
+
+
+//--------------------------------------------------------------------
+// Representação de Entidades de Microserviços Externos
+//--------------------------------------------------------------------
+// ... (as tabelas externas permanecem as mesmas) ...
+table Aluno_Externo as Aluno {
+  id int [pk]
+  numero_aluno varchar
+}
+
+table Docente_Externo as Docente {
+  id int [pk]
+  numero_mecanografico varchar
+}
+
+table UnidadeCurricular_Externo as UnidadeCurricular {
+  id int [pk]
+  codigo_uc varchar
+}
+
+table AnoLetivo_Externo as AnoLetivo {
+  id int [pk]
+  ano varchar
+}
+
+table Inscricao_Externo as Inscricao {
+  id int [pk]
+  aluno_id int [ref: > Aluno.id]
+  unidade_curricular_id int [ref: > UnidadeCurricular.id]
+  ano_letivo_id int [ref: > AnoLetivo.id]
+  nota_final decimal(4,2) [note: 'Esta nota será atualizada por este microserviço de Avaliações']
+}

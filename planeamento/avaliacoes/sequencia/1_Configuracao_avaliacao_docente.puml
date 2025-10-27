@@ -1,0 +1,40 @@
+@startuml
+!theme plain
+
+title 1. Configuração da Avaliação pelo Docente
+
+actor Docente
+participant Frontend
+box "Backend" #LightBlue
+  participant "API Gateway" as Gateway
+  participant "Microserviço\nAvaliações" as MS_Aval
+end box
+database "DB Avaliações" as DB_Aval
+
+autonumber
+
+Docente -> Frontend: Acede à página de configuração da UC "POO"
+Frontend -> Gateway: POST /unidades-curriculares/POO/escala-classificacao\n(com componentes e pesos)
+Gateway -> MS_Aval: Encaminha pedido
+
+activate MS_Aval
+MS_Aval -> DB_Aval: Cria registos em `EscalaDeClassificacoes` e `ComponenteAvaliacao`
+DB_Aval --> MS_Aval: Confirma criação (retorna IDs)
+MS_Aval --> Gateway: 201 Created (com IDs dos componentes)
+Gateway --> Frontend: Retorna resposta
+deactivate MS_Aval
+
+Frontend -> Docente: Mostra componentes criados e permite adicionar avaliações
+
+Docente -> Frontend: Cria "1º Teste" para o componente "Frequência"
+Frontend -> Gateway: POST /componentes-avaliacao/1/avaliacoes\n(com título e data)
+Gateway -> MS_Aval: Encaminha pedido
+
+activate MS_Aval
+MS_Aval -> DB_Aval: Cria registo em `Avaliacao`
+DB_Aval --> MS_Aval: Confirma criação
+MS_Aval --> Gateway: 201 Created
+Gateway --> Frontend: Retorna resposta
+deactivate MS_Aval
+
+@enduml
