@@ -1,0 +1,58 @@
+//--------------------------------------------------------------------
+// Tabelas para o Microserviço de Notificações
+// Responsável por gerir templates, envios e histórico de notificações
+//--------------------------------------------------------------------
+
+table Template {
+  id int [pk, increment]
+  codigo varchar(100) [unique, not null, note: 'ex: NOTA_PUBLICADA, REVISAO_ACEITE']
+  assunto varchar(255) [not null, note: 'Assunto do email/notificação']
+  corpo text [not null, note: 'Corpo do template com placeholders {nome}, {data}, etc']
+  tipo varchar(50) [not null, note: 'ex: EMAIL, SMS, PUSH']
+  
+  note: 'Templates predefinidos para as diferentes notificações do sistema'
+}
+
+table Notificacao {
+  id int [pk, increment]
+  template_id int [ref: > Template.id]
+  utilizador_id int [not null, note: 'FK para Utilizador no serviço de Identidade']
+  dados jsonb [not null, note: 'Dados específicos usados no template, ex: {"nota": 15, "uc": "POO"}']
+  estado varchar(50) [not null, default: 'PENDENTE', note: 'ex: PENDENTE, ENVIADA, FALHOU']
+  erro text [note: 'Detalhes do erro, se houver']
+  data_criacao timestamp [default: `now()`]
+  data_envio timestamp
+  
+  note: 'Registo de todas as notificações enviadas ou a enviar'
+}
+
+table PreferenciaNotificacao {
+  utilizador_id int [pk, note: 'FK para Utilizador no serviço de Identidade']
+  email_ativo boolean [not null, default: true]
+  sms_ativo boolean [not null, default: false]
+  push_ativo boolean [not null, default: true]
+  
+  note: 'Preferências de cada utilizador sobre como quer receber notificações'
+}
+
+table TentativaEnvio {
+  id int [pk, increment]
+  notificacao_id int [ref: > Notificacao.id]
+  numero_tentativa int [not null, note: 'Número da tentativa (1, 2, 3...)']
+  resultado varchar(50) [not null, note: 'ex: SUCESSO, ERRO_SMTP, ERRO_REDE']
+  erro_detalhes text
+  data_tentativa timestamp [default: `now()`]
+  
+  note: 'Registo de cada tentativa de envio de uma notificação'
+}
+
+//--------------------------------------------------------------------
+// Representação de Entidades de Microserviços Externos
+//--------------------------------------------------------------------
+
+table Utilizador_Externo as Utilizador {
+  id int [pk]
+  email varchar
+  email_institucional varchar
+  telefone varchar
+}
