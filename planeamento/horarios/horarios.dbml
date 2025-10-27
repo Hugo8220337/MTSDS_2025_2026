@@ -1,0 +1,132 @@
+//--------------------------------------------------------------------
+// Tabelas para o Microserviço de Horários
+// Responsável por gerir turmas, alocação de salas, horários e agenda
+// de aulas dos docentes e alunos.
+//--------------------------------------------------------------------
+
+// --- Entidades Estruturais ---
+
+table Turma {
+  id int [pk, increment]
+  unidade_curricular_id int [not null, note: 'FK para UnidadeCurricular no serviço de Gestão Académica']
+  ano_letivo_id int [not null, note: 'FK para AnoLetivo no serviço de Gestão Académica']
+  codigo_turma varchar(20) [not null, note: 'ex: LEI1A, MEI2N (curso + ano + turma)']
+  tipo varchar(50) [not null, note: 'ex: DIURNO, NOTURNO, POS_LABORAL']
+  vagas_max int [not null, note: 'Número máximo de alunos']
+  
+  indexes {
+    (unidade_curricular_id, ano_letivo_id, codigo_turma) [unique]
+  }
+  
+  note: 'Grupo de alunos inscritos numa UC'
+}
+
+table AlunoTurma {
+  turma_id int [ref: > Turma.id]
+  inscricao_id int [not null, note: 'FK para Inscricao no serviço de Gestão Académica']
+  data_inscricao timestamp [default: `now()`]
+  
+  indexes {
+    (turma_id, inscricao_id) [pk]
+  }
+  
+  note: 'Associação entre alunos (via inscrição) e turmas'
+}
+
+table Sala {
+  id int [pk, increment]
+  edificio varchar(50) [not null, note: 'ex: A, B, C']
+  piso int [not null]
+  numero varchar(20) [not null, note: 'ex: 201, LAB1']
+  tipo varchar(50) [not null, note: 'ex: SALA_AULA, LABORATORIO, AUDITORIO']
+  capacidade int [not null]
+  equipamento text [note: 'Lista de equipamentos disponíveis na sala']
+  escola_id int [not null, note: 'FK para Escola no serviço de Gestão Académica']
+  
+  indexes {
+    (edificio, piso, numero) [unique]
+  }
+  
+  note: 'Espaços físicos onde decorrem as aulas'
+}
+
+table SlotHorario {
+  id int [pk, increment]
+  hora_inicio time [not null]
+  hora_fim time [not null]
+  duracao_minutos int [not null]
+  tipo_slot varchar(50) [not null, note: 'ex: AULA_NORMAL, INTERVALO, ALMOCO']
+  
+  indexes {
+    (hora_inicio, hora_fim) [unique]
+  }
+  
+  note: 'Períodos de tempo pré-definidos para aulas'
+}
+
+table Aula {
+  id int [pk, increment]
+  turma_id int [ref: > Turma.id]
+  docente_id int [not null, note: 'FK para Docente no serviço de Gestão Académica']
+  sala_id int [ref: > Sala.id]
+  slot_horario_id int [ref: > SlotHorario.id]
+  dia_semana int [not null, note: '1=Segunda, 2=Terça, etc.']
+  tipo_aula varchar(50) [not null, note: 'ex: TEORICA, PRATICA, TEORICO_PRATICA']
+  data_inicio date [not null, note: 'Data da primeira aula']
+  data_fim date [not null, note: 'Data da última aula']
+  
+  indexes {
+    (sala_id, slot_horario_id, dia_semana) [unique, note: 'Evita conflitos de sala']
+    (docente_id, slot_horario_id, dia_semana) [unique, note: 'Evita conflitos de docente']
+  }
+  
+  note: 'Ocorrência regular de uma aula (dia/hora/local)'
+}
+
+table Excecao {
+  id int [pk, increment]
+  aula_id int [ref: > Aula.id]
+  data date [not null]
+  tipo varchar(50) [not null, note: 'ex: FERIADO, ALTERACAO_SALA, REPOSICAO']
+  sala_id_alternativa int [ref: > Sala.id, note: 'Se for alteração de sala']
+  slot_horario_id_alternativo int [ref: > SlotHorario.id, note: 'Se for alteração de horário']
+  observacoes text
+  
+  indexes {
+    (aula_id, data) [unique]
+  }
+  
+  note: 'Regista exceções ao horário normal (feriados, alterações pontuais)'
+}
+
+//--------------------------------------------------------------------
+// Representação de Entidades de Microserviços Externos
+//--------------------------------------------------------------------
+
+table UnidadeCurricular_Externo as UnidadeCurricular {
+  id int [pk]
+  codigo_uc varchar
+  nome varchar
+}
+
+table AnoLetivo_Externo as AnoLetivo {
+  id int [pk]
+  ano varchar
+}
+
+table Docente_Externo as Docente {
+  id int [pk]
+  numero_mecanografico varchar
+}
+
+table Inscricao_Externo as Inscricao {
+  id int [pk]
+  aluno_id int
+  unidade_curricular_id int
+  ano_letivo_id int
+}
+
+table Escola_Externo as Escola {
+  id int [pk]
+  sigla varchar
+}
