@@ -5,6 +5,7 @@
 
 table Utilizador {
     id int [pk, increment]
+    uuid int [unique, not null, note: 'Número de aluno atribuido pela escola (ex: 8220337)']
     nome_completo varchar(255) [not null]
     email varchar(255) [unique, not null, note: 'usado para login antes de obter o email institucional, para quem faz pela DGES este campo é definido depois do institucional']
     email_institucional varchar(255) [unique, note: 'ex: 8220125@estg.ipp.pt']
