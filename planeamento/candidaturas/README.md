@@ -26,3 +26,44 @@ Para desenhar um backend para um sistema de candidaturas como o da ESTG/P.Porto,
 
 3. **Matrícula:**
 - A partir daqui, o processo converge. O aluno importado da DGES acede ao seu portal, vê que está "Colocado" e procede para a matrícula, seguindo o mesmo fluxo (`Processo 4`) que os candidatos locais.
+
+---
+
+# Novo plano
+
+### 1 - Microserviço candidaturas-dges
+
+Responsável apenas pela integração com o DGES:
+
+- Importa ficheiros CSV/XML oficiais
+
+- Faz o mapping de cursos DGES → internos
+
+- Cria “candidaturas externas” com estado “Colocado DGES”
+
+- Emite evento: AlunoColocadoDGES
+
+
+### 2 - Microserviço candidaturas-locais
+
+Responsável pelos concursos geridos internamente:
+
+- M23, CTeSP, Mestrados, Pós-Graduações, Reingressos…
+
+- Fluxos completos: submissão, análise, resultados
+
+- Gestão de concursos, fases e candidaturas
+
+- Exporta eventos: CandidaturaAprovada, CandidatoSelecionado
+
+### 3 - Microserviço matriculas
+
+Responsável pela matrícula em si (comum a ambos os fluxos DGES e locais):
+
+- Recebe eventos: AlunoColocadoDGES, CandidaturaAprovada
+
+- Cria processos de matrícula
+
+- Integra com serviço de utilizadores e pagamentos
+
+- Gere documentos e estados (matriculado, pendente, etc.)
