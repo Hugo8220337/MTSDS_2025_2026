@@ -867,3 +867,44 @@ Authorization: Bearer <token>
   "message": "Matrícula realizada com sucesso. O seu número de aluno é 202500123."
 }
 ```
+
+## Adicionado posteriormente
+
+### Verificar elegibilidade para matrícula
+```http
+GET /api/v1/escolas/estg/candidaturas/101/elegibilidade-matricula
+Authorization: Bearer <token>
+```
+
+```json
+{
+  "elegivel": true,
+  "prazo_matricula": {
+    "inicio": "2025-10-01",
+    "fim": "2025-10-15"
+  },
+  "curso": {
+    "id": 15,
+    "nome": "Mestrado em Engenharia Informática"
+  }
+}
+```
+
+### Realizar Matrícula
+```http
+POST /api/v1/escolas/estg/candidaturas/101/matricula
+Authorization: Bearer <token>
+```
+
+```json
+{
+  "matricula": {
+    "id": 1,
+    "numero_aluno": "202500123",
+    "data_matricula": "2025-10-01T14:30:00Z",
+    "ano_letivo": "2025/2026",
+    "estado": "ATIVA"
+  },
+  "mensagem": "Matrícula realizada com sucesso"
+}
+```

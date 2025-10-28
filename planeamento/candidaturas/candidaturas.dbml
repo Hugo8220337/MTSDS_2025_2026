@@ -21,9 +21,9 @@ table Fase {
   descricao text
   data_inicio_candidatura date
   data_fim_candidatura date
-  data_publicacao_resultados date
   data_inicio_matricula date
   data_fim_matricula date
+  data_publicacao_resultados date
   vagas int [note: 'número de vagas disponíveis nesta fase']
 
   note: 'Tabela de fases do processo académico'
@@ -58,6 +58,18 @@ table DocumentoRequerido {
   obrigatorio boolean [default: true, note: 'se é obrigatório ou opcional']
 
   note: 'Tabela de documentos exigidos para cada concurso'
+}
+
+table Matricula {
+  id int [pk, increment]
+  candidatura_id int [ref: > Candidatura.id]
+  numero_aluno varchar(50) [unique, not null]
+  data_matricula timestamp [default: `now()`]
+  ano_letivo varchar(9) [not null]
+  data_efetivacao timestamp [default: `now()`, note: 'Momento exato em que a matrícula foi realizada']
+  estado varchar(50) [not null, default: 'ATIVA', note: 'ex: ATIVA, ANULADA, SUSPENSA']
+  
+  note: 'Tabela que regista as matrículas efetivas dos alunos'
 }
 
 table DocumentoSubmetido {
