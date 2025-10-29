@@ -1,0 +1,125 @@
+// Candidaturas Locais Database Model
+
+// Tabela principal de concursos locais (M23, CTeSP, Mestrados, etc)
+Table concursos {
+  id integer [pk]
+  nome string [note: 'Nome descritivo do concurso']
+  tipo tipo_concurso [note: 'Tipo do concurso (M23, CTESP, MESTRADO, etc)']
+  ano_letivo string [note: 'Ano letivo do concurso']
+  data_inicio timestamp [note: 'Data de início das candidaturas']
+  data_fim timestamp [note: 'Data limite para submissão de candidaturas']
+  estado estado_concurso [note: 'Estado atual do concurso']
+  created_at timestamp
+  updated_at timestamp
+
+  note: 'Concursos de acesso geridos internamente pela instituição'
+}
+
+// Fases de cada concurso
+Table fases_concurso {
+  id integer [pk]
+  concurso_id integer [ref: > concursos.id, note: 'Concurso ao qual esta fase pertence']
+  numero integer [note: 'Número da fase (1ª, 2ª, etc)']
+  data_inicio timestamp [note: 'Data de início da fase']
+  data_fim timestamp [note: 'Data de término da fase']
+  vagas_totais integer [note: 'Número total de vagas disponíveis nesta fase']
+  estado estado_fase [note: 'Estado atual da fase']
+  created_at timestamp
+  updated_at timestamp
+
+  note: 'Fases de candidatura de cada concurso (podem existir múltiplas fases)'
+}
+
+// Candidaturas submetidas
+Table candidaturas {
+  id integer [pk]
+  fase_id integer [ref: > fases_concurso.id, note: 'Fase do concurso a que se candidata']
+  nif string [note: 'NIF/Documento de identificação do candidato']
+  nome string [note: 'Nome completo do candidato']
+  estado estado_candidatura [note: 'Estado atual da candidatura']
+  data_submissao timestamp [note: 'Data e hora da submissão da candidatura']
+  created_at timestamp
+  updated_at timestamp
+
+  note: 'Candidaturas individuais submetidas pelos candidatos'
+}
+
+// Opções de curso de cada candidatura
+Table opcoes_curso {
+  id integer [pk]
+  candidatura_id integer [ref: > candidaturas.id, note: 'Candidatura à qual esta opção pertence']
+  curso_id int [note: 'Código do curso no sistema interno']
+  ordem_preferencia integer [note: 'Ordem de preferência do curso (1ª, 2ª, etc)']
+  estado estado_opcao [note: 'Estado da opção de curso']
+  created_at timestamp
+  updated_at timestamp
+
+  note: 'Opções de curso selecionadas em cada candidatura'
+}
+
+// Documentos anexados às candidaturas
+Table documentos_candidatura {
+  id integer [pk]
+  candidatura_id integer [ref: > candidaturas.id, note: 'Candidatura à qual o documento pertence']
+  tipo_documento string [note: 'Tipo do documento (diploma, certificado, etc)']
+  url_documento string [note: 'URL para acesso ao documento no sistema de arquivos']
+  estado estado_documento [note: 'Estado de validação do documento']
+  created_at timestamp
+  updated_at timestamp
+  
+  note: 'Documentos obrigatórios e complementares das candidaturas'
+}
+
+Enum tipo_concurso {
+  M23
+  CTESP
+  MESTRADO
+  POS_GRADUACAO
+  REINGRESSO
+  MUDANCA_CURSO
+}
+
+Enum estado_concurso {
+  CONFIGURACAO
+  ABERTO
+  ANALISE
+  SERIACAO
+  PUBLICADO
+  FECHADO
+}
+
+Enum estado_fase {
+  CONFIGURACAO
+  ABERTA
+  EM_ANALISE
+  SERIADA
+  PUBLICADA
+  FECHADA
+}
+
+Enum estado_candidatura {
+  RASCUNHO
+  SUBMETIDA
+  EM_ANALISE
+  COMPLETA
+  INCOMPLETA
+  APROVADA
+  REJEITADA
+  SELECIONADO
+  NAO_SELECIONADO
+}
+
+Enum estado_opcao {
+  ANALISE
+  APROVADA
+  REJEITADA
+  COLOCADO
+  NAO_COLOCADO
+}
+
+Enum estado_documento {
+  PENDENTE
+  VALIDO
+  INVALIDO
+  REJEITADO
+}

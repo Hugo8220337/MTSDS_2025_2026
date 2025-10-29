@@ -1,0 +1,75 @@
+// Matrículas Database Model
+
+// Processos de matrícula dos alunos
+Table processos_matricula {
+  id integer [pk]
+  nif string [note: 'NIF/Documento de identificação do aluno']
+  nome string [note: 'Nome completo do aluno']
+  curso_id string [note: 'Código do curso no sistema interno']
+  ano_letivo string [note: 'Ano letivo da matrícula']
+  origem origem_matricula [note: 'Origem do aluno (DGES ou concurso local)']
+  estado estado_matricula [note: 'Estado atual do processo de matrícula']
+  data_criacao timestamp [note: 'Data de criação do processo de matrícula']
+  created_at timestamp
+  updated_at timestamp
+
+  note: 'Processos de matrícula de alunos, tanto DGES quanto concursos locais'
+}
+
+// Documentos necessários para matrícula
+Table documentos_matricula {
+  id integer [pk]
+  processo_matricula_id integer [ref: > processos_matricula.id, note: 'Processo de matrícula ao qual o documento pertence']
+  tipo_documento string [note: 'Tipo do documento (CC, foto, certificado, etc)']
+  url_documento string [note: 'URL para acesso ao documento no sistema de arquivos']
+  estado estado_documento [note: 'Estado de validação do documento']
+  created_at timestamp
+  updated_at timestamp
+
+  note: 'Documentos necessários para efetivação da matrícula'
+}
+
+// Pagamentos associados à matrícula
+// TODO acho que isto deveria ficar noutro microserviço
+Table pagamentos_matricula {
+  id integer [pk]
+  processo_matricula_id integer [ref: > processos_matricula.id, note: 'Processo de matrícula ao qual o pagamento pertence']
+  referencia string [note: 'Referência multibanco para pagamento']
+  valor decimal [note: 'Valor do pagamento']
+  estado estado_pagamento [note: 'Estado atual do pagamento']
+  data_limite timestamp [note: 'Data limite para efetuar o pagamento']
+  data_pagamento timestamp [note: 'Data em que o pagamento foi efetuado']
+  created_at timestamp
+  updated_at timestamp
+
+  note: 'Registos de pagamentos relacionados ao processo de matrícula'
+}
+
+Enum origem_matricula {
+  DGES
+  LOCAL
+}
+
+Enum estado_matricula {
+  CRIADA
+  DOCUMENTOS_PENDENTES
+  PAGAMENTO_PENDENTE
+  EM_PROCESSAMENTO
+  MATRICULADO
+  ANULADA
+  ERRO
+}
+
+Enum estado_documento {
+  PENDENTE
+  VALIDO
+  INVALIDO
+  REJEITADO
+}
+
+Enum estado_pagamento {
+  PENDENTE
+  PAGO
+  VENCIDO
+  ANULADO
+}
