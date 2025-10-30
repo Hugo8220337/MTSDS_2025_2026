@@ -1,0 +1,82 @@
+//--------------------------------------------------------------------
+// Microserviço de Revisões
+// Responsável pela gestão de pedidos de revisão de notas
+//--------------------------------------------------------------------
+
+Table pedidos_revisao {
+  id int [pk, increment]
+  classificacao_id int [not null, note: 'ID da classificação a ser revista']
+  aluno_id int [not null]
+  justificacao text [not null]
+  estado estado_revisao [not null, default: 'SUBMETIDO']
+  data_submissao timestamp [not null]
+  prazo_resposta timestamp
+  created_at timestamp
+  updated_at timestamp
+
+  note: 'Pedidos de revisão de classificações'
+}
+
+Table analises_revisao {
+  id int [pk, increment]
+  pedido_id int [ref: > pedidos_revisao.id]
+  docente_id int [not null]
+  parecer text [not null]
+  nota_recomendada decimal(4,2)
+  decisao decisao_revisao [not null]
+  data_analise timestamp [not null]
+  created_at timestamp
+  updated_at timestamp
+
+  note: 'Análises dos pedidos de revisão'
+}
+
+Table documentos_revisao {
+  id int [pk, increment]
+  pedido_id int [ref: > pedidos_revisao.id]
+  tipo tipo_documento [not null]
+  url_documento text [not null]
+  data_upload timestamp [not null]
+  created_at timestamp
+  updated_at timestamp
+
+  note: 'Documentos anexados aos pedidos de revisão'
+}
+
+Table historico_estados_revisao {
+  id int [pk, increment]
+  pedido_id int [ref: > pedidos_revisao.id]
+  estado_anterior estado_revisao
+  estado_novo estado_revisao
+  responsavel_id int [not null]
+  motivo text
+  data_mudanca timestamp [not null]
+  created_at timestamp
+  updated_at timestamp
+  
+  note: 'Histórico de mudanças de estado dos pedidos'
+}
+
+Enum estado_revisao {
+  SUBMETIDO [note: 'Pedido submetido pelo aluno']
+  EM_ANALISE [note: 'Em análise pelo docente']
+  AGUARDA_DOCUMENTOS [note: 'Aguardando documentos adicionais']
+  DEFERIDO [note: 'Revisão aceita']
+  INDEFERIDO [note: 'Revisão recusada']
+  CANCELADO [note: 'Cancelado pelo aluno']
+}
+
+Enum decisao_revisao {
+  MANTER_NOTA [note: 'Manter a nota original']
+  ALTERAR_NOTA [note: 'Alterar para nova nota']
+  SOLICITAR_DOCUMENTOS [note: 'Solicitar mais documentos']
+  REMARCAR_AVALIACAO [note: 'Remarcar nova avaliação']
+}
+
+Enum tipo_documento {
+  ENUNCIADO [note: 'Enunciado da avaliação']
+  RESOLUCAO [note: 'Resolução do aluno']
+  CRITERIOS [note: 'Critérios de correção']
+  JUSTIFICATIVA [note: 'Justificativa do pedido']
+  PARECER [note: 'Parecer do docente']
+}

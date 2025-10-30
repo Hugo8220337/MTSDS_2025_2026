@@ -32,7 +32,7 @@ Cria nova fase do concurso
 
 ## Candidaturas
 
-### POST /api/v1/candidaturas/candidaturas
+### POST /api/v1/candidaturas
 Submete nova candidatura
 ```json
 {
@@ -48,10 +48,10 @@ Submete nova candidatura
 }
 ```
 
-### GET /api/v1/candidaturas/candidaturas/{id}
+### GET /api/v1/candidaturas/{id}
 Obtém detalhes de uma candidatura
 
-### POST /api/v1/candidaturas/candidaturas/{id}/documentos
+### POST /api/v1/candidaturas/{id}/documentos
 Upload de documento
 ```json
 {
@@ -60,7 +60,7 @@ Upload de documento
 }
 ```
 
-### PUT /api/v1/candidaturas/candidaturas/{id}/estado
+### PUT /api/v1/candidaturas/{id}/atualizar-estado
 Atualiza estado da candidatura
 ```json
 {

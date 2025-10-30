@@ -4,7 +4,7 @@ Base URL: `/api/v1/candiaturas/dges`
 
 ## Importação DGES
 
-### POST /api/v1/candiaturas/dges/importacao
+### POST /api/v1/candiaturas/dges/importar
 Importa arquivo CSV/XML com colocações DGES
 ```json
 {

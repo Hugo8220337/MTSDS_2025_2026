@@ -41,7 +41,7 @@ Gera referência para pagamento
 }
 ```
 
-### PUT /api/matriculas/{id}/estado
+### PUT /api/matriculas/{id}/atualizar-estado
 Atualiza estado da matrícula
 ```json
 {

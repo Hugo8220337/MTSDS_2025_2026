@@ -45,7 +45,7 @@ Endpoints para administradores criarem e gerirem os modelos de mensagens.
 ### 2.1. Criar um novo Template
 
 ```http
-POST /api/v1/admin/templates
+POST /api/v1/notifications/templates
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -68,7 +68,7 @@ Content-Type: application/json
 ### 2.2. Listar todos os Templates
 
 ```http
-GET /api/v1/admin/templates
+GET /api/v1/notifications/templates
 Authorization: Bearer <token>
 ```
 **Resposta:** `200 OK`
@@ -98,7 +98,7 @@ Endpoints para os utilizadores consultarem o seu histórico e gerirem as suas pr
 ### 3.1. Obter Histórico de Notificações do Utilizador
 
 ```http
-GET /api/v1/account/me/notificacoes
+GET /api/v1/notifications/me
 Authorization: Bearer <token>
 ```
 **Resposta:** `200 OK`
@@ -124,7 +124,7 @@ Authorization: Bearer <token>
 Permite ao utilizador ativar ou desativar canais de comunicação.
 
 ```http
-PUT /api/v1/account/me/preferencias
+PUT /api/v1/notifications/me/change-preferences
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -155,7 +155,7 @@ Endpoints para administradores monitorizarem o estado do sistema de notificaçõ
 Permite ver todas as notificações do sistema, com filtros para depuração.
 
 ```http
-GET /api/v1/admin/notificacoes?estado=FALHOU&limit=50
+GET /api/v1/notifications?estado=FALHOU&limit=50
 Authorization: Bearer <token>
 ```
 **Resposta:** `200 OK`
@@ -175,7 +175,7 @@ Authorization: Bearer <token>
 ### 4.2. Obter Detalhes de uma Notificação (com tentativas de envio)
 
 ```http
-GET /api/v1/admin/notificacoes/3
+GET /api/v1/notificacoes/3
 Authorization: Bearer <token>
 ```
 **Resposta:** `200 OK`

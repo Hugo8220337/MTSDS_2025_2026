@@ -1,0 +1,60 @@
+//--------------------------------------------------------------------
+// Microserviço de Classificações
+// Responsável pelo lançamento e gestão de notas
+//--------------------------------------------------------------------
+
+Table classificacoes {
+  id int [pk, increment]
+  momento_avaliacao_id int [not null, note: 'ID do momento no serviço de Config']
+  inscricao_id int [not null, note: 'ID da inscrição do aluno na UC']
+  valor decimal(4,2) [not null, note: 'Nota atribuída (0-20)']
+  docente_id int [not null, note: 'Docente que lançou a nota']
+  data_lancamento timestamp [not null]
+  estado estado_classificacao [not null, default: 'LANCADA']
+  observacoes text
+  created_at timestamp
+  updated_at timestamp
+
+  indexes {
+    (momento_avaliacao_id, inscricao_id) [unique]
+  }
+
+  note: 'Notas dos alunos em cada momento de avaliação'
+}
+
+Table historico_classificacoes {
+  id int [pk, increment]
+  classificacao_id int [ref: > classificacoes.id]
+  valor_anterior decimal(4,2)
+  valor_novo decimal(4,2)
+  docente_id int [not null, note: 'Docente que fez a alteração']
+  motivo text [not null]
+  data_alteracao timestamp [not null]
+  created_at timestamp
+  updated_at timestamp
+
+  note: 'Histórico de alterações em classificações'
+}
+
+Table medias_componentes {
+  id int [pk, increment]
+  componente_id int [not null, note: 'ID do componente no serviço de Config']
+  inscricao_id int [not null]
+  media_final decimal(4,2) [not null]
+  data_calculo timestamp [not null]
+  created_at timestamp
+  updated_at timestamp
+
+  indexes {
+    (componente_id, inscricao_id) [unique]
+  }
+  
+  note: 'Médias calculadas por componente de avaliação'
+}
+
+Enum estado_classificacao {
+  LANCADA [note: 'Nota lançada normalmente']
+  EM_REVISAO [note: 'Em processo de revisão']
+  REVISTA [note: 'Nota alterada após revisão']
+  ANULADA [note: 'Classificação anulada']
+}
