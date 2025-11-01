@@ -1,6 +1,6 @@
 # Exemplos de API Requests & Responses (Microserviço de Gestão Académica)
 
-Este ficheiro detalha os endpoints da API para gestão de escolas, cursos, unidades curriculares, alunos, docentes e inscrições.
+Este ficheiro detalha os endpoints da API para gestão de escolas, cursos, unidades curriculares, alunos, docentes, inscrições e turmas.
 
 ---
 
@@ -102,7 +102,90 @@ Content-Type: application/json
 
 ---
 
-## Processo 2: Gestão de Alunos e Docentes (Fluxo do Admin e Eventos)
+## Processo 2: Gestão de Turmas (Fluxo do Admin)
+
+### 2.1. Gestão de Turmas
+
+#### Criar uma nova turma para uma UC
+```http
+POST /api/v1/admin/unidades-curriculares/{ucId}/turmas
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "codigo_turma": "LEI1A",
+  "ano_letivo": "2025/2026",
+  "tipo": "DIURNO",
+  "vagas_max": 30
+}
+```
+**Resposta:** `201 Created`
+```json
+{
+  "id": 1,
+  "codigo_turma": "LEI1A",
+  "unidade_curricular": {
+    "codigo": "POO",
+    "nome": "Programação Orientada a Objetos"
+  },
+  "vagas_disponiveis": 30
+}
+```
+
+#### Inscrever alunos numa turma
+```http
+POST /api/v1/admin/turmas/{turmaId}/alunos
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "inscricoes": [
+    { "inscricao_id": 1501 },
+    { "inscricao_id": 1502 },
+    { "inscricao_id": 1503 }
+  ]
+}
+```
+**Resposta:** `201 Created`
+```json
+{
+  "turma": "LEI1A",
+  "alunos_inscritos": 3,
+  "vagas_restantes": 27
+}
+```
+
+#### Listar alunos de uma turma
+```http
+GET /api/v1/admin/turmas/{turmaId}/alunos
+Authorization: Bearer <token>
+```
+**Resposta:** `200 OK`
+```json
+{
+  "turma": "LEI1A",
+  "alunos": [
+    {
+      "numero": "8220337",
+      "nome": "João Silva",
+      "inscricao_id": 1501,
+      "data_inscricao": "2025-09-01T10:00:00Z"
+    },
+    {
+      "numero": "8220307",
+      "nome": "Maria Santos",
+      "inscricao_id": 1502,
+      "data_inscricao": "2025-09-01T10:05:00Z"
+    }
+  ],
+  "total_alunos": 2,
+  "vagas_restantes": 28
+}
+```
+
+---
+
+## Processo 3: Gestão de Alunos e Docentes (Fluxo do Admin e Eventos)
 
 Estes endpoints gerem os registos académicos. A criação é tipicamente acionada por eventos de outros serviços.
 

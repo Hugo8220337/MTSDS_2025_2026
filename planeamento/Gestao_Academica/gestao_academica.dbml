@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------
 // Tabelas para o Microserviço de Gestão Académica
 // Responsável por gerir Escolas, Cursos, Alunos, Docentes,
-// Unidades Curriculares e as suas respetivas associações.
+// Unidades Curriculares, Turmas e as suas respetivas associações.
 //--------------------------------------------------------------------
 
 // --- Entidades Estruturais ---
@@ -98,6 +98,42 @@ table Inscricao {
   unidade_curricular_id int [ref: > UnidadeCurricular.id, not null]
   ano_letivo_id int [ref: > AnoLetivo.id, not null]
   estado varchar(50) [not null, default: 'INSCRITO', note: 'ex: INSCRITO, APROVADO, REPROVADO']
+  data_inscricao timestamp [default: `now()`]
+  
+  indexes {
+    (aluno_id, unidade_curricular_id, ano_letivo_id) [unique]
+  }
+  
+  note: 'Regista a inscrição de um aluno numa UC num ano letivo.'
+}
+
+// --- Entidades de Gestão de Turmas ---
+
+table Turma {
+  id int [pk, increment]
+  unidade_curricular_id int [ref: > UnidadeCurricular.id, not null]
+  ano_letivo_id int [ref: > AnoLetivo.id, not null]
+  codigo_turma varchar(20) [not null, note: 'ex: LEI1A, MEI2N (curso + ano + turma)']
+  tipo varchar(50) [not null, note: 'ex: DIURNO, NOTURNO, POS_LABORAL']
+  vagas_max int [not null, note: 'Número máximo de alunos']
+  
+  indexes {
+    (unidade_curricular_id, ano_letivo_id, codigo_turma) [unique]
+  }
+  
+  note: 'Grupo de alunos inscritos numa UC'
+}
+
+table AlunoTurma {
+  turma_id int [ref: > Turma.id]
+  inscricao_id int [ref: > Inscricao.id, not null]
+  data_inscricao timestamp [default: `now()`]
+  
+  indexes {
+    (turma_id, inscricao_id) [pk]
+  }
+  
+  note: 'Associação entre alunos (via inscrição) e turmas'
   nota_final decimal(4,2) [note: 'Nota final da UC, pode ser gerida pelo serviço de Avaliações']
   
   indexes {

@@ -1,67 +1,12 @@
 # Exemplos de API Requests & Responses (Microserviço de Horários)
 
-Este ficheiro detalha os endpoints da API para gestão de turmas, salas, horários e aulas.
+Este ficheiro detalha os endpoints da API para gestão de salas, horários e aulas.
 
 ---
 
-## Processo 1: Gestão de Turmas (Fluxo do Admin)
+## Processo 1: Gestão de Salas (Fluxo do Admin)
 
-### 1.1. Criar e Configurar Turmas
-
-#### Criar uma nova turma para uma UC
-```http
-POST /api/v1/admin/escolas/estg/unidades-curriculares/POO/turmas
-Authorization: Bearer <token>
-Content-Type: application/json
-
-{
-  "codigo_turma": "LEI1A",
-  "ano_letivo": "2025/2026",
-  "tipo": "DIURNO",
-  "vagas_max": 30
-}
-```
-**Resposta:** `201 Created`
-```json
-{
-  "id": 1,
-  "codigo_turma": "LEI1A",
-  "unidade_curricular": {
-    "codigo": "POO",
-    "nome": "Programação Orientada a Objetos"
-  },
-  "vagas_disponiveis": 30
-}
-```
-
-#### Inscrever alunos numa turma
-```http
-POST /api/v1/admin/turmas/LEI1A/alunos
-Authorization: Bearer <token>
-Content-Type: application/json
-
-{
-  "inscricoes": [
-    { "numero_aluno": "8220337" },
-    { "numero_aluno": "8220307" },
-    { "numero_aluno": "8220169" }
-  ]
-}
-```
-**Resposta:** `201 Created`
-```json
-{
-  "turma": "LEI1A",
-  "alunos_inscritos": 2,
-  "vagas_restantes": 28
-}
-```
-
----
-
-## Processo 2: Gestão de Salas (Fluxo do Admin)
-
-### 2.1. Criar e Gerir Salas
+### 1.1. Criar e Gerir Salas
 
 #### Criar uma nova sala
 ```http
