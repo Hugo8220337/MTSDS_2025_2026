@@ -13,6 +13,7 @@ Estes endpoints são usados para configurar a estrutura base da instituição.
 #### Criar uma nova Escola
 ```http
 POST /api/v1/admin/escolas
+/api/v1/admin/schools
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -32,7 +33,8 @@ Content-Type: application/json
 
 #### Criar um novo Curso para uma Escola
 ```http
-POST /api/v1/admin/escolas/ESTG/cursos
+POST /api/v1/admin/escolas/estg/cursos
+/api/v1/admin/schools/estg/courses
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -58,6 +60,7 @@ Content-Type: application/json
 #### Criar uma nova Unidade Curricular (UC)
 ```http
 POST /api/v1/admin/unidades-curriculares
+/api/v1/admin/curricular-units
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -80,6 +83,7 @@ Content-Type: application/json
 #### Associar uma UC a um Plano de Estudos de um Curso
 ```http
 POST /api/v1/admin/cursos/LEI/plano-estudos
+/api/v1/admin/courses/LEI/study-plans
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -109,6 +113,7 @@ Content-Type: application/json
 #### Criar uma nova turma para uma UC
 ```http
 POST /api/v1/admin/unidades-curriculares/{ucId}/turmas
+/api/v1/admin/curricular-units/{ucId}/classes
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -135,6 +140,7 @@ Content-Type: application/json
 #### Inscrever alunos numa turma
 ```http
 POST /api/v1/admin/turmas/{turmaId}/alunos
+/admin/classes/{turmaId}/students
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -158,6 +164,7 @@ Content-Type: application/json
 #### Listar alunos de uma turma
 ```http
 GET /api/v1/admin/turmas/{turmaId}/alunos
+/admin/classes/{turmaId}/students
 Authorization: Bearer <token>
 ```
 **Resposta:** `200 OK`
@@ -192,6 +199,7 @@ Estes endpoints gerem os registos académicos. A criação é tipicamente aciona
 #### Obter dados de um Aluno
 ```http
 GET /api/v1/admin/alunos/8220337
+/admin/students/8220337
 Authorization: Bearer <token>
 ```
 **Resposta:** `200 OK`
@@ -209,6 +217,7 @@ Authorization: Bearer <token>
 coloquei D9876 como se fosse o Id do docente, mas o id é inteiro, então tem que se normaliza de outra forma
 ```http
 POST /api/v1/admin/docentes/D9876/lecionacoes
+/admin/teachers/D9876/teachings
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -237,6 +246,7 @@ Devolve as UCs do plano de estudos do aluno que ele possa frequentar o ano letiv
 
 ```http
 GET /api/v1/alunos/me/inscricoes/disponiveis?ano_letivo=2025/2026
+/students/me/registrations/available?school_year=2025/2026
 Authorization: Bearer <token>
 ```
 **Resposta:** `200 OK`
@@ -262,6 +272,7 @@ Authorization: Bearer <token>
 #### Realizar inscrição em Unidades Curriculares
 ```http
 POST /api/v1/alunos/me/inscricoes
+/students/me/registrations
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -286,6 +297,7 @@ Content-Type: application/json
 #### Obter histórico de inscrições (pauta do aluno)
 ```http
 GET /api/v1/alunos/me/inscricoes
+/students/me/registrations
 Authorization: Bearer <token>
 ```
 **Resposta:** `200 OK`
@@ -306,6 +318,7 @@ Authorization: Bearer <token>
 #### Obter alunos inscritos numa UC (para um docente)
 ```http
 GET /api/v1/docentes/me/unidades-curriculares/POO/alunos?ano_letivo=2025/2026
+/api/v1/teachers/me/curricular-units/POO/students?school_year=2025/2026
 Authorization: Bearer <token>
 ```
 **Resposta:** `200 OK`

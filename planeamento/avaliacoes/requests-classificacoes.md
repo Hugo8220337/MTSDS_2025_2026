@@ -5,7 +5,7 @@ Base URL: `/api/v1/classificacoes`
 ## Classificações
 
 ### POST /classificacoes
-Lança novas classificações~
+Lança novas classificações
 As médias têm de ser atualizadas quando isto acontece (provavelmente tem de se  lançar um evento).
 ```json
 {
@@ -24,6 +24,7 @@ As médias têm de ser atualizadas quando isto acontece (provavelmente tem de se
 ```
 
 ### GET /classificacoes
+## /classifications
 Lista classificações com suporte a filtros
 ```
 Parâmetros:
@@ -34,9 +35,11 @@ Parâmetros:
 ```
 
 ### GET /classificacoes/{id}
+## /classifications/{id}
 Obtém uma classificação específica
 
 ### PUT /classificacoes/{id}
+## /classifications/{id}
 Atualiza uma classificação
 ```json
 {
@@ -48,6 +51,7 @@ Atualiza uma classificação
 ## Médias
 
 ### GET /alunos/{numeroAluno}/unidades-curriculares/{codigoUC}/medias
+## /students/{student_number}/curricular_units/{ucId}/averages
 Obtém todas as médias de um aluno numa UC
 ```json
 {

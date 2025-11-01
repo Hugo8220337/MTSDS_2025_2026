@@ -1,13 +1,16 @@
 # API Candidaturas
 
 Base URL: `/api/v1/candidaturas`
+`/api/v1/applications`
 
 ## Concursos
 
 ### GET /api/v1/candidaturas/concursos
+## /api/v1/applications/admissions
 Lista concursos disponíveis
 
 ### POST /api/v1/candidaturas/concursos
+## /api/v1/applications/admissions
 Cria novo concurso
 ```json
 {
@@ -20,6 +23,7 @@ Cria novo concurso
 ```
 
 ### POST /api/v1/candidaturas/concursos/{id}/fases
+## /api/v1/applications/admissions/{id}/phases
 Cria nova fase do concurso
 ```json
 {
@@ -33,6 +37,7 @@ Cria nova fase do concurso
 ## Candidaturas
 
 ### POST /api/v1/candidaturas
+## /api/v1/applications
 Submete nova candidatura
 ```json
 {
@@ -49,9 +54,12 @@ Submete nova candidatura
 ```
 
 ### GET /api/v1/candidaturas/{id}
+## /api/v1/applications/{id}
 Obtém detalhes de uma candidatura
 
 ### POST /api/v1/candidaturas/{id}/documentos
+## /api/v1/applications/{id}/documents
+
 Upload de documento
 ```json
 {
@@ -61,6 +69,7 @@ Upload de documento
 ```
 
 ### PUT /api/v1/candidaturas/{id}/atualizar-estado
+## /api/v1/applications/{id}/update-state
 Atualiza estado da candidatura
 ```json
 {
@@ -72,7 +81,9 @@ Atualiza estado da candidatura
 ## Seriação
 
 ### POST /api/v1/candidaturas/concursos/{id}/fases/{fase_id}/seriar
+## POST /api/v1/applications/admissions/{id}/phases/{phase_id}/filtering
 Inicia processo de seriação da fase
 
 ### GET /api/v1/candidaturas/concursos/{id}/fases/{fase_id}/resultados
+## GET /api/v1/applications/admissions/{id}/phases/{phase_id}/results
 Obtém resultados da seriação

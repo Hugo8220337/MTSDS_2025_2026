@@ -5,6 +5,7 @@ Base URL: `/api/v1/config-avaliacoes`
 ## Escalas de Avaliação
 
 ### POST /api/v1/config-avaliacoes/escalas
+## config-evaluations/assessment-scales
 Cria uma nova escala de avaliação para uma UC
 ```json
 {
@@ -15,6 +16,7 @@ Cria uma nova escala de avaliação para uma UC
 ```
 
 ### PUT /api/v1/config-avaliacoes/escalas/{id}/componentes
+## config-evaluations/assessment-scales/{id}/components
 Adiciona componentes à escala
 ```json
 {
@@ -34,6 +36,7 @@ Adiciona componentes à escala
 ```
 
 ### POST /api/v1/config-avaliacoes/componentes/{id}/momentos
+## config-evaluations/assessment-scales/{id}/components/{componentId}/moments
 Cria um momento de avaliação
 ```json
 {
@@ -43,6 +46,9 @@ Cria um momento de avaliação
   "sala": "Lab-1"
 }
 ```
+
+### DELETE /moments/{id}
+## config-evaluations/moments/{id}
 
 ### PUT /api/v1/config-avaliacoes/escalas/{id}/submeter
 Submete escala para aprovação
