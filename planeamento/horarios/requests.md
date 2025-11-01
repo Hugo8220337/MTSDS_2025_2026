@@ -11,6 +11,7 @@ Este ficheiro detalha os endpoints da API para gestão de salas, horários e aul
 #### Criar uma nova sala
 ```http
 POST /api/v1/admin/escolas/estg/salas
+/api/v1/admin/schools/estg/classrooms
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -36,6 +37,7 @@ Content-Type: application/json
 #### Obter disponibilidade de uma sala
 ```http
 GET /api/v1/admin/salas/A201/disponibilidade?data=2025-11-01
+/api/v1/admin/classrooms/A201/available?date=2025-11-01
 Authorization: Bearer <token>
 ```
 **Resposta:** `200 OK`
@@ -63,6 +65,7 @@ Authorization: Bearer <token>
 #### Criar um novo slot horário
 ```http
 POST /api/v1/admin/slots-horario
+/api/v1/admin/schedule-slots
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -87,6 +90,7 @@ Content-Type: application/json
 #### Criar uma aula regular
 ```http
 POST /api/v1/admin/turmas/LEI1A/aulas
+/api/v1/admin/classes/LEI1A/lessons
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -114,6 +118,7 @@ Content-Type: application/json
 #### Registrar uma exceção (alteração pontual)
 ```http
 POST /api/v1/admin/aulas/1/excecoes
+/api/v1/admin/lessons/1/exceptions
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -142,6 +147,7 @@ Content-Type: application/json
 #### Obter horário do aluno
 ```http
 GET /api/v1/alunos/me/horario?semana=2025-11-10
+/api/v1/students/me/schedule?week=2025-11-10
 Authorization: Bearer <token>
 ```
 **Resposta:** `200 OK`
@@ -165,6 +171,7 @@ Authorization: Bearer <token>
 #### Obter horário do docente
 ```http
 GET /api/v1/docentes/me/horario?semana=2025-11-10
+/api/v1/teachers/me/schedule?week=2025-11-10
 Authorization: Bearer <token>
 ```
 **Resposta:** `200 OK`
@@ -190,6 +197,7 @@ Authorization: Bearer <token>
 #### Obter ocupação de todas as salas
 ```http
 GET /api/v1/escolas/estg/salas/ocupacao?data=2025-11-10
+/schools/estg/classrooms/ocupied?date=2025-11-10
 Authorization: Bearer <token>
 ```
 **Resposta:** `200 OK`

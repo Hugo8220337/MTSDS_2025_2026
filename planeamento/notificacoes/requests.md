@@ -14,6 +14,7 @@ Cria um registo na tabela `Notificacao` que será processado por um worker para 
 
 ```http
 POST /api/v1/notificacoes/enviar
+/api/v1/notifications/send
 Content-Type: application/json
 // Este endpoint seria chamado internamente, possivelmente sem um token de utilizador,
 // mas com um token de serviço-para-serviço.
@@ -156,6 +157,7 @@ Permite ver todas as notificações do sistema, com filtros para depuração.
 
 ```http
 GET /api/v1/notifications?estado=FALHOU&limit=50
+/api/v1/notifications?state=FAILED&limit=50
 Authorization: Bearer <token>
 ```
 **Resposta:** `200 OK`
@@ -176,6 +178,7 @@ Authorization: Bearer <token>
 
 ```http
 GET /api/v1/notificacoes/3
+/api/v1/notifications/3
 Authorization: Bearer <token>
 ```
 **Resposta:** `200 OK`

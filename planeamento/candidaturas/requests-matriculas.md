@@ -3,6 +3,7 @@
 ## Processos de Matrícula
 
 ### POST /api/matriculas
+## /api/enrollments
 Cria novo processo de matrícula
 ```json
 {
@@ -15,9 +16,11 @@ Cria novo processo de matrícula
 ```
 
 ### GET /api/matriculas/{id}
+## /api/enrollments/{id}
 Obtém detalhes do processo de matrícula
 
 ### POST /api/matriculas/{id}/documentos
+## /api/enrollments/{id}/documents
 Upload de documento de matrícula
 ```json
 {
@@ -27,12 +30,15 @@ Upload de documento de matrícula
 ```
 
 ### GET /api/matriculas/{id}/documentos
+## /api/enrollments/{id}/documents
 Lista documentos do processo
 
 ### GET /api/matriculas/{id}/pagamentos
+## /api/enrollments/{id}/payments
 Lista pagamentos do processo
 
 ### POST /api/matriculas/{id}/pagamentos/gerar-referencia
+## /api/enrollments/{id}/payments/
 Gera referência para pagamento
 ```json
 {
@@ -42,38 +48,11 @@ Gera referência para pagamento
 ```
 
 ### PUT /api/matriculas/{id}/atualizar-estado
+## PUT /api/enrollments/{id}/update-state
 Atualiza estado da matrícula
 ```json
 {
   "estado": "MATRICULADO",
   "observacoes": "Processo concluído com sucesso"
-}
-```
-
-## Eventos (Webhooks)
-
-### POST /api/matriculas/eventos/dges
-Recebe evento de colocação DGES
-```json
-{
-  "tipo": "AlunoColocadoDGES",
-  "dados": {
-    "nif": "123456789",
-    "nome": "João Silva",
-    "curso_id": "LEI"
-  }
-}
-```
-
-### POST /api/matriculas/eventos/candidatura
-Recebe evento de candidatura aprovada
-```json
-{
-  "tipo": "CandidaturaAprovada",
-  "dados": {
-    "nif": "123456789",
-    "nome": "João Silva",
-    "curso_id": "MEI"
-  }
 }
 ```

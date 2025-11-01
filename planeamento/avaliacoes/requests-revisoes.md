@@ -5,6 +5,7 @@ Base URL: `/api/v1/revisoes`
 ## Gestão de Revisões
 
 ### POST /api/v1/revisoes/pedidos
+## /api/v1/revisions/requests
 Submete pedido de revisão
 ```json
 {
@@ -14,6 +15,8 @@ Submete pedido de revisão
 ```
 
 ### POST /api/v1/revisoes/pedidos/{id}/documentos
+## /api/v1/revisions/requests/{id}/documents
+
 Anexa documento ao pedido
 ```json
 {
@@ -23,6 +26,7 @@ Anexa documento ao pedido
 ```
 
 ### POST /api/v1/revisoes/pedidos/{id}/analises
+## /api/v1/revisions/requests/{id}/analysis
 Registra análise do pedido
 ```json
 {
@@ -33,6 +37,7 @@ Registra análise do pedido
 ```
 
 ### PUT /api/v1/revisoes/pedidos/{id}/estado
+## /api/v1/revisions/requests/{id}/state
 Atualiza estado do pedido
 ```json
 {
@@ -44,13 +49,17 @@ Atualiza estado do pedido
 ## Consultas
 
 ### GET /api/v1/revisoes/pedidos/{id}
+## /api/v1/revisions/requests/{id}
 Obtém detalhes de um pedido
 
 ### GET /api/v1/revisoes/pedidos/{id}/historico
+## /api/v1/revisions/requests/{id}/history
 Obtém histórico de estados
 
 ### GET /api/v1/revisoes/alunos/{aluno_id}/pedidos
+## /api/v1/revisions/students/{student_id}/requests
 Lista pedidos de um aluno
 
 ### GET /api/v1/revisoes/docentes/{docente_id}/pedidos
+## /api/v1/revisions/teachers/{teacher_id}/requests
 Lista pedidos para análise do docente
