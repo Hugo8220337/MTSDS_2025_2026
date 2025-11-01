@@ -38,8 +38,8 @@ export const AppRoutes = () => {
     }
   ]
 
-  // const routes = isAuthenticated ? authenticatedRoutes : unauthenticatedRoutes
-  const routes = isAuthenticated ? unauthenticatedRoutes : authenticatedRoutes // TOGGLE FOR TESTING PURPOSES
+  const routes = isAuthenticated ? authenticatedRoutes : unauthenticatedRoutes
+  // const routes = isAuthenticated ? unauthenticatedRoutes : authenticatedRoutes // TOGGLE FOR TESTING PURPOSES
 
 
   return useRoutes(routes)

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:open-bpmn="http://open-bpmn.org/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_3" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:process id="Process_PublicacaoPauta" isExecutable="false" processType="Public">
+    <bpmn:documentation id="documentation_j9t0eA"/>
+    <bpmn:extensionElements>
+      <open-bpmn:auto-align/>
+    </bpmn:extensionElements>
+    <bpmn:startEvent id="StartEvent_FimEpoca" name="Fim da Época de Avaliação">
+      <bpmn:documentation id="documentation_Jc3Z9g"/>
+      <bpmn:outgoing>Flow_9</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_CriarPauta" name="Criar Pauta (EM_PREPARACAO)">
+      <bpmn:documentation id="documentation_R6W6NQ"/>
+      <bpmn:incoming>Flow_9</bpmn:incoming>
+      <bpmn:outgoing>Flow_10</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_GerarResultados" name="Gerar Resultados da Pauta">
+      <bpmn:documentation id="documentation_P5PvLw"/>
+      <bpmn:incoming>Flow_10</bpmn:incoming>
+      <bpmn:outgoing>Flow_11</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_PublicarProvisoria" name="Publicar Pauta (PROVISORIA)">
+      <bpmn:documentation id="documentation_tWnVvw"/>
+      <bpmn:incoming>Flow_11</bpmn:incoming>
+      <bpmn:outgoing>Flow_12</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:intermediateCatchEvent id="Event_TimerRevisao" name="Período para Pedidos de Revisão">
+      <bpmn:documentation id="documentation_HFirfg"/>
+      <bpmn:incoming>Flow_12</bpmn:incoming>
+      <bpmn:outgoing>Flow_13</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_1"/>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:task id="Task_RecolherAssinaturas" name="Recolher Assinaturas (Regente, etc.)">
+      <bpmn:documentation id="documentation_CmAtlg"/>
+      <bpmn:incoming>Flow_13</bpmn:incoming>
+      <bpmn:outgoing>Flow_14</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_PublicarDefinitiva" name="Publicar Pauta (PUBLICADA)">
+      <bpmn:documentation id="documentation_i2XICA"/>
+      <bpmn:incoming>Flow_14</bpmn:incoming>
+      <bpmn:outgoing>Flow_15</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_FecharPauta" name="Fechar Pauta (FECHADA)">
+      <bpmn:documentation id="documentation_TAEC0g"/>
+      <bpmn:incoming>Flow_15</bpmn:incoming>
+      <bpmn:outgoing>Flow_16</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="EndEvent_PautaFechada" name="Pauta Fechada e Arquivada">
+      <bpmn:documentation id="documentation_n1cplQ"/>
+      <bpmn:incoming>Flow_16</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_9" sourceRef="StartEvent_FimEpoca" targetRef="Task_CriarPauta">
+      <bpmn:documentation id="documentation_9HexYw"/>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_10" sourceRef="Task_CriarPauta" targetRef="Task_GerarResultados">
+      <bpmn:documentation id="documentation_t4MojQ"/>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_11" sourceRef="Task_GerarResultados" targetRef="Task_PublicarProvisoria">
+      <bpmn:documentation id="documentation_l172qg"/>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_12" sourceRef="Task_PublicarProvisoria" targetRef="Event_TimerRevisao">
+      <bpmn:documentation id="documentation_1k5UBA"/>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_13" sourceRef="Event_TimerRevisao" targetRef="Task_RecolherAssinaturas">
+      <bpmn:documentation id="documentation_DSsoTg"/>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_14" sourceRef="Task_RecolherAssinaturas" targetRef="Task_PublicarDefinitiva">
+      <bpmn:documentation id="documentation_hwYIyA"/>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_15" sourceRef="Task_PublicarDefinitiva" targetRef="Task_FecharPauta">
+      <bpmn:documentation id="documentation_daM6Gw"/>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_16" sourceRef="Task_FecharPauta" targetRef="EndEvent_PautaFechada">
+      <bpmn:documentation id="documentation_elDt2w"/>
+    </bpmn:sequenceFlow>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_3">
+    <bpmndi:BPMNPlane bpmnElement="Process_PublicacaoPauta" id="BPMNPlane_3">
+      <bpmndi:BPMNShape bpmnElement="StartEvent_FimEpoca" id="Shape_StartEvent_FimEpoca">
+        <dc:Bounds height="36" width="36" x="162" y="162"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="27" width="89" x="136" y="205"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Task_CriarPauta" id="Shape_Task_CriarPauta">
+        <dc:Bounds height="80" width="100" x="250" y="140"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Task_GerarResultados" id="Shape_Task_GerarResultados">
+        <dc:Bounds height="80" width="100" x="400" y="140"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Task_PublicarProvisoria" id="Shape_Task_PublicarProvisoria">
+        <dc:Bounds height="80" width="100" x="550" y="140"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Event_TimerRevisao" id="Shape_Event_TimerRevisao">
+        <dc:Bounds height="36" width="36" x="702" y="162"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="27" width="89" x="676" y="205"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Task_RecolherAssinaturas" id="Shape_Task_RecolherAssinaturas">
+        <dc:Bounds height="80" width="100" x="790" y="140"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Task_PublicarDefinitiva" id="Shape_Task_PublicarDefinitiva">
+        <dc:Bounds height="80" width="100" x="940" y="140"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Task_FecharPauta" id="Shape_Task_FecharPauta">
+        <dc:Bounds height="80" width="100" x="1090" y="140"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="EndEvent_PautaFechada" id="Shape_EndEvent_PautaFechada">
+        <dc:Bounds height="36" width="36" x="1242" y="162"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="27" width="82" x="1219" y="205"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="Flow_9" id="Edge_Flow_9">
+        <di:waypoint x="198.0" y="180.0"/>
+        <di:waypoint x="250.0" y="180.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_10" id="Edge_Flow_10">
+        <di:waypoint x="350.0" y="180.0"/>
+        <di:waypoint x="400.0" y="180.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_11" id="Edge_Flow_11">
+        <di:waypoint x="500.0" y="180.0"/>
+        <di:waypoint x="550.0" y="180.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_12" id="Edge_Flow_12">
+        <di:waypoint x="650.0" y="180.0"/>
+        <di:waypoint x="702.0" y="180.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_13" id="Edge_Flow_13">
+        <di:waypoint x="738.0" y="180.0"/>
+        <di:waypoint x="790.0" y="180.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_14" id="Edge_Flow_14">
+        <di:waypoint x="890.0" y="180.0"/>
+        <di:waypoint x="940.0" y="180.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_15" id="Edge_Flow_15">
+        <di:waypoint x="1040.0" y="180.0"/>
+        <di:waypoint x="1090.0" y="180.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_16" id="Edge_Flow_16">
+        <di:waypoint x="1190.0" y="180.0"/>
+        <di:waypoint x="1242.0" y="180.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

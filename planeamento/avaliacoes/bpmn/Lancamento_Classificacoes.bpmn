@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:open-bpmn="http://open-bpmn.org/XMLSchema" id="Definitions_2" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:process id="Process_LancamentoClassificacoes" isExecutable="false" processType="Public">
+    <bpmn:documentation id="documentation_9MgO2g"/>
+    <bpmn:extensionElements>
+      <open-bpmn:auto-align/>
+    </bpmn:extensionElements>
+    <bpmn:startEvent id="StartEvent_MomentoRealizado" name="Momento de Avaliação Realizado">
+      <bpmn:documentation id="documentation_Qq1bsw"/>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_LancarNotas" name="Lançar Classificações (Estado: LANCADA)">
+      <bpmn:documentation id="documentation_oq9cTw"/>
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+      <bpmn:outgoing>Flow_6</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:intermediateThrowEvent id="Event_NotasLancadas" name="Evento: Classificações Lançadas">
+      <bpmn:documentation id="documentation_TouZ1g"/>
+      <bpmn:incoming>Flow_6</bpmn:incoming>
+      <bpmn:outgoing>Flow_7</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1"/>
+    </bpmn:intermediateThrowEvent>
+    <bpmn:task id="Task_CalcularMedia" name="Calcular/Atualizar Média do Componente">
+      <bpmn:documentation id="documentation_snCr0Q"/>
+      <bpmn:incoming>Flow_7</bpmn:incoming>
+      <bpmn:outgoing>Flow_8</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="EndEvent_MediaAtualizada" name="Média Atualizada">
+      <bpmn:documentation id="documentation_h0MenQ"/>
+      <bpmn:incoming>Flow_8</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="StartEvent_MomentoRealizado" targetRef="Task_LancarNotas">
+      <bpmn:documentation id="documentation_FCGe0g"/>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_6" sourceRef="Task_LancarNotas" targetRef="Event_NotasLancadas">
+      <bpmn:documentation id="documentation_DhfW4w"/>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_7" sourceRef="Event_NotasLancadas" targetRef="Task_CalcularMedia">
+      <bpmn:documentation id="documentation_rDjV5Q"/>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_8" sourceRef="Task_CalcularMedia" targetRef="EndEvent_MediaAtualizada">
+      <bpmn:documentation id="documentation_g5n9sg"/>
+    </bpmn:sequenceFlow>
+    <bpmn:textAnnotation id="textAnnotation_kSqyKA" textFormat="">
+      <bpmn:documentation id="documentation_7ttmOQ"/>
+      <bpmn:text id="text_WMnGfQ"><![CDATA[O docente utiliza o sistema (via POST /classificacoes) para inserir as notas dos alunos. As classificações são criadas com o estado inicial LANCADA]]></bpmn:text>
+    </bpmn:textAnnotation>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_2">
+    <bpmndi:BPMNPlane bpmnElement="Process_LancamentoClassificacoes" id="BPMNPlane_2">
+      <bpmndi:BPMNShape bpmnElement="StartEvent_MomentoRealizado" id="Shape_StartEvent_MomentoRealizado">
+        <dc:Bounds height="36" width="36" x="180" y="162"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="27" width="88" x="154" y="205"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Task_LancarNotas" id="Shape_Task_LancarNotas">
+        <dc:Bounds height="80" width="100" x="270" y="140"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Event_NotasLancadas" id="Shape_Event_NotasLancadas">
+        <dc:Bounds height="36" width="36" x="432" y="162"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="27" width="78" x="411" y="205"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Task_CalcularMedia" id="Shape_Task_CalcularMedia">
+        <dc:Bounds height="80" width="100" x="530" y="140"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="EndEvent_MediaAtualizada" id="Shape_EndEvent_MediaAtualizada">
+        <dc:Bounds height="36" width="36" x="692" y="162"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="14" width="78" x="671" y="205"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="textAnnotation_kSqyKA" id="BPMNShape_VS6YjA">
+        <dc:Bounds height="51.0" width="111.0" x="265.0" y="246.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="Flow_5" id="Edge_Flow_5">
+        <di:waypoint x="216.0" y="180.0"/>
+        <di:waypoint x="270.0" y="180.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_6" id="Edge_Flow_6">
+        <di:waypoint x="370.0" y="180.0"/>
+        <di:waypoint x="432.0" y="180.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_7" id="Edge_Flow_7">
+        <di:waypoint x="468.0" y="180.0"/>
+        <di:waypoint x="530.0" y="180.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_8" id="Edge_Flow_8">
+        <di:waypoint x="630.0" y="180.0"/>
+        <di:waypoint x="692.0" y="180.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
