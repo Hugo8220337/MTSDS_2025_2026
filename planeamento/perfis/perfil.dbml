@@ -1,0 +1,42 @@
+//--------------------------------------------------------------------
+// Tabelas para o Microserviço de Perfis
+// Responsável por gerir dados pessoais e de contacto dos utilizadores.
+//--------------------------------------------------------------------
+
+table Perfil {
+  id int [pk, increment]
+  utilizador_id varchar(36) [unique, not null, note: 'FK para o UUID do Utilizador no serviço IAM']
+  nome_completo varchar(255) [not null]
+  nome_social varchar(255) [note: 'Nome pelo qual a pessoa prefere ser tratada']
+  data_nascimento date
+  nif varchar(20) [unique, note: 'Nº de Identificação Fiscal']
+  telefone varchar(20)
+  
+  data_criacao timestamp [default: `now()`]
+  data_ultima_atualizacao timestamp [default: `now()`]
+
+  note: 'Tabela central com os dados de perfil de uma pessoa.'
+}
+
+table DocumentoIdentificacao {
+  id int [pk, increment]
+  perfil_id int [ref: > Perfil.id, not null]
+  tipo_documento_id int [ref: > TipoDocumento.id, not null]
+  numero varchar(50) [not null]
+  data_validade date
+  
+  indexes {
+    (perfil_id, tipo_documento_id) [unique]
+  }
+  
+  note: 'Armazena os documentos de identificação de um perfil.'
+}
+
+table TipoDocumento {
+  id int [pk, increment]
+  designacao varchar(100) [not null, note: 'ex: Cartão Cidadão, Passaporte, BI']
+  codigo varchar(10) [unique, not null, note: 'código interno do tipo de documento']
+  pais_emissor varchar(100) [note: 'país que emite o documento (ex: Portugal, Brasil)']
+  
+  note: 'Tabela de tipos de documentos de identificação'
+}

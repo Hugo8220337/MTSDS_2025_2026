@@ -5,32 +5,17 @@
 
 table Utilizador {
     id int [pk, increment]
-    uuid int [unique, not null, note: 'Número de aluno atribuido pela escola (ex: 8220337)']
-    nome_completo varchar(255) [not null]
-    email varchar(255) [unique, not null, note: 'usado para login antes de obter o email institucional, para quem faz pela DGES este campo é definido depois do institucional']
-    email_institucional varchar(255) [unique, note: 'ex: 8220125@estg.ipp.pt']
+    uuid varchar(36) [unique, not null, note: 'Identificador único universal para comunicação entre serviços']
+    email varchar(255) [unique, not null, note: 'Email principal usado para login e recuperação de conta']
+    email_institucional varchar(255) [unique, note: 'ex: 8220125@estg.ipp.pt, atribuído após matrícula']
     password_hash varchar(255) [not null]
-    nif varchar(20) [unique, note: 'Nº de Identificação Fiscal']
-    tipo_documento_id int [ref: > TipoDocumento.id, note: 'ex: Cartão Cidadão, Passaporte']
-    numero_documento_id varchar(50) [note: 'número do documento de identificação']
-    data_nascimento date
-    telefone varchar(20)
     ativo boolean [default: true, not null]
     email_verificado_em timestamp [note: 'Timestamp de quando o email foi verificado']
 
     data_criacao timestamp [default: `now()`]
     data_ultima_atualizacao timestamp [default: `now()`]
 
-    note: 'Tabela central de utilizadores do sistema'
-}
-
-table TipoDocumento {
-  id int [pk, increment]
-  designacao varchar(100) [not null, note: 'ex: Cartão Cidadão, Passaporte, BI']
-  codigo varchar(10) [unique, not null, note: 'código interno do tipo de documento']
-  pais_origem varchar(100) [note: 'país que emite o documento (ex: Portugal, Brasil)']
-  
-  note: 'Tabela de tipos de documentos de identificação'
+    note: 'Tabela de credenciais e identidade digital do utilizador.'
 }
 
 table Papel {

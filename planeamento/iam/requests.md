@@ -76,9 +76,9 @@ Authorization: Bearer <token>
   "id": 1,
   "nome_completo": "Ana Silva",
   "email": "ana.silva@email.com",
-  "nif": "285948372",
-  "data_nascimento": "1995-05-10",
-  "telefone": "+351912345678"
+  "papeis": [
+      { "nome": "CANDIDATO", "escola_id": null }
+  ]
 }
 ```
 
