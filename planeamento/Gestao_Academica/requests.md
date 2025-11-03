@@ -229,7 +229,7 @@ Content-Type: application/json
 **Resposta:** `201 Created`
 ```json
 {
-  "docente_numero": "D9876",
+  "docente_numero": "D8200326",
   "unidade_curricular_codigo": "POO",
   "ano_letivo": "2025/2026"
 }

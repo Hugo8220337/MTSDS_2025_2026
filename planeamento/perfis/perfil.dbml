@@ -40,3 +40,11 @@ table TipoDocumento {
   
   note: 'Tabela de tipos de documentos de identificação'
 }
+
+table Escola_Microservico_Externo as Escola {
+  id int [pk, increment]
+  nome varchar(255) [not null, note: 'ex: Escola Superior de Tecnologia e Gestão']
+  sigla varchar(20) [unique, not null]
+  
+  note: 'Tabela de escolas externas ao microserviço de perfis, para contexto.'
+}
