@@ -1,119 +1,119 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:open-bpmn="http://open-bpmn.org/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
-  <bpmn:process id="Process_ConfiguracaoAvaliacao" isExecutable="false" processType="Public">
-    <bpmn:documentation id="documentation_daqKSg"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:open-bpmn="http://open-bpmn.org/XMLSchema" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.40.1">
+  <bpmn:process id="Process_ConfiguracaoAvaliacao" processType="Public" isExecutable="false">
+    <bpmn:documentation id="documentation_daqKSg" />
     <bpmn:extensionElements>
-      <open-bpmn:auto-align/>
+      <open-bpmn:auto-align />
     </bpmn:extensionElements>
     <bpmn:startEvent id="StartEvent_InicioProcesso" name="Início do Período de Configuração">
-      <bpmn:documentation id="documentation_sUfCjQ"/>
+      <bpmn:documentation id="documentation_sUfCjQ" />
       <bpmn:outgoing>Flow_1</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:task id="Task_ElaborarFormula" name="Elaborar Fórmula de Avaliação (Rascunho)">
-      <bpmn:documentation id="documentation_RXJFmw"/>
-      <bpmn:incoming>Flow_1</bpmn:incoming>
-      <bpmn:incoming>Flow_Rejeitado</bpmn:incoming>
-      <bpmn:outgoing>Flow_2</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:task id="Task_SubmeterAprovacao" name="Submeter para Aprovação">
-      <bpmn:documentation id="documentation_NqMKqg"/>
-      <bpmn:incoming>Flow_2</bpmn:incoming>
-      <bpmn:outgoing>Flow_3</bpmn:outgoing>
-    </bpmn:task>
     <bpmn:exclusiveGateway id="Gateway_Aprovacao" name="Avaliação Pedagógica">
-      <bpmn:documentation id="documentation_WI8p0Q"/>
+      <bpmn:documentation id="documentation_WI8p0Q" />
       <bpmn:incoming>Flow_3</bpmn:incoming>
       <bpmn:outgoing>Flow_Aprovado</bpmn:outgoing>
       <bpmn:outgoing>Flow_Rejeitado</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:task id="Task_AprovarFormula" name="Aprovar e Publicar Fórmula (Aprovada)">
-      <bpmn:documentation id="documentation_0cj0og"/>
-      <bpmn:incoming>Flow_Aprovado</bpmn:incoming>
-      <bpmn:outgoing>Flow_4</bpmn:outgoing>
-    </bpmn:task>
     <bpmn:endEvent id="EndEvent_ProcessoConcluido" name="Fórmula de Avaliação Ativa">
-      <bpmn:documentation id="documentation_5Uuvpw"/>
+      <bpmn:documentation id="documentation_5Uuvpw" />
       <bpmn:incoming>Flow_4</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_InicioProcesso" targetRef="Task_ElaborarFormula">
-      <bpmn:documentation id="documentation_gR0Zjw"/>
+      <bpmn:documentation id="documentation_gR0Zjw" />
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_ElaborarFormula" targetRef="Task_SubmeterAprovacao">
-      <bpmn:documentation id="documentation_8D7X3A"/>
+      <bpmn:documentation id="documentation_8D7X3A" />
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_3" sourceRef="Task_SubmeterAprovacao" targetRef="Gateway_Aprovacao">
-      <bpmn:documentation id="documentation_2mOedw"/>
+      <bpmn:documentation id="documentation_2mOedw" />
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_Aprovado" name="Aprovado" sourceRef="Gateway_Aprovacao" targetRef="Task_AprovarFormula">
-      <bpmn:documentation id="documentation_CGw2zw"/>
+      <bpmn:documentation id="documentation_CGw2zw" />
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_Rejeitado" name="Rejeitado" sourceRef="Gateway_Aprovacao" targetRef="Task_ElaborarFormula">
-      <bpmn:documentation id="documentation_a8pEcQ"/>
+      <bpmn:documentation id="documentation_a8pEcQ" />
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_4" sourceRef="Task_AprovarFormula" targetRef="EndEvent_ProcessoConcluido">
-      <bpmn:documentation id="documentation_NKKUDQ"/>
+      <bpmn:documentation id="documentation_NKKUDQ" />
     </bpmn:sequenceFlow>
+    <bpmn:userTask id="Task_ElaborarFormula" name="Elaborar Fórmula de Avaliação (Rascunho)">
+      <bpmn:documentation />
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:incoming>Flow_Rejeitado</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_SubmeterAprovacao" name="Submeter para Aprovação">
+      <bpmn:documentation />
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_AprovarFormula" name="Aprovar e Publicar Fórmula (Aprovada)">
+      <bpmn:documentation />
+      <bpmn:incoming>Flow_Aprovado</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:userTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane bpmnElement="Process_ConfiguracaoAvaliacao" id="BPMNPlane_1">
-      <bpmndi:BPMNShape bpmnElement="StartEvent_InicioProcesso" id="_BPMNShape_StartEvent_2">
-        <dc:Bounds height="36" width="36" x="179" y="159"/>
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_ConfiguracaoAvaliacao">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_InicioProcesso">
+        <dc:Bounds x="179" y="159" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="40" width="80" x="157" y="202"/>
+          <dc:Bounds x="157" y="202" width="80" height="40" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="Task_ElaborarFormula" id="Activity_0y8h6f8_di">
-        <dc:Bounds height="80" width="100" x="270" y="137"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="Task_SubmeterAprovacao" id="Activity_1i0g1g1_di">
-        <dc:Bounds height="80" width="100" x="430" y="137"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="Gateway_Aprovacao" id="Gateway_0o1b7g3_di" isMarkerVisible="true">
-        <dc:Bounds height="50" width="50" x="585" y="152"/>
+      <bpmndi:BPMNShape id="Gateway_0o1b7g3_di" bpmnElement="Gateway_Aprovacao" isMarkerVisible="true">
+        <dc:Bounds x="585" y="152" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="27" width="84" x="568" y="114.5"/>
+          <dc:Bounds x="568" y="114.5" width="84" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="Task_AprovarFormula" id="Activity_1v0s8s3_di">
-        <dc:Bounds height="80" width="100" x="690" y="137"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="EndEvent_ProcessoConcluido" id="Event_0x0j3af_di">
-        <dc:Bounds height="36" width="36" x="852" y="159"/>
+      <bpmndi:BPMNShape id="Event_0x0j3af_di" bpmnElement="EndEvent_ProcessoConcluido">
+        <dc:Bounds x="852" y="159" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="27" width="83" x="829" y="202"/>
+          <dc:Bounds x="829" y="202" width="83" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge bpmnElement="Flow_1" id="Flow_1h2f3d4_di">
-        <di:waypoint x="215.0" y="177.0"/>
-        <di:waypoint x="270.0" y="177.0"/>
+      <bpmndi:BPMNShape id="Activity_1kprv31_di" bpmnElement="Task_ElaborarFormula">
+        <dc:Bounds x="270" y="137" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1v0p3we_di" bpmnElement="Task_SubmeterAprovacao">
+        <dc:Bounds x="430" y="137" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1s179mc_di" bpmnElement="Task_AprovarFormula">
+        <dc:Bounds x="690" y="137" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1h2f3d4_di" bpmnElement="Flow_1">
+        <di:waypoint x="215" y="177" />
+        <di:waypoint x="270" y="177" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="Flow_2" id="Flow_0c2k2e3_di">
-        <di:waypoint x="370.0" y="177.0"/>
-        <di:waypoint x="430.0" y="177.0"/>
+      <bpmndi:BPMNEdge id="Flow_0c2k2e3_di" bpmnElement="Flow_2">
+        <di:waypoint x="370" y="177" />
+        <di:waypoint x="430" y="177" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="Flow_3" id="Flow_1p9v2c1_di">
-        <di:waypoint x="530.0" y="177.0"/>
-        <di:waypoint x="585.0" y="177.0"/>
+      <bpmndi:BPMNEdge id="Flow_1p9v2c1_di" bpmnElement="Flow_3">
+        <di:waypoint x="530" y="177" />
+        <di:waypoint x="585" y="177" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="Flow_Aprovado" id="Flow_0f0b2y2_di">
-        <di:waypoint x="635.0" y="177.0"/>
-        <di:waypoint x="690.0" y="177.0"/>
+      <bpmndi:BPMNEdge id="Flow_0f0b2y2_di" bpmnElement="Flow_Aprovado">
+        <di:waypoint x="635" y="177" />
+        <di:waypoint x="690" y="177" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="14" width="49" x="640" y="159"/>
+          <dc:Bounds x="641" y="159" width="48" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="Flow_Rejeitado" id="Flow_0g3s4h5_di">
-        <di:waypoint x="610.0" y="202.0"/>
-        <di:waypoint x="610.0" y="280.0"/>
-        <di:waypoint x="320.0" y="280.0"/>
-        <di:waypoint x="320.0" y="217.0"/>
+      <bpmndi:BPMNEdge id="Flow_0g3s4h5_di" bpmnElement="Flow_Rejeitado">
+        <di:waypoint x="610" y="202" />
+        <di:waypoint x="610" y="280" />
+        <di:waypoint x="320" y="280" />
+        <di:waypoint x="320" y="217" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="14" width="50" x="450" y="263"/>
+          <dc:Bounds x="452" y="263" width="47" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="Flow_4" id="Flow_1m2n0c0_di">
-        <di:waypoint x="790.0" y="177.0"/>
-        <di:waypoint x="852.0" y="177.0"/>
+      <bpmndi:BPMNEdge id="Flow_1m2n0c0_di" bpmnElement="Flow_4">
+        <di:waypoint x="790" y="177" />
+        <di:waypoint x="852" y="177" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

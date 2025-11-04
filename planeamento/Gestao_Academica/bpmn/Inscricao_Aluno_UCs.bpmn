@@ -1,272 +1,468 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:open-bpmn="http://open-bpmn.org/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
-  <bpmn:collaboration id="Collaboration_1">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:open-bpmn="http://open-bpmn.org/XMLSchema" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:collaboration id="Collaboration_1f9v52n">
     <bpmn:participant id="Participant_Aluno" name="Aluno" processRef="Process_Aluno"/>
     <bpmn:participant id="Participant_Sistema" name="Sistema de Gestão Académica" processRef="Process_Sistema">
-      <bpmn:documentation id="documentation_FLzQCg"/>
+      <bpmn:documentation id="documentation_p0P06g"/>
     </bpmn:participant>
-    <bpmn:messageFlow id="MessageFlow_1" sourceRef="Task_SubmeterInscricao" targetRef="Task_ValidarInscricao">
-      <bpmn:documentation id="documentation_VhPXAw"/>
+    <bpmn:messageFlow id="MessageFlow_1" name="Solicita UCs" sourceRef="Task_SolicitarUCs" targetRef="StartEvent_Sistema">
+      <bpmn:documentation id="documentation_Vmwguw"/>
     </bpmn:messageFlow>
-    <bpmn:messageFlow id="MessageFlow_2" sourceRef="Task_ApresentarUCsDisponiveis" targetRef="Task_SelecionarUCs">
-      <bpmn:documentation id="documentation_N9u4hA"/>
+    <bpmn:messageFlow id="MessageFlow_2" name="UCs Disponíveis" sourceRef="Task_ApresentarUCs" targetRef="Task_ReceberUCs">
+      <bpmn:documentation id="documentation_RBGaKw"/>
     </bpmn:messageFlow>
-    <bpmn:messageFlow id="MessageFlow_3" sourceRef="Task_ConfirmarInscricao" targetRef="Task_ReceberConfirmacao">
-      <bpmn:documentation id="documentation_aidNDw"/>
+    <bpmn:messageFlow id="MessageFlow_3" name="Boletim de Inscrição" sourceRef="Task_SubmeterInscricao" targetRef="IntermediateCatchEvent_Boletim">
+      <bpmn:documentation id="documentation_FCD1lQ"/>
     </bpmn:messageFlow>
-    <bpmn:messageFlow id="MessageFlow_4" sourceRef="Task_NotificarErro" targetRef="Task_ReceberErro">
-      <bpmn:documentation id="documentation_ZHZlnQ"/>
+    <bpmn:messageFlow id="MessageFlow_4" name="Confirmação" sourceRef="Task_EnviarConfirmacao" targetRef="IntermediateCatchEvent_Confirmacao">
+      <bpmn:documentation id="documentation_luCzlw"/>
     </bpmn:messageFlow>
-    <bpmn:messageFlow id="MessageFlow_5" sourceRef="Task_IniciarInscricao" targetRef="Task_ApresentarOpcaoInscricao">
-      <bpmn:documentation id="documentation_BFql9Q"/>
+    <bpmn:messageFlow id="MessageFlow_5" name="Notificação de Erro" sourceRef="Task_NotificarErro" targetRef="IntermediateCatchEvent_Erro">
+      <bpmn:documentation id="documentation_ekk9OA"/>
     </bpmn:messageFlow>
   </bpmn:collaboration>
   <bpmn:process id="Process_Aluno" isExecutable="false" processType="Public">
-    <bpmn:documentation id="documentation_dJViXA"/>
+    <bpmn:documentation id="documentation_K50cbw"/>
     <bpmn:extensionElements>
       <open-bpmn:auto-align/>
     </bpmn:extensionElements>
-    <bpmn:startEvent id="StartEvent_Aluno" name="Período de Inscrições Aberto">
-      <bpmn:documentation id="documentation_HdmccQ"/>
+    <bpmn:startEvent id="StartEvent_Aluno" name="Início do Período de Inscrições">
+      <bpmn:documentation id="documentation_oV5aQQ"/>
       <bpmn:outgoing>Flow_1</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:task id="Task_IniciarInscricao" name="Acede à plataforma e inicia o processo de inscrição">
-      <bpmn:documentation id="documentation_tBKSfw"/>
+    <bpmn:task id="Task_SolicitarUCs" name="Acede à plataforma e solicita as UCs disponíveis">
+      <bpmn:documentation id="documentation_R1lz0Q"/>
       <bpmn:incoming>Flow_1</bpmn:incoming>
       <bpmn:outgoing>Flow_2</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:task id="Task_SelecionarUCs" name="Seleciona as Unidades Curriculares a inscrever">
-      <bpmn:documentation id="documentation_5XWlTw"/>
+    <bpmn:task id="Task_ReceberUCs" name="Recebe e visualiza a lista de UCs">
+      <bpmn:documentation id="documentation_hktbeg"/>
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_SubmeterInscricao" name="Seleciona as UCs e submete o boletim de inscrição">
+      <bpmn:documentation id="documentation_vloQlg"/>
       <bpmn:incoming>Flow_3</bpmn:incoming>
       <bpmn:incoming>Flow_11</bpmn:incoming>
       <bpmn:outgoing>Flow_4</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:task id="Task_SubmeterInscricao" name="Submete o boletim de inscrição">
-      <bpmn:documentation id="documentation_LMm0Yw"/>
+    <bpmn:eventBasedGateway id="Gateway_ResultadoInscricao">
+      <bpmn:documentation id="documentation_g5N5Ag"/>
       <bpmn:incoming>Flow_4</bpmn:incoming>
       <bpmn:outgoing>Flow_5</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:task id="Task_ReceberConfirmacao" name="Recebe a confirmação de inscrição">
-      <bpmn:documentation id="documentation_i4G2gw"/>
-      <bpmn:incoming>Flow_6</bpmn:incoming>
+      <bpmn:outgoing>Flow_6</bpmn:outgoing>
+    </bpmn:eventBasedGateway>
+    <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_Confirmacao" name="Confirmação Recebida">
+      <bpmn:documentation id="documentation_TXVn7g"/>
+      <bpmn:incoming>Flow_5</bpmn:incoming>
       <bpmn:outgoing>Flow_7</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:endEvent id="EndEvent_Aluno" name="Inscrição Concluída">
-      <bpmn:documentation id="documentation_xUvOUg"/>
-      <bpmn:incoming>Flow_7</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:task id="Task_ReceberErro" name="Recebe notificação de erro na inscrição">
-      <bpmn:documentation id="documentation_fSOoaw"/>
-      <bpmn:incoming>Flow_10</bpmn:incoming>
+      <bpmn:messageEventDefinition/>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_Erro" name="Erro Recebido">
+      <bpmn:documentation id="documentation_mxX6ww"/>
+      <bpmn:incoming>Flow_6</bpmn:incoming>
+      <bpmn:outgoing>Flow_8</bpmn:outgoing>
+      <bpmn:messageEventDefinition/>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:task id="Task_CorrigirInscricao" name="Analisa o erro e corrige a seleção de UCs">
+      <bpmn:documentation id="documentation_BCfulw"/>
+      <bpmn:incoming>Flow_8</bpmn:incoming>
       <bpmn:outgoing>Flow_11</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_Aluno" targetRef="Task_IniciarInscricao">
-      <bpmn:documentation id="documentation_3DExvg"/>
+    <bpmn:endEvent id="EndEvent_Aluno" name="Inscrição Concluída">
+      <bpmn:documentation id="documentation_mfMN5w"/>
+      <bpmn:incoming>Flow_7</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_Aluno" targetRef="Task_SolicitarUCs">
+      <bpmn:documentation id="documentation_ta6pLw"/>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_IniciarInscricao" targetRef="Task_SelecionarUCs">
-      <bpmn:documentation id="documentation_sPh5ZQ"/>
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_SolicitarUCs" targetRef="Task_ReceberUCs">
+      <bpmn:documentation id="documentation_qQuG5A"/>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_3" name="UCs Disponíveis" sourceRef="Task_ApresentarUCsDisponiveis" targetRef="Task_SelecionarUCs"/>
-    <bpmn:sequenceFlow id="Flow_4" sourceRef="Task_SelecionarUCs" targetRef="Task_SubmeterInscricao">
-      <bpmn:documentation id="documentation_0XTxSw"/>
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="Task_ReceberUCs" targetRef="Task_SubmeterInscricao">
+      <bpmn:documentation id="documentation_Resgow"/>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_5" sourceRef="Task_SubmeterInscricao" targetRef="Task_ValidarInscricao"/>
-    <bpmn:sequenceFlow id="Flow_6" name="Confirmação" sourceRef="Task_ConfirmarInscricao" targetRef="Task_ReceberConfirmacao"/>
-    <bpmn:sequenceFlow id="Flow_7" sourceRef="Task_ReceberConfirmacao" targetRef="EndEvent_Aluno">
-      <bpmn:documentation id="documentation_ZuvWZA"/>
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="Task_SubmeterInscricao" targetRef="Gateway_ResultadoInscricao">
+      <bpmn:documentation id="documentation_6Ldfpw"/>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_10" name="Erro" sourceRef="Task_NotificarErro" targetRef="Task_ReceberErro"/>
-    <bpmn:sequenceFlow id="Flow_11" sourceRef="Task_ReceberErro" targetRef="Task_SelecionarUCs">
-      <bpmn:documentation id="documentation_y54QJg"/>
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="Gateway_ResultadoInscricao" targetRef="IntermediateCatchEvent_Confirmacao">
+      <bpmn:documentation id="documentation_vD6Srg"/>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_6" sourceRef="Gateway_ResultadoInscricao" targetRef="IntermediateCatchEvent_Erro">
+      <bpmn:documentation id="documentation_m2bRaQ"/>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_7" sourceRef="IntermediateCatchEvent_Confirmacao" targetRef="EndEvent_Aluno">
+      <bpmn:documentation id="documentation_uz0UeQ"/>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_8" sourceRef="IntermediateCatchEvent_Erro" targetRef="Task_CorrigirInscricao">
+      <bpmn:documentation id="documentation_NyQ4MA"/>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_11" sourceRef="Task_CorrigirInscricao" targetRef="Task_SubmeterInscricao">
+      <bpmn:documentation id="documentation_ICOhJQ"/>
     </bpmn:sequenceFlow>
   </bpmn:process>
-  <bpmn:process id="Process_Sistema" processType="Private">
-    <bpmn:task id="Task_ApresentarOpcaoInscricao" name="Apresenta a opção de inscrição ao aluno">
-      <bpmn:documentation id="documentation_lMswoA"/>
-      <bpmn:outgoing>Flow_8</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:task id="Task_ApresentarUCsDisponiveis" name="Consulta o plano de estudos e devolve as UCs disponíveis">
-      <bpmn:documentation id="documentation_WZAewQ"/>
-      <bpmn:incoming>Flow_8</bpmn:incoming>
-      <bpmn:outgoing>Flow_3</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:task id="Task_ValidarInscricao" name="Valida as regras da inscrição (ex: ECTS, pré-requisitos)">
-      <bpmn:documentation id="documentation_mFEBJw"/>
-      <bpmn:incoming>Flow_5</bpmn:incoming>
+  <bpmn:process id="Process_Sistema" isExecutable="false" processType="Private">
+    <bpmn:startEvent id="StartEvent_Sistema" name="Recebe Pedido de UCs">
+      <bpmn:documentation id="documentation_hEVIVg"/>
       <bpmn:outgoing>Flow_9</bpmn:outgoing>
+      <bpmn:messageEventDefinition/>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_ApresentarUCs" name="Consulta o plano de estudos e devolve as UCs disponíveis">
+      <bpmn:documentation id="documentation_R8Tv3g"/>
+      <bpmn:incoming>Flow_9</bpmn:incoming>
+      <bpmn:outgoing>Flow_10</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_Boletim" name="Recebe Boletim de Inscrição">
+      <bpmn:documentation id="documentation_H3SLgw"/>
+      <bpmn:incoming>Flow_10</bpmn:incoming>
+      <bpmn:outgoing>Flow_12</bpmn:outgoing>
+      <bpmn:messageEventDefinition/>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:task id="Task_ValidarInscricao" name="Valida as regras da inscrição (ECTS, pré-requisitos, etc.)">
+      <bpmn:documentation id="documentation_91OPfQ"/>
+      <bpmn:incoming>Flow_12</bpmn:incoming>
+      <bpmn:outgoing>Flow_13</bpmn:outgoing>
     </bpmn:task>
     <bpmn:exclusiveGateway id="Gateway_InscricaoValida" name="Inscrição Válida?">
-      <bpmn:documentation id="documentation_R4p0Iw"/>
-      <bpmn:incoming>Flow_9</bpmn:incoming>
+      <bpmn:documentation id="documentation_3Pyd4g"/>
+      <bpmn:incoming>Flow_13</bpmn:incoming>
       <bpmn:outgoing>Flow_Valida</bpmn:outgoing>
       <bpmn:outgoing>Flow_Invalida</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:task id="Task_RegistarInscricao" name="Regista a inscrição na base de dados">
-      <bpmn:documentation id="documentation_rYKWjg"/>
+      <bpmn:documentation id="documentation_Agl2jw"/>
       <bpmn:incoming>Flow_Valida</bpmn:incoming>
-      <bpmn:outgoing>Flow_12</bpmn:outgoing>
+      <bpmn:outgoing>Flow_14</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:task id="Task_ConfirmarInscricao" name="Envia confirmação de sucesso">
-      <bpmn:documentation id="documentation_mrXvxw"/>
-      <bpmn:incoming>Flow_12</bpmn:incoming>
-      <bpmn:outgoing>Flow_6</bpmn:outgoing>
+    <bpmn:task id="Task_EnviarConfirmacao" name="Envia confirmação de sucesso">
+      <bpmn:documentation id="documentation_Ju0qqA"/>
+      <bpmn:incoming>Flow_14</bpmn:incoming>
+      <bpmn:outgoing>Flow_15</bpmn:outgoing>
     </bpmn:task>
     <bpmn:task id="Task_NotificarErro" name="Envia notificação com o motivo do erro">
-      <bpmn:documentation id="documentation_TkFggg"/>
+      <bpmn:documentation id="documentation_cgu22g"/>
       <bpmn:incoming>Flow_Invalida</bpmn:incoming>
-      <bpmn:outgoing>Flow_10</bpmn:outgoing>
+      <bpmn:outgoing>Flow_16</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:sequenceFlow id="Flow_8" sourceRef="Task_ApresentarOpcaoInscricao" targetRef="Task_ApresentarUCsDisponiveis">
-      <bpmn:documentation id="documentation_sBhqbA"/>
+    <bpmn:endEvent id="EndEvent_Sistema_Sucesso" name="Processo de Inscrição Finalizado">
+      <bpmn:documentation id="documentation_7M87LQ"/>
+      <bpmn:incoming>Flow_15</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="EndEvent_Sistema_Erro" name="Processo de Inscrição Finalizado">
+      <bpmn:documentation id="documentation_TyqJCw"/>
+      <bpmn:incoming>Flow_16</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_9" sourceRef="StartEvent_Sistema" targetRef="Task_ApresentarUCs">
+      <bpmn:documentation id="documentation_53yHAQ"/>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_9" sourceRef="Task_ValidarInscricao" targetRef="Gateway_InscricaoValida">
-      <bpmn:documentation id="documentation_nfKXfg"/>
+    <bpmn:sequenceFlow id="Flow_10" sourceRef="Task_ApresentarUCs" targetRef="IntermediateCatchEvent_Boletim">
+      <bpmn:documentation id="documentation_3wMkmQ"/>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_12" sourceRef="IntermediateCatchEvent_Boletim" targetRef="Task_ValidarInscricao">
+      <bpmn:documentation id="documentation_arhL2g"/>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_13" sourceRef="Task_ValidarInscricao" targetRef="Gateway_InscricaoValida">
+      <bpmn:documentation id="documentation_8YClRA"/>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_Valida" name="Sim" sourceRef="Gateway_InscricaoValida" targetRef="Task_RegistarInscricao">
-      <bpmn:documentation id="documentation_mclLYQ"/>
+      <bpmn:documentation id="documentation_91YmSg"/>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_Invalida" name="Não" sourceRef="Gateway_InscricaoValida" targetRef="Task_NotificarErro">
-      <bpmn:documentation id="documentation_EcOSOQ"/>
+      <bpmn:documentation id="documentation_wEEL0Q"/>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_12" sourceRef="Task_RegistarInscricao" targetRef="Task_ConfirmarInscricao">
-      <bpmn:documentation id="documentation_zDxDLw"/>
+    <bpmn:sequenceFlow id="Flow_14" sourceRef="Task_RegistarInscricao" targetRef="Task_EnviarConfirmacao">
+      <bpmn:documentation id="documentation_90NpWQ"/>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_15" sourceRef="Task_EnviarConfirmacao" targetRef="EndEvent_Sistema_Sucesso">
+      <bpmn:documentation id="documentation_KHw6fw"/>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_16" sourceRef="Task_NotificarErro" targetRef="EndEvent_Sistema_Erro">
+      <bpmn:documentation id="documentation_05zUxw"/>
     </bpmn:sequenceFlow>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane bpmnElement="Collaboration_1" id="BPMNPlane_1">
+    <bpmndi:BPMNPlane bpmnElement="Collaboration_1f9v52n" id="BPMNPlane_1">
       <bpmndi:BPMNShape bpmnElement="Participant_Aluno" id="Participant_Aluno_di" isHorizontal="true">
-        <dc:Bounds height="250" width="1100" x="160" y="80"/>
+        <dc:Bounds height="300" width="1290" x="160" y="80"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="StartEvent_Aluno" id="StartEvent_Aluno_di">
-        <dc:Bounds height="36" width="36" x="212" y="182"/>
+        <dc:Bounds height="36" width="36" x="212" y="162"/>
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="27" width="77" x="192" y="225"/>
+          <dc:Bounds height="27" width="74" x="195.0" y="200.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="Task_IniciarInscricao" id="Task_IniciarInscricao_di">
-        <dc:Bounds height="80" width="100" x="300" y="160"/>
+      <bpmndi:BPMNShape bpmnElement="Task_SolicitarUCs" id="Task_SolicitarUCs_di">
+        <dc:Bounds height="80" width="100" x="300" y="140"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="Task_SelecionarUCs" id="Task_SelecionarUCs_di">
-        <dc:Bounds height="80" width="100" x="450" y="160"/>
+      <bpmndi:BPMNShape bpmnElement="Task_ReceberUCs" id="Task_ReceberUCs_di">
+        <dc:Bounds height="80" width="100" x="450" y="140"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="Task_SubmeterInscricao" id="Task_SubmeterInscricao_di">
-        <dc:Bounds height="80" width="100" x="600" y="160"/>
+        <dc:Bounds height="80" width="100" x="600" y="140"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="Task_ReceberConfirmacao" id="Task_ReceberConfirmacao_di">
-        <dc:Bounds height="80" width="100" x="980" y="160"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="EndEvent_Aluno" id="EndEvent_Aluno_di">
-        <dc:Bounds height="36" width="36" x="1132" y="182"/>
-        <bpmndi:BPMNLabel>
-          <dc:Bounds height="14" width="84" x="1108" y="225"/>
+      <bpmndi:BPMNShape bpmnElement="Gateway_ResultadoInscricao" id="Gateway_ResultadoInscricao_di">
+        <dc:Bounds height="50" width="50" x="755" y="155"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_BUvWTA">
+          <dc:Bounds height="20.0" width="100.0" x="730.0" y="208.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="Task_ReceberErro" id="Task_ReceberErro_di">
-        <dc:Bounds height="80" width="100" x="800" y="240"/>
+      <bpmndi:BPMNShape bpmnElement="IntermediateCatchEvent_Confirmacao" id="IntermediateCatchEvent_Confirmacao_di">
+        <dc:Bounds height="36" width="36" x="862" y="162"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="27" width="74" x="843" y="205"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="IntermediateCatchEvent_Erro" id="IntermediateCatchEvent_Erro_di">
+        <dc:Bounds height="36" width="36" x="862" y="262"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="14" width="62" x="849" y="305"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Task_CorrigirInscricao" id="Task_CorrigirInscricao_di">
+        <dc:Bounds height="80" width="100" x="950" y="240"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="EndEvent_Aluno" id="EndEvent_Aluno_di">
+        <dc:Bounds height="36" width="36" x="1062" y="162"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="14" width="78" x="1041" y="205"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="Flow_1" id="Flow_1_di">
-        <di:waypoint x="408.0" y="280.0"/>
-        <di:waypoint x="460.0" y="280.0"/>
+        <di:waypoint x="408.0" y="260.0"/>
+        <di:waypoint x="568.0" y="260.0"/>
+        <di:waypoint x="568.0" y="340.0"/>
+        <di:waypoint x="728.0" y="340.0"/>
+        <di:waypoint x="728.0" y="420.0"/>
+        <di:waypoint x="780.0" y="420.0"/>
+        <di:waypoint x="780.0" y="340.0"/>
+        <di:waypoint x="720.0" y="340.0"/>
+        <di:waypoint x="720.0" y="260.0"/>
+        <di:waypoint x="560.0" y="260.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="Flow_2" id="Flow_2_di">
-        <di:waypoint x="560.0" y="280.0"/>
-        <di:waypoint x="610.0" y="280.0"/>
+        <di:waypoint x="560.0" y="260.0"/>
+        <di:waypoint x="720.0" y="260.0"/>
+        <di:waypoint x="720.0" y="340.0"/>
+        <di:waypoint x="880.0" y="340.0"/>
+        <di:waypoint x="880.0" y="420.0"/>
+        <di:waypoint x="930.0" y="420.0"/>
+        <di:waypoint x="930.0" y="340.0"/>
+        <di:waypoint x="870.0" y="340.0"/>
+        <di:waypoint x="870.0" y="260.0"/>
+        <di:waypoint x="710.0" y="260.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_3" id="Flow_3_di">
+        <di:waypoint x="710.0" y="260.0"/>
+        <di:waypoint x="870.0" y="260.0"/>
+        <di:waypoint x="870.0" y="340.0"/>
+        <di:waypoint x="1030.0" y="340.0"/>
+        <di:waypoint x="1030.0" y="420.0"/>
+        <di:waypoint x="1080.0" y="420.0"/>
+        <di:waypoint x="1080.0" y="340.0"/>
+        <di:waypoint x="1020.0" y="340.0"/>
+        <di:waypoint x="1020.0" y="260.0"/>
+        <di:waypoint x="860.0" y="260.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="Flow_4" id="Flow_4_di">
-        <di:waypoint x="710.0" y="280.0"/>
-        <di:waypoint x="760.0" y="280.0"/>
+        <di:waypoint x="860.0" y="260.0"/>
+        <di:waypoint x="1020.0" y="260.0"/>
+        <di:waypoint x="1020.0" y="340.0"/>
+        <di:waypoint x="1180.0" y="340.0"/>
+        <di:waypoint x="1180.0" y="420.0"/>
+        <di:waypoint x="1235.0" y="420.0"/>
+        <di:waypoint x="1235.0" y="340.0"/>
+        <di:waypoint x="1125.0" y="340.0"/>
+        <di:waypoint x="1125.0" y="260.0"/>
+        <di:waypoint x="965.0" y="260.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_5" id="Flow_5_di">
+        <di:waypoint x="965.0" y="260.0"/>
+        <di:waypoint x="1125.0" y="260.0"/>
+        <di:waypoint x="1125.0" y="340.0"/>
+        <di:waypoint x="1285.0" y="340.0"/>
+        <di:waypoint x="1285.0" y="420.0"/>
+        <di:waypoint x="1342.0" y="420.0"/>
+        <di:waypoint x="1342.0" y="340.0"/>
+        <di:waypoint x="1218.0" y="340.0"/>
+        <di:waypoint x="1218.0" y="260.0"/>
+        <di:waypoint x="1058.0" y="260.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_6" id="Flow_6_di">
+        <di:waypoint x="940.0" y="285.0"/>
+        <di:waypoint x="940.0" y="365.0"/>
+        <di:waypoint x="1100.0" y="365.0"/>
+        <di:waypoint x="1100.0" y="445.0"/>
+        <di:waypoint x="1260.0" y="445.0"/>
+        <di:waypoint x="1260.0" y="520.0"/>
+        <di:waypoint x="1342.0" y="520.0"/>
+        <di:waypoint x="1342.0" y="440.0"/>
+        <di:waypoint x="1218.0" y="440.0"/>
+        <di:waypoint x="1218.0" y="360.0"/>
+        <di:waypoint x="1058.0" y="360.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="Flow_7" id="Flow_7_di">
-        <di:waypoint x="1240.0" y="280.0"/>
-        <di:waypoint x="1292.0" y="280.0"/>
+        <di:waypoint x="1058.0" y="260.0"/>
+        <di:waypoint x="1218.0" y="260.0"/>
+        <di:waypoint x="1218.0" y="340.0"/>
+        <di:waypoint x="1378.0" y="340.0"/>
+        <di:waypoint x="1378.0" y="420.0"/>
+        <di:waypoint x="1542.0" y="420.0"/>
+        <di:waypoint x="1542.0" y="340.0"/>
+        <di:waypoint x="1418.0" y="340.0"/>
+        <di:waypoint x="1418.0" y="260.0"/>
+        <di:waypoint x="1258.0" y="260.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_8" id="Flow_8_di">
+        <di:waypoint x="1058.0" y="360.0"/>
+        <di:waypoint x="1218.0" y="360.0"/>
+        <di:waypoint x="1218.0" y="440.0"/>
+        <di:waypoint x="1378.0" y="440.0"/>
+        <di:waypoint x="1378.0" y="520.0"/>
+        <di:waypoint x="1430.0" y="520.0"/>
+        <di:waypoint x="1430.0" y="440.0"/>
+        <di:waypoint x="1370.0" y="440.0"/>
+        <di:waypoint x="1370.0" y="360.0"/>
+        <di:waypoint x="1210.0" y="360.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="Flow_11" id="Flow_11_di">
-        <di:waypoint x="960.0" y="360.0"/>
-        <di:waypoint x="660.0" y="360.0"/>
-        <di:waypoint x="660.0" y="320.0"/>
+        <di:waypoint x="1210.0" y="360.0"/>
+        <di:waypoint x="1370.0" y="360.0"/>
+        <di:waypoint x="1370.0" y="480.0"/>
+        <di:waypoint x="1480.0" y="480.0"/>
+        <di:waypoint x="1480.0" y="340.0"/>
+        <di:waypoint x="1130.0" y="340.0"/>
+        <di:waypoint x="1130.0" y="380.0"/>
+        <di:waypoint x="1020.0" y="380.0"/>
+        <di:waypoint x="1020.0" y="260.0"/>
+        <di:waypoint x="860.0" y="260.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape bpmnElement="Participant_Sistema" id="Participant_Sistema_di" isHorizontal="true">
-        <dc:Bounds height="250" width="1100" x="160" y="390"/>
+        <dc:Bounds height="300" width="1290" x="160" y="410"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="Task_ApresentarOpcaoInscricao" id="Task_ApresentarOpcaoInscricao_di">
-        <dc:Bounds height="80" width="100" x="300" y="470"/>
+      <bpmndi:BPMNShape bpmnElement="StartEvent_Sistema" id="StartEvent_Sistema_di">
+        <dc:Bounds height="36" width="36" x="332" y="492"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="27" width="85" x="308" y="535"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="Task_ApresentarUCsDisponiveis" id="Task_ApresentarUCsDisponiveis_di">
+      <bpmndi:BPMNShape bpmnElement="Task_ApresentarUCs" id="Task_ApresentarUCs_di">
         <dc:Bounds height="80" width="100" x="450" y="470"/>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="IntermediateCatchEvent_Boletim" id="IntermediateCatchEvent_Boletim_di">
+        <dc:Bounds height="36" width="36" x="632" y="492"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="27" width="89" x="606" y="535"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="Task_ValidarInscricao" id="Task_ValidarInscricao_di">
-        <dc:Bounds height="80" width="100" x="600" y="470"/>
+        <dc:Bounds height="80" width="100" x="730" y="470"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="Gateway_InscricaoValida" id="Gateway_InscricaoValida_di" isMarkerVisible="true">
-        <dc:Bounds height="50" width="50" x="725" y="485"/>
+        <dc:Bounds height="50" width="50" x="885" y="485"/>
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="14" width="84" x="708" y="458"/>
+          <dc:Bounds height="14" width="84" x="868" y="458"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="Task_RegistarInscricao" id="Task_RegistarInscricao_di">
-        <dc:Bounds height="80" width="100" x="830" y="470"/>
+        <dc:Bounds height="80" width="100" x="990" y="470"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="Task_ConfirmarInscricao" id="Task_ConfirmarInscricao_di">
-        <dc:Bounds height="80" width="100" x="980" y="470"/>
+      <bpmndi:BPMNShape bpmnElement="Task_EnviarConfirmacao" id="Task_EnviarConfirmacao_di">
+        <dc:Bounds height="80" width="100" x="1120" y="470"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="Task_NotificarErro" id="Task_NotificarErro_di">
-        <dc:Bounds height="80" width="100" x="800" y="560"/>
+        <dc:Bounds height="80" width="100" x="990" y="590"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge bpmnElement="Flow_8" id="Flow_8_di">
-        <di:waypoint x="400.0" y="510.0"/>
+      <bpmndi:BPMNShape bpmnElement="EndEvent_Sistema_Sucesso" id="EndEvent_Sistema_Sucesso_di">
+        <dc:Bounds height="36" width="36" x="1272" y="492"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="27" width="78" x="1251" y="535"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="EndEvent_Sistema_Erro" id="EndEvent_Sistema_Erro_di">
+        <dc:Bounds height="36" width="36" x="1152" y="612"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="27" width="78" x="1131" y="655"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="Flow_9" id="Flow_9_di">
+        <di:waypoint x="368.0" y="510.0"/>
         <di:waypoint x="450.0" y="510.0"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="Flow_9" id="Flow_9_di">
-        <di:waypoint x="700.0" y="510.0"/>
-        <di:waypoint x="725.0" y="510.0"/>
+      <bpmndi:BPMNEdge bpmnElement="Flow_10" id="Flow_10_di">
+        <di:waypoint x="550.0" y="510.0"/>
+        <di:waypoint x="632.0" y="510.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_12" id="Flow_12_di">
+        <di:waypoint x="668.0" y="510.0"/>
+        <di:waypoint x="730.0" y="510.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_13" id="Flow_13_di">
+        <di:waypoint x="830.0" y="510.0"/>
+        <di:waypoint x="885.0" y="510.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="Flow_Valida" id="Flow_Valida_di">
-        <di:waypoint x="775.0" y="510.0"/>
-        <di:waypoint x="830.0" y="510.0"/>
+        <di:waypoint x="935.0" y="510.0"/>
+        <di:waypoint x="990.0" y="510.0"/>
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="14" width="18" x="795" y="492"/>
+          <dc:Bounds height="14" width="18" x="954" y="492"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="Flow_Invalida" id="Flow_Invalida_di">
-        <di:waypoint x="750.0" y="535.0"/>
-        <di:waypoint x="750.0" y="600.0"/>
-        <di:waypoint x="800.0" y="600.0"/>
+        <di:waypoint x="910.0" y="535.0"/>
+        <di:waypoint x="910.0" y="630.0"/>
+        <di:waypoint x="990.0" y="630.0"/>
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="14" width="22" x="758" y="565"/>
+          <dc:Bounds height="14" width="22" x="919" y="580"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="Flow_12" id="Flow_12_di">
-        <di:waypoint x="930.0" y="510.0"/>
-        <di:waypoint x="980.0" y="510.0"/>
+      <bpmndi:BPMNEdge bpmnElement="Flow_14" id="Flow_14_di">
+        <di:waypoint x="1090.0" y="510.0"/>
+        <di:waypoint x="1120.0" y="510.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_15" id="Flow_15_di">
+        <di:waypoint x="1220.0" y="510.0"/>
+        <di:waypoint x="1272.0" y="510.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_16" id="Flow_16_di">
+        <di:waypoint x="1090.0" y="630.0"/>
+        <di:waypoint x="1152.0" y="630.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="MessageFlow_1" id="MessageFlow_1_di">
-        <di:waypoint x="650.0" y="240.0"/>
-        <di:waypoint x="650.0" y="470.0"/>
+        <di:waypoint x="350.0" y="220.0"/>
+        <di:waypoint x="350.0" y="492.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="14" width="59" x="355" y="350"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="MessageFlow_2" id="MessageFlow_2_di">
         <di:waypoint x="500.0" y="470.0"/>
-        <di:waypoint x="500.0" y="240.0"/>
+        <di:waypoint x="500.0" y="220.0"/>
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="14" width="68" x="496" y="342"/>
+          <dc:Bounds height="14" width="79" x="505" y="339"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="MessageFlow_3" id="MessageFlow_3_di">
-        <di:waypoint x="1030.0" y="470.0"/>
-        <di:waypoint x="1030.0" y="240.0"/>
+        <di:waypoint x="650.0" y="220.0"/>
+        <di:waypoint x="650.0" y="492.0"/>
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="14" width="64" x="1033" y="342"/>
+          <dc:Bounds height="27" width="79" x="655" y="350"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="MessageFlow_4" id="MessageFlow_4_di">
-        <di:waypoint x="850.0" y="560.0"/>
-        <di:waypoint x="850.0" y="320.0"/>
+        <di:waypoint x="1170.0" y="470.0"/>
+        <di:waypoint x="1170.0" y="180.0"/>
+        <di:waypoint x="898.0" y="180.0"/>
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="14" width="22" x="859" y="437"/>
+          <dc:Bounds height="14" width="64" x="1175" y="319"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="MessageFlow_5" id="MessageFlow_5_di">
-        <di:waypoint x="350.0" y="240.0"/>
-        <di:waypoint x="350.0" y="470.0"/>
+        <di:waypoint x="1040.0" y="590.0"/>
+        <di:waypoint x="1040.0" y="280.0"/>
+        <di:waypoint x="898.0" y="280.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="27" width="89" x="1045" y="429"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

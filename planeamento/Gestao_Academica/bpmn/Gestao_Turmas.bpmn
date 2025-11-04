@@ -1,84 +1,84 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:open-bpmn="http://open-bpmn.org/XMLSchema" exporter="Camunda Modeler" exporterVersion="5.40.1" id="Definitions_GestaoTurmas" targetNamespace="http://bpmn.io/schema/bpmn">
-  <bpmn:process id="Process_GestaoTurmas" isExecutable="false" processType="Public">
-    <bpmn:documentation id="documentation_MXS3qQ"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:open-bpmn="http://open-bpmn.org/XMLSchema" id="Definitions_GestaoTurmas" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.40.1">
+  <bpmn:process id="Process_GestaoTurmas" processType="Public" isExecutable="false">
+    <bpmn:documentation id="documentation_MXS3qQ" />
     <bpmn:extensionElements>
-      <open-bpmn:auto-align/>
+      <open-bpmn:auto-align />
     </bpmn:extensionElements>
     <bpmn:startEvent id="StartEvent_Planeamento" name="Planeamento do Ano Letivo">
-      <bpmn:documentation id="documentation_OoPp4g"/>
+      <bpmn:documentation id="documentation_OoPp4g" />
       <bpmn:outgoing>Flow_1</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:userTask id="Task_CriarTurma" name="Criar Turma para UC">
-      <bpmn:documentation id="documentation_qanHNg"/>
+      <bpmn:documentation id="documentation_qanHNg" />
       <bpmn:incoming>Flow_1</bpmn:incoming>
       <bpmn:outgoing>Flow_2</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:userTask id="Task_AssociarDocente" name="Associar Docente à Lecionação">
-      <bpmn:documentation id="documentation_wRNhuA"/>
+      <bpmn:documentation id="documentation_wRNhuA" />
       <bpmn:incoming>Flow_2</bpmn:incoming>
       <bpmn:outgoing>Flow_3</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:userTask id="Task_InscreverAlunos" name="Inscrever Alunos na Turma">
-      <bpmn:documentation id="documentation_NS74eA"/>
+      <bpmn:documentation id="documentation_NS74eA" />
       <bpmn:incoming>Flow_3</bpmn:incoming>
       <bpmn:outgoing>Flow_4</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:endEvent id="EndEvent_TurmaPronta" name="Turma Pronta para Início das Aulas">
-      <bpmn:documentation id="documentation_8ec9cw"/>
+      <bpmn:documentation id="documentation_8ec9cw" />
       <bpmn:incoming>Flow_4</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_Planeamento" targetRef="Task_CriarTurma">
-      <bpmn:documentation id="documentation_KdNbbQ"/>
+      <bpmn:documentation id="documentation_KdNbbQ" />
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_CriarTurma" targetRef="Task_AssociarDocente">
-      <bpmn:documentation id="documentation_AnP3tA"/>
+      <bpmn:documentation id="documentation_AnP3tA" />
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_3" sourceRef="Task_AssociarDocente" targetRef="Task_InscreverAlunos">
-      <bpmn:documentation id="documentation_wnZRGw"/>
+      <bpmn:documentation id="documentation_wnZRGw" />
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_4" sourceRef="Task_InscreverAlunos" targetRef="EndEvent_TurmaPronta">
-      <bpmn:documentation id="documentation_3vJw8A"/>
+      <bpmn:documentation id="documentation_3vJw8A" />
     </bpmn:sequenceFlow>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane bpmnElement="Process_GestaoTurmas" id="BPMNPlane_1">
-      <bpmndi:BPMNShape bpmnElement="StartEvent_Planeamento" id="StartEvent_Planeamento_di">
-        <dc:Bounds height="36" width="36" x="179" y="159"/>
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_GestaoTurmas">
+      <bpmndi:BPMNShape id="StartEvent_Planeamento_di" bpmnElement="StartEvent_Planeamento">
+        <dc:Bounds x="179" y="99" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="27" width="88" x="154" y="202"/>
+          <dc:Bounds x="158" y="142" width="81" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="Task_CriarTurma" id="Task_CriarTurma_di">
-        <dc:Bounds height="80" width="100" x="270" y="137"/>
+      <bpmndi:BPMNShape id="Task_CriarTurma_di" bpmnElement="Task_CriarTurma">
+        <dc:Bounds x="270" y="77" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="Task_AssociarDocente" id="Task_AssociarDocente_di">
-        <dc:Bounds height="80" width="100" x="430" y="137"/>
+      <bpmndi:BPMNShape id="Task_AssociarDocente_di" bpmnElement="Task_AssociarDocente">
+        <dc:Bounds x="410" y="77" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="Task_InscreverAlunos" id="Task_InscreverAlunos_di">
-        <dc:Bounds height="80" width="100" x="590" y="137"/>
+      <bpmndi:BPMNShape id="Task_InscreverAlunos_di" bpmnElement="Task_InscreverAlunos">
+        <dc:Bounds x="560" y="77" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="EndEvent_TurmaPronta" id="EndEvent_TurmaPronta_di">
-        <dc:Bounds height="36" width="36" x="752" y="159"/>
+      <bpmndi:BPMNShape id="EndEvent_TurmaPronta_di" bpmnElement="EndEvent_TurmaPronta">
+        <dc:Bounds x="722" y="99" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="27" width="87" x="727" y="202"/>
+          <dc:Bounds x="704" y="142" width="73" height="40" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge bpmnElement="Flow_1" id="Flow_1_di">
-        <di:waypoint x="215.0" y="177.0"/>
-        <di:waypoint x="270.0" y="177.0"/>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="270" y="117" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="Flow_2" id="Flow_2_di">
-        <di:waypoint x="370.0" y="177.0"/>
-        <di:waypoint x="430.0" y="177.0"/>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
+        <di:waypoint x="370" y="117" />
+        <di:waypoint x="410" y="117" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="Flow_3" id="Flow_3_di">
-        <di:waypoint x="530.0" y="177.0"/>
-        <di:waypoint x="590.0" y="177.0"/>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3">
+        <di:waypoint x="510" y="117" />
+        <di:waypoint x="560" y="117" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="Flow_4" id="Flow_4_di">
-        <di:waypoint x="690.0" y="177.0"/>
-        <di:waypoint x="752.0" y="177.0"/>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4">
+        <di:waypoint x="660" y="117" />
+        <di:waypoint x="722" y="117" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

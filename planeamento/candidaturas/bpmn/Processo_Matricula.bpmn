@@ -1,367 +1,406 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:open-bpmn="http://open-bpmn.org/XMLSchema" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" exporter="Camunda Modeler" exporterVersion="5.40.1" id="Definitions_Matricula" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.8.0" targetNamespace="http://bpmn.io/schema/bpmn">
-  <bpmn:process id="Process_Matricula" isExecutable="true" processType="Public">
-    <bpmn:documentation id="documentation_HvmVYA"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:open-bpmn="http://open-bpmn.org/XMLSchema" id="Definitions_Matricula" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.40.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.8.0">
+  <bpmn:process id="Process_Matricula" processType="Public" isExecutable="true">
+    <bpmn:documentation id="documentation_HvmVYA" />
     <bpmn:extensionElements>
-      <open-bpmn:auto-align/>
+      <open-bpmn:auto-align />
     </bpmn:extensionElements>
     <bpmn:startEvent id="StartEvent_AlunoColocado" name="Aluno Colocado (Local ou DGES)">
-      <bpmn:documentation id="documentation_WVXS2A"/>
+      <bpmn:documentation id="documentation_WVXS2A" />
       <bpmn:outgoing>Flow_1</bpmn:outgoing>
-      <bpmn:messageEventDefinition id="MessageEventDefinition_Start" messageRef="Message_AlunoColocado"/>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_Start" messageRef="Message_AlunoColocado" />
     </bpmn:startEvent>
     <bpmn:serviceTask id="Task_CriarProcesso" name="Criar Processo de Matrícula (Estado: CRIADA)">
-      <bpmn:documentation id="documentation_CtTBcg"/>
+      <bpmn:documentation id="documentation_CtTBcg" />
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="create-enrollment"/>
+        <zeebe:taskDefinition type="create-enrollment" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1</bpmn:incoming>
       <bpmn:outgoing>Flow_2</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sendTask id="Task_NotificarAlunoInicio" name="Notificar Aluno para Iniciar Matrícula">
-      <bpmn:documentation id="documentation_bCSplg"/>
+      <bpmn:documentation id="documentation_bCSplg" />
       <bpmn:incoming>Flow_2</bpmn:incoming>
       <bpmn:outgoing>Flow_3</bpmn:outgoing>
     </bpmn:sendTask>
     <bpmn:parallelGateway id="Gateway_InicioAcoes">
-      <bpmn:documentation id="documentation_PnZ6wA"/>
+      <bpmn:documentation id="documentation_PnZ6wA" />
       <bpmn:incoming>Flow_3</bpmn:incoming>
       <bpmn:outgoing>Flow_Documentos</bpmn:outgoing>
       <bpmn:outgoing>Flow_Pagamento</bpmn:outgoing>
     </bpmn:parallelGateway>
     <bpmn:subProcess id="SubProcess_Documentos" name="Gestão de Documentos">
-      <bpmn:documentation id="documentation_g27xxg"/>
+      <bpmn:documentation id="documentation_g27xxg" />
       <bpmn:incoming>Flow_Documentos</bpmn:incoming>
       <bpmn:outgoing>Flow_DocsOK</bpmn:outgoing>
       <bpmn:startEvent id="SubStart_Docs">
-        <bpmn:documentation id="documentation_T0vy0g"/>
+        <bpmn:documentation id="documentation_T0vy0g" />
         <bpmn:outgoing>Flow_Sub1</bpmn:outgoing>
       </bpmn:startEvent>
       <bpmn:userTask id="Task_SubmeterDocs" name="Aluno Submete Documentos">
-        <bpmn:documentation id="documentation_JoMtzw"/>
+        <bpmn:documentation id="documentation_JoMtzw" />
         <bpmn:incoming>Flow_Sub1</bpmn:incoming>
         <bpmn:incoming>Flow_DocsInvalidos</bpmn:incoming>
+        <bpmn:incoming>Flow_0td27rs</bpmn:incoming>
         <bpmn:outgoing>Flow_Sub2</bpmn:outgoing>
       </bpmn:userTask>
       <bpmn:userTask id="Task_ValidarDocs" name="Serviços Académicos Validam Documentos">
-        <bpmn:documentation id="documentation_LAV1HA"/>
+        <bpmn:documentation id="documentation_LAV1HA" />
         <bpmn:incoming>Flow_Sub2</bpmn:incoming>
         <bpmn:outgoing>Flow_Sub3</bpmn:outgoing>
       </bpmn:userTask>
       <bpmn:exclusiveGateway id="Gateway_DocsValidos" name="Documentos Válidos?">
-        <bpmn:documentation id="documentation_lri0Gw"/>
+        <bpmn:documentation id="documentation_lri0Gw" />
         <bpmn:incoming>Flow_Sub3</bpmn:incoming>
         <bpmn:outgoing>Flow_DocsValidos</bpmn:outgoing>
         <bpmn:outgoing>Flow_DocsInvalidos</bpmn:outgoing>
       </bpmn:exclusiveGateway>
-      <bpmn:sendTask id="Task_NotificarDocsInvalidos" name="Notificar Aluno (Documentos Inválidos)">
-        <bpmn:documentation id="documentation_qyWs7g"/>
-        <bpmn:incoming>Flow_DocsInvalidos</bpmn:incoming>
-        <bpmn:outgoing>Flow_Sub1</bpmn:outgoing>
-      </bpmn:sendTask>
       <bpmn:endEvent id="SubEnd_Docs">
-        <bpmn:documentation id="documentation_I96I1g"/>
+        <bpmn:documentation id="documentation_I96I1g" />
         <bpmn:incoming>Flow_DocsValidos</bpmn:incoming>
       </bpmn:endEvent>
       <bpmn:sequenceFlow id="Flow_Sub1" sourceRef="SubStart_Docs" targetRef="Task_SubmeterDocs">
-        <bpmn:documentation id="documentation_dGFFIA"/>
+        <bpmn:documentation id="documentation_dGFFIA" />
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_Sub2" sourceRef="Task_SubmeterDocs" targetRef="Task_ValidarDocs">
-        <bpmn:documentation id="documentation_EDjmpw"/>
+        <bpmn:documentation id="documentation_EDjmpw" />
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_Sub3" sourceRef="Task_ValidarDocs" targetRef="Gateway_DocsValidos">
-        <bpmn:documentation id="documentation_ZBfKCg"/>
+        <bpmn:documentation id="documentation_ZBfKCg" />
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_DocsValidos" name="Sim" sourceRef="Gateway_DocsValidos" targetRef="SubEnd_Docs">
-        <bpmn:documentation id="documentation_4EzDpg"/>
+        <bpmn:documentation id="documentation_4EzDpg" />
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_DocsInvalidos" name="Não" sourceRef="Gateway_DocsValidos" targetRef="Task_NotificarDocsInvalidos">
-        <bpmn:documentation id="documentation_QDwF0Q"/>
+        <bpmn:documentation id="documentation_QDwF0Q" />
       </bpmn:sequenceFlow>
+      <bpmn:sendTask id="Task_NotificarDocsInvalidos" name="Notificar Aluno (Documentos Inválidos)">
+        <bpmn:documentation id="documentation_qyWs7g" />
+        <bpmn:incoming>Flow_DocsInvalidos</bpmn:incoming>
+        <bpmn:outgoing>Flow_Sub1</bpmn:outgoing>
+        <bpmn:outgoing>Flow_0td27rs</bpmn:outgoing>
+      </bpmn:sendTask>
+      <bpmn:sequenceFlow id="Flow_0td27rs" sourceRef="Task_NotificarDocsInvalidos" targetRef="Task_SubmeterDocs" />
+      <bpmn:boundaryEvent id="Event_05hg9tq" name="Espera até final do prazo" attachedToRef="Task_SubmeterDocs">
+        <bpmn:outgoing>Flow_1e7c342</bpmn:outgoing>
+        <bpmn:timerEventDefinition id="TimerEventDefinition_1lqz98p" />
+      </bpmn:boundaryEvent>
+      <bpmn:task id="Activity_1i9yrit" name="Colocar Candidatura como Invalidada">
+        <bpmn:incoming>Flow_1e7c342</bpmn:incoming>
+        <bpmn:outgoing>Flow_0tmjba5</bpmn:outgoing>
+      </bpmn:task>
+      <bpmn:sequenceFlow id="Flow_1e7c342" sourceRef="Event_05hg9tq" targetRef="Activity_1i9yrit" />
+      <bpmn:endEvent id="Event_15jndrv">
+        <bpmn:incoming>Flow_0tmjba5</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_0tmjba5" sourceRef="Activity_1i9yrit" targetRef="Event_15jndrv" />
     </bpmn:subProcess>
     <bpmn:subProcess id="SubProcess_Pagamento" name="Gestão de Pagamento">
-      <bpmn:documentation id="documentation_qzboTw"/>
+      <bpmn:documentation id="documentation_qzboTw" />
       <bpmn:incoming>Flow_Pagamento</bpmn:incoming>
       <bpmn:outgoing>Flow_PagamentoOK</bpmn:outgoing>
       <bpmn:startEvent id="SubStart_Pagamento">
-        <bpmn:documentation id="documentation_KxIZnQ"/>
+        <bpmn:documentation id="documentation_KxIZnQ" />
         <bpmn:outgoing>Flow_Sub4</bpmn:outgoing>
       </bpmn:startEvent>
       <bpmn:serviceTask id="Task_GerarReferencia" name="Gerar Referência de Pagamento">
-        <bpmn:documentation id="documentation_4Tdn5Q"/>
+        <bpmn:documentation id="documentation_4Tdn5Q" />
         <bpmn:extensionElements>
-          <zeebe:taskDefinition type="generate-payment-reference"/>
+          <zeebe:taskDefinition type="generate-payment-reference" />
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_Sub4</bpmn:incoming>
         <bpmn:outgoing>Flow_Sub5</bpmn:outgoing>
       </bpmn:serviceTask>
       <bpmn:intermediateCatchEvent id="Event_PagamentoRecebido" name="Confirmação de Pagamento Recebida">
-        <bpmn:documentation id="documentation_A8foGA"/>
+        <bpmn:documentation id="documentation_A8foGA" />
         <bpmn:incoming>Flow_Sub5</bpmn:incoming>
         <bpmn:outgoing>Flow_Sub6</bpmn:outgoing>
-        <bpmn:messageEventDefinition id="MessageEventDefinition_Pagamento" messageRef="Message_PagamentoConfirmado"/>
+        <bpmn:messageEventDefinition id="MessageEventDefinition_Pagamento" messageRef="Message_PagamentoConfirmado" />
       </bpmn:intermediateCatchEvent>
       <bpmn:endEvent id="SubEnd_Pagamento">
-        <bpmn:documentation id="documentation_CVQKOw"/>
+        <bpmn:documentation id="documentation_CVQKOw" />
         <bpmn:incoming>Flow_Sub6</bpmn:incoming>
       </bpmn:endEvent>
       <bpmn:sequenceFlow id="Flow_Sub4" sourceRef="SubStart_Pagamento" targetRef="Task_GerarReferencia">
-        <bpmn:documentation id="documentation_IHsuRg"/>
+        <bpmn:documentation id="documentation_IHsuRg" />
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_Sub5" sourceRef="Task_GerarReferencia" targetRef="Event_PagamentoRecebido">
-        <bpmn:documentation id="documentation_eimpqA"/>
+        <bpmn:documentation id="documentation_eimpqA" />
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_Sub6" sourceRef="Event_PagamentoRecebido" targetRef="SubEnd_Pagamento">
-        <bpmn:documentation id="documentation_ZtnHog"/>
+        <bpmn:documentation id="documentation_ZtnHog" />
       </bpmn:sequenceFlow>
     </bpmn:subProcess>
     <bpmn:parallelGateway id="Gateway_FimAcoes">
-      <bpmn:documentation id="documentation_SH9ZEQ"/>
+      <bpmn:documentation id="documentation_SH9ZEQ" />
       <bpmn:incoming>Flow_DocsOK</bpmn:incoming>
       <bpmn:incoming>Flow_PagamentoOK</bpmn:incoming>
       <bpmn:outgoing>Flow_4</bpmn:outgoing>
     </bpmn:parallelGateway>
     <bpmn:serviceTask id="Task_FinalizarMatricula" name="Finalizar Matrícula (Estado: MATRICULADO)">
-      <bpmn:documentation id="documentation_hVxUAw"/>
+      <bpmn:documentation id="documentation_hVxUAw" />
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="finalize-enrollment"/>
+        <zeebe:taskDefinition type="finalize-enrollment" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_4</bpmn:incoming>
       <bpmn:outgoing>Flow_5</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sendTask id="Task_NotificarAlunoFim" name="Notificar Aluno (Matrícula Concluída)">
-      <bpmn:documentation id="documentation_PRCN4Q"/>
+      <bpmn:documentation id="documentation_PRCN4Q" />
       <bpmn:incoming>Flow_5</bpmn:incoming>
       <bpmn:outgoing>Flow_6</bpmn:outgoing>
     </bpmn:sendTask>
     <bpmn:endEvent id="EndEvent_Matriculado" name="Aluno Matriculado">
-      <bpmn:documentation id="documentation_VbwP5A"/>
+      <bpmn:documentation id="documentation_VbwP5A" />
       <bpmn:incoming>Flow_6</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_AlunoColocado" targetRef="Task_CriarProcesso">
-      <bpmn:documentation id="documentation_HpbqLg"/>
+      <bpmn:documentation id="documentation_HpbqLg" />
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_CriarProcesso" targetRef="Task_NotificarAlunoInicio">
-      <bpmn:documentation id="documentation_vj9Lyg"/>
+      <bpmn:documentation id="documentation_vj9Lyg" />
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_3" sourceRef="Task_NotificarAlunoInicio" targetRef="Gateway_InicioAcoes">
-      <bpmn:documentation id="documentation_Allipw"/>
+      <bpmn:documentation id="documentation_Allipw" />
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_Documentos" sourceRef="Gateway_InicioAcoes" targetRef="SubProcess_Documentos">
-      <bpmn:documentation id="documentation_YdiMYA"/>
+      <bpmn:documentation id="documentation_YdiMYA" />
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_Pagamento" sourceRef="Gateway_InicioAcoes" targetRef="SubProcess_Pagamento">
-      <bpmn:documentation id="documentation_0PHevQ"/>
+      <bpmn:documentation id="documentation_0PHevQ" />
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_DocsOK" sourceRef="SubProcess_Documentos" targetRef="Gateway_FimAcoes">
-      <bpmn:documentation id="documentation_VaXxYw"/>
+      <bpmn:documentation id="documentation_VaXxYw" />
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_PagamentoOK" sourceRef="SubProcess_Pagamento" targetRef="Gateway_FimAcoes">
-      <bpmn:documentation id="documentation_yClCgQ"/>
+      <bpmn:documentation id="documentation_yClCgQ" />
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_4" sourceRef="Gateway_FimAcoes" targetRef="Task_FinalizarMatricula">
-      <bpmn:documentation id="documentation_VgU9sw"/>
+      <bpmn:documentation id="documentation_VgU9sw" />
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_5" sourceRef="Task_FinalizarMatricula" targetRef="Task_NotificarAlunoFim">
-      <bpmn:documentation id="documentation_z172Iw"/>
+      <bpmn:documentation id="documentation_z172Iw" />
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_6" sourceRef="Task_NotificarAlunoFim" targetRef="EndEvent_Matriculado">
-      <bpmn:documentation id="documentation_pKuyjg"/>
+      <bpmn:documentation id="documentation_pKuyjg" />
     </bpmn:sequenceFlow>
+    <bpmn:textAnnotation id="TextAnnotation_1ikgmo2">
+      <bpmn:text>Fora de Escopo</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0a6q0c1" associationDirection="None" sourceRef="SubProcess_Pagamento" targetRef="TextAnnotation_1ikgmo2" />
   </bpmn:process>
   <bpmn:message id="Message_AlunoColocado" name="AlunoColocado">
-    <bpmn:documentation id="documentation_k8m1uw"/>
+    <bpmn:documentation id="documentation_k8m1uw" />
   </bpmn:message>
   <bpmn:message id="Message_PagamentoConfirmado" name="PagamentoConfirmado">
-    <bpmn:documentation id="documentation_ktiCKA"/>
+    <bpmn:documentation id="documentation_ktiCKA" />
   </bpmn:message>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane bpmnElement="Process_Matricula" id="BPMNPlane_1">
-      <bpmndi:BPMNShape bpmnElement="StartEvent_AlunoColocado" id="StartEvent_AlunoColocado_di">
-        <dc:Bounds height="36" width="36" x="179" y="159"/>
-        <bpmndi:BPMNLabel>
-          <dc:Bounds height="27" width="88" x="154" y="202"/>
-        </bpmndi:BPMNLabel>
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_Matricula">
+      <bpmndi:BPMNShape id="Task_CriarProcesso_di" bpmnElement="Task_CriarProcesso">
+        <dc:Bounds x="270" y="397" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="Task_CriarProcesso" id="Task_CriarProcesso_di">
-        <dc:Bounds height="80" width="100" x="270" y="137"/>
+      <bpmndi:BPMNShape id="Task_NotificarAlunoInicio_di" bpmnElement="Task_NotificarAlunoInicio">
+        <dc:Bounds x="410" y="397" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="Task_NotificarAlunoInicio" id="Task_NotificarAlunoInicio_di">
-        <dc:Bounds height="80" width="100" x="430" y="137"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="Gateway_InicioAcoes" id="Gateway_InicioAcoes_di">
-        <dc:Bounds height="50" width="50" x="585" y="152"/>
+      <bpmndi:BPMNShape id="Gateway_InicioAcoes_di" bpmnElement="Gateway_InicioAcoes">
+        <dc:Bounds x="535" y="412" width="50" height="50" />
         <bpmndi:BPMNLabel id="BPMNLabel_3MZQOA">
-          <dc:Bounds height="20.0" width="100.0" x="560.0" y="205.0"/>
+          <dc:Bounds x="560" y="205" width="100" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="SubProcess_Documentos" id="SubProcess_Documentos_di" isExpanded="true">
-        <dc:Bounds height="150" width="550" x="690" y="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="SubStart_Docs" id="SubStart_Docs_di">
-        <dc:Bounds height="36" width="36" x="710" y="132"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_0mnz8g">
-          <dc:Bounds height="20.0" width="100.0" x="678.0" y="171.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="Task_SubmeterDocs" id="Task_SubmeterDocs_di">
-        <dc:Bounds height="80" width="100" x="780" y="110"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="Task_ValidarDocs" id="Task_ValidarDocs_di">
-        <dc:Bounds height="80" width="100" x="920" y="110"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="Gateway_DocsValidos" id="Gateway_DocsValidos_di" isMarkerVisible="true">
-        <dc:Bounds height="50" width="50" x="1065" y="125"/>
-        <bpmndi:BPMNLabel>
-          <dc:Bounds height="14" width="80" x="1050" y="95"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="Task_NotificarDocsInvalidos" id="Task_NotificarDocsInvalidos_di">
-        <dc:Bounds height="80.0" width="100.0" x="922.0" y="-10.0"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="SubEnd_Docs" id="SubEnd_Docs_di">
-        <dc:Bounds height="36" width="36" x="1182" y="132"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_1jh3oQ">
-          <dc:Bounds height="20.0" width="100.0" x="1150.0" y="171.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="Message_AlunoColocado" id="BPMNShape_X2n0Jg">
-        <dc:Bounds height="20.0" width="30.0" x="0.0" y="0.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_leSLnA">
-          <dc:Bounds height="20.0" width="100.0" x="-35.0" y="25.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="Message_PagamentoConfirmado" id="BPMNShape_nxGXOQ">
-        <dc:Bounds height="20.0" width="30.0" x="0.0" y="0.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_B02Uqw">
-          <dc:Bounds height="20.0" width="100.0" x="-35.0" y="25.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge bpmnElement="Flow_Sub1" id="Flow_Sub1_di">
-        <di:waypoint x="746.0" y="150.0"/>
-        <di:waypoint x="780.0" y="150.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="Flow_Sub2" id="Flow_Sub2_di">
-        <di:waypoint x="880.0" y="150.0"/>
-        <di:waypoint x="920.0" y="150.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="Flow_Sub3" id="Flow_Sub3_di">
-        <di:waypoint x="1020.0" y="150.0"/>
-        <di:waypoint x="1065.0" y="150.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="Flow_DocsValidos" id="Flow_DocsValidos_di">
-        <di:waypoint x="1115.0" y="150.0"/>
-        <di:waypoint x="1182.0" y="150.0"/>
-        <bpmndi:BPMNLabel>
-          <dc:Bounds height="14" width="20" x="1140" y="132"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="Flow_DocsInvalidos" id="Flow_DocsInvalidos_di">
-        <di:waypoint x="1090.0" y="125.0"/>
-        <di:waypoint x="1090.0" y="30.0"/>
-        <di:waypoint x="1022.0" y="30.0"/>
-        <bpmndi:BPMNLabel>
-          <dc:Bounds height="14" width="22" x="1095" y="90"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape bpmnElement="SubProcess_Pagamento" id="SubProcess_Pagamento_di" isExpanded="true">
-        <dc:Bounds height="150" width="450" x="690" y="250"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="SubStart_Pagamento" id="SubStart_Pagamento_di">
-        <dc:Bounds height="36" width="36" x="710" y="302"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_BWPiwQ">
-          <dc:Bounds height="20.0" width="100.0" x="678.0" y="341.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="Task_GerarReferencia" id="Task_GerarReferencia_di">
-        <dc:Bounds height="80" width="100" x="780" y="280"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="Event_PagamentoRecebido" id="Event_PagamentoRecebido_di">
-        <dc:Bounds height="36" width="36" x="922" y="302"/>
-        <bpmndi:BPMNLabel>
-          <dc:Bounds height="27" width="87" x="897" y="345"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="SubEnd_Pagamento" id="SubEnd_Pagamento_di">
-        <dc:Bounds height="36" width="36" x="1022" y="302"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_XsCgwQ">
-          <dc:Bounds height="20.0" width="100.0" x="990.0" y="341.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge bpmnElement="Flow_Sub4" id="Flow_Sub4_di">
-        <di:waypoint x="746.0" y="320.0"/>
-        <di:waypoint x="780.0" y="320.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="Flow_Sub5" id="Flow_Sub5_di">
-        <di:waypoint x="880.0" y="320.0"/>
-        <di:waypoint x="922.0" y="320.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="Flow_Sub6" id="Flow_Sub6_di">
-        <di:waypoint x="958.0" y="320.0"/>
-        <di:waypoint x="1022.0" y="320.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape bpmnElement="Gateway_FimAcoes" id="Gateway_FimAcoes_di">
-        <dc:Bounds height="50" width="50" x="1305" y="202"/>
+      <bpmndi:BPMNShape id="Gateway_FimAcoes_di" bpmnElement="Gateway_FimAcoes">
+        <dc:Bounds x="1095" y="575" width="50" height="50" />
         <bpmndi:BPMNLabel id="BPMNLabel_HE1RbA">
-          <dc:Bounds height="20.0" width="100.0" x="1280.0" y="255.0"/>
+          <dc:Bounds x="1280" y="255" width="100" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="Task_FinalizarMatricula" id="Task_FinalizarMatricula_di">
-        <dc:Bounds height="80" width="100" x="1410" y="187"/>
+      <bpmndi:BPMNShape id="Task_FinalizarMatricula_di" bpmnElement="Task_FinalizarMatricula">
+        <dc:Bounds x="1180" y="560" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="Task_NotificarAlunoFim" id="Task_NotificarAlunoFim_di">
-        <dc:Bounds height="80" width="100" x="1570" y="187"/>
+      <bpmndi:BPMNShape id="Task_NotificarAlunoFim_di" bpmnElement="Task_NotificarAlunoFim">
+        <dc:Bounds x="1310" y="560" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="EndEvent_Matriculado" id="EndEvent_Matriculado_di">
-        <dc:Bounds height="36" width="36" x="1732" y="209"/>
+      <bpmndi:BPMNShape id="EndEvent_Matriculado_di" bpmnElement="EndEvent_Matriculado">
+        <dc:Bounds x="1442" y="582" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="14" width="87" x="1707" y="252"/>
+          <dc:Bounds x="1416" y="625" width="89" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge bpmnElement="Flow_1" id="Flow_1_di">
-        <di:waypoint x="215.0" y="177.0"/>
-        <di:waypoint x="270.0" y="177.0"/>
+      <bpmndi:BPMNShape id="StartEvent_AlunoColocado_di" bpmnElement="StartEvent_AlunoColocado">
+        <dc:Bounds x="202" y="419" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="179" y="462" width="84" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SubProcess_Pagamento_di" bpmnElement="SubProcess_Pagamento" isExpanded="true">
+        <dc:Bounds x="610" y="510" width="450" height="150" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SubStart_Pagamento_di" bpmnElement="SubStart_Pagamento">
+        <dc:Bounds x="630" y="562" width="36" height="36" />
+        <bpmndi:BPMNLabel id="BPMNLabel_BWPiwQ">
+          <dc:Bounds x="678" y="341" width="100" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_GerarReferencia_di" bpmnElement="Task_GerarReferencia">
+        <dc:Bounds x="700" y="540" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_PagamentoRecebido_di" bpmnElement="Event_PagamentoRecebido">
+        <dc:Bounds x="842" y="562" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="822" y="605" width="78" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SubEnd_Pagamento_di" bpmnElement="SubEnd_Pagamento">
+        <dc:Bounds x="942" y="562" width="36" height="36" />
+        <bpmndi:BPMNLabel id="BPMNLabel_XsCgwQ">
+          <dc:Bounds x="990" y="341" width="100" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_Sub4_di" bpmnElement="Flow_Sub4">
+        <di:waypoint x="666" y="580" />
+        <di:waypoint x="700" y="580" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="Flow_2" id="Flow_2_di">
-        <di:waypoint x="370.0" y="177.0"/>
-        <di:waypoint x="430.0" y="177.0"/>
+      <bpmndi:BPMNEdge id="Flow_Sub5_di" bpmnElement="Flow_Sub5">
+        <di:waypoint x="800" y="580" />
+        <di:waypoint x="842" y="580" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="Flow_3" id="Flow_3_di">
-        <di:waypoint x="530.0" y="177.0"/>
-        <di:waypoint x="585.0" y="177.0"/>
+      <bpmndi:BPMNEdge id="Flow_Sub6_di" bpmnElement="Flow_Sub6">
+        <di:waypoint x="878" y="580" />
+        <di:waypoint x="942" y="580" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="Flow_Documentos" id="Flow_Documentos_di">
-        <di:waypoint x="635.0" y="177.0"/>
-        <di:waypoint x="663.0" y="177.0"/>
-        <di:waypoint x="663.0" y="155.0"/>
-        <di:waypoint x="690.0" y="155.0"/>
+      <bpmndi:BPMNEdge id="Association_0a6q0c1_di" bpmnElement="Association_0a6q0c1">
+        <di:waypoint x="878" y="660" />
+        <di:waypoint x="906" y="710" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="Flow_Pagamento" id="Flow_Pagamento_di">
-        <di:waypoint x="610.0" y="202.0"/>
-        <di:waypoint x="610.0" y="325.0"/>
-        <di:waypoint x="690.0" y="325.0"/>
+      <bpmndi:BPMNShape id="SubProcess_Documentos_di" bpmnElement="SubProcess_Documentos" isExpanded="true">
+        <dc:Bounds x="610" y="80" width="550" height="400" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SubStart_Docs_di" bpmnElement="SubStart_Docs">
+        <dc:Bounds x="630" y="242" width="36" height="36" />
+        <bpmndi:BPMNLabel id="BPMNLabel_0mnz8g">
+          <dc:Bounds x="678" y="171" width="100" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_SubmeterDocs_di" bpmnElement="Task_SubmeterDocs">
+        <dc:Bounds x="700" y="220" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ValidarDocs_di" bpmnElement="Task_ValidarDocs">
+        <dc:Bounds x="840" y="220" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_DocsValidos_di" bpmnElement="Gateway_DocsValidos" isMarkerVisible="true">
+        <dc:Bounds x="985" y="235" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="978" y="294.5" width="63" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SubEnd_Docs_di" bpmnElement="SubEnd_Docs">
+        <dc:Bounds x="1102" y="242" width="36" height="36" />
+        <bpmndi:BPMNLabel id="BPMNLabel_1jh3oQ">
+          <dc:Bounds x="1150" y="171" width="100" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1i9yrit_di" bpmnElement="Activity_1i9yrit">
+        <dc:Bounds x="820" y="340" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_15jndrv_di" bpmnElement="Event_15jndrv">
+        <dc:Bounds x="972" y="362" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_NotificarDocsInvalidos_di" bpmnElement="Task_NotificarDocsInvalidos">
+        <dc:Bounds x="960" y="120" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_05hg9tq_di" bpmnElement="Event_05hg9tq">
+        <dc:Bounds x="732" y="282" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="641" y="306" width="77" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_Sub1_di" bpmnElement="Flow_Sub1">
+        <di:waypoint x="666" y="260" />
+        <di:waypoint x="700" y="260" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="Flow_DocsOK" id="Flow_DocsOK_di">
-        <di:waypoint x="1240.0" y="155.0"/>
-        <di:waypoint x="1330.0" y="155.0"/>
-        <di:waypoint x="1330.0" y="202.0"/>
+      <bpmndi:BPMNEdge id="Flow_0td27rs_di" bpmnElement="Flow_0td27rs">
+        <di:waypoint x="960" y="160" />
+        <di:waypoint x="750" y="160" />
+        <di:waypoint x="750" y="220" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="Flow_PagamentoOK" id="Flow_PagamentoOK_di">
-        <di:waypoint x="1140.0" y="325.0"/>
-        <di:waypoint x="1330.0" y="325.0"/>
-        <di:waypoint x="1330.0" y="252.0"/>
+      <bpmndi:BPMNEdge id="Flow_Sub2_di" bpmnElement="Flow_Sub2">
+        <di:waypoint x="800" y="260" />
+        <di:waypoint x="840" y="260" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="Flow_4" id="Flow_4_di">
-        <di:waypoint x="1355.0" y="227.0"/>
-        <di:waypoint x="1410.0" y="227.0"/>
+      <bpmndi:BPMNEdge id="Flow_Sub3_di" bpmnElement="Flow_Sub3">
+        <di:waypoint x="940" y="260" />
+        <di:waypoint x="985" y="260" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="Flow_5" id="Flow_5_di">
-        <di:waypoint x="1510.0" y="227.0"/>
-        <di:waypoint x="1570.0" y="227.0"/>
+      <bpmndi:BPMNEdge id="Flow_DocsValidos_di" bpmnElement="Flow_DocsValidos">
+        <di:waypoint x="1035" y="260" />
+        <di:waypoint x="1102" y="260" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1061" y="242" width="19" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="Flow_6" id="Flow_6_di">
-        <di:waypoint x="1670.0" y="227.0"/>
-        <di:waypoint x="1732.0" y="227.0"/>
+      <bpmndi:BPMNEdge id="Flow_DocsInvalidos_di" bpmnElement="Flow_DocsInvalidos">
+        <di:waypoint x="1010" y="235" />
+        <di:waypoint x="1010" y="200" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1011" y="228" width="21" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1e7c342_di" bpmnElement="Flow_1e7c342">
+        <di:waypoint x="750" y="318" />
+        <di:waypoint x="750" y="380" />
+        <di:waypoint x="820" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0tmjba5_di" bpmnElement="Flow_0tmjba5">
+        <di:waypoint x="920" y="380" />
+        <di:waypoint x="972" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_1ikgmo2_di" bpmnElement="TextAnnotation_1ikgmo2">
+        <dc:Bounds x="865" y="710" width="100" height="30" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
+        <di:waypoint x="238" y="437" />
+        <di:waypoint x="270" y="437" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
+        <di:waypoint x="370" y="437" />
+        <di:waypoint x="410" y="437" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3">
+        <di:waypoint x="510" y="437" />
+        <di:waypoint x="535" y="437" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Documentos_di" bpmnElement="Flow_Documentos">
+        <di:waypoint x="585" y="437" />
+        <di:waypoint x="610" y="437" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Pagamento_di" bpmnElement="Flow_Pagamento">
+        <di:waypoint x="560" y="462" />
+        <di:waypoint x="560" y="585" />
+        <di:waypoint x="610" y="585" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_DocsOK_di" bpmnElement="Flow_DocsOK">
+        <di:waypoint x="1120" y="480" />
+        <di:waypoint x="1120" y="575" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_PagamentoOK_di" bpmnElement="Flow_PagamentoOK">
+        <di:waypoint x="1060" y="600" />
+        <di:waypoint x="1095" y="600" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4">
+        <di:waypoint x="1145" y="600" />
+        <di:waypoint x="1180" y="600" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5">
+        <di:waypoint x="1280" y="600" />
+        <di:waypoint x="1310" y="600" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_6_di" bpmnElement="Flow_6">
+        <di:waypoint x="1410" y="600" />
+        <di:waypoint x="1442" y="600" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
