@@ -56,6 +56,11 @@ table Aluno {
   numero_aluno varchar(50) [unique, not null, note: 'Número mecanográfico gerado internamente']
   curso_id int [ref: > Curso.id, not null, note: 'Curso em que o aluno está inscrito']
   estado varchar(50) [not null, default: 'ATIVO', note: 'ex: ATIVO, CONCLUIDO, INTERROMPIDO']
+
+  nome_completo varchar(255) [not null]
+  data_nascimento date
+  nif varchar(20) [unique, note: 'Nº de Identificação Fiscal']
+  telefone varchar(20)
   
   note: 'Representa o registo académico de um aluno.'
 }
