@@ -7,13 +7,18 @@ Table processos_matricula {
   nome string [note: 'Nome completo do aluno']
   curso_id string [note: 'Código do curso no sistema interno']
   ano_letivo string [note: 'Ano letivo da matrícula']
+  colocacao_dges_id integer [null, note: 'ID da colocação DGES (se origem = DGES)']
+  candidatura_local_id integer [null, note: 'ID da candidatura local (se origem = LOCAL)']
   origem origem_matricula [note: 'Origem do aluno (DGES ou concurso local)']
   estado estado_matricula [note: 'Estado atual do processo de matrícula']
   data_criacao timestamp [note: 'Data de criação do processo de matrícula']
   created_at timestamp
   updated_at timestamp
 
-  note: 'Processos de matrícula de alunos, tanto DGES quanto concursos locais'
+    note: 'Processos de matrícula de alunos, tanto DGES quanto concursos locais.
+  Criado automaticamente quando:
+  - colocacoes_dges.estado = COLOCADO_DGES (origem = DGES)
+  - candidaturas.estado = APROVADA e opcoes_curso.estado = COLOCADO (origem = LOCAL)'
 }
 
 // Documentos necessários para matrícula
@@ -29,21 +34,7 @@ Table documentos_matricula {
   note: 'Documentos necessários para efetivação da matrícula'
 }
 
-// Pagamentos associados à matrícula
-// TODO acho que isto deveria ficar noutro microserviço
-Table pagamentos_matricula {
-  id integer [pk]
-  processo_matricula_id integer [ref: > processos_matricula.id, note: 'Processo de matrícula ao qual o pagamento pertence']
-  referencia string [note: 'Referência multibanco para pagamento']
-  valor decimal [note: 'Valor do pagamento']
-  estado estado_pagamento [note: 'Estado atual do pagamento']
-  data_limite timestamp [note: 'Data limite para efetuar o pagamento']
-  data_pagamento timestamp [note: 'Data em que o pagamento foi efetuado']
-  created_at timestamp
-  updated_at timestamp
 
-  note: 'Registos de pagamentos relacionados ao processo de matrícula'
-}
 
 Enum origem_matricula {
   DGES
@@ -53,7 +44,6 @@ Enum origem_matricula {
 Enum estado_matricula {
   CRIADA
   DOCUMENTOS_PENDENTES
-  PAGAMENTO_PENDENTE
   EM_PROCESSAMENTO
   MATRICULADO
   ANULADA
@@ -65,11 +55,4 @@ Enum estado_documento {
   VALIDO
   INVALIDO
   REJEITADO
-}
-
-Enum estado_pagamento {
-  PENDENTE
-  PAGO
-  VENCIDO
-  ANULADO
 }

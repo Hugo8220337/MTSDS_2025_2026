@@ -37,7 +37,9 @@ Table colocacoes_dges {
   created_at timestamp
   updated_at timestamp
 
-  note: 'Registo de alunos colocados através do sistema DGES'
+  note: 'Registo de alunos colocados através do sistema DGES
+  Quando o estado for COLOCADO_DGES, deve ser iniciado o processo de matrícula 
+  para poder ter o seu registo na tabela de aluno na gestão académica.'
 }
 
 Enum estado_colocacao {

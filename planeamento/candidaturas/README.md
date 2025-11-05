@@ -67,3 +67,46 @@ Responsável pela matrícula em si (comum a ambos os fluxos DGES e locais):
 - Integra com serviço de utilizadores e pagamentos
 
 - Gere documentos e estados (matriculado, pendente, etc.)
+
+
+
+# Candidaturas DGES
+┌─────────────┐      ┌──────────────┐      ┌─────────────────┐
+│ DGES Import │ ───> │ Colocações   │ ───> │ Processo        │
+│             |      │ DGES         │      │ Matrícula       │
+└─────────────┘      └──────────────┘      └─────────────────┘
+                                                    │
+                                                    ▼
+                                           ┌─────────────────┐
+                                           │ Aluno (Gestão   │
+                                           │ Académica)      │
+                                           └─────────────────┘
+# Candidatura DGES
+┌─────────────────┐
+│ Import DGES     │ → estado: IMPORTADO
+│ colocacoes_dges │ → estado: PROCESSADO
+└────────┬────────┘ → estado: COLOCADO_DGES
+         │
+         ▼
+┌─────────────────────┐
+│ Criar processo      │ → origem: DGES
+│ processos_matricula │ → estado: CRIADA
+└─────────────────────┘
+         │
+         ▼
+    [Fluxo Matrícula]
+
+# Candidaturas DGES
+┌─────────────────┐
+│ Candidatura     │ → estado: SUBMETIDA
+│ candidaturas    │ → estado: EM_ANALISE
+└────────┬────────┘ → estado: APROVADA
+         │          → opcoes_curso: COLOCADO
+         ▼
+┌─────────────────────┐
+│ Criar processo      │ → origem: LOCAL
+│ processos_matricula │ → estado: CRIADA
+└─────────────────────┘
+         │
+         ▼
+    [Fluxo Matrícula]

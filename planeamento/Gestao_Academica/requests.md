@@ -342,3 +342,65 @@ Authorization: Bearer <token>
   }
 ]
 ```
+
+## Processo 4: Gestão de Matrículas (Eventos e Criação de Alunos)
+
+### 4.1. Criar Aluno a partir de Matrícula (Evento Interno)
+
+Este endpoint é chamado **automaticamente** quando uma matrícula é concluída no microserviço de Candidaturas.
+
+#### Criar um novo Aluno
+```http
+POST /api/v1/students/create
+
+Authorization: Bearer <service-token>
+Content-Type: application/json
+
+{
+  "nif": "123456789",
+  "nome": "João Silva",
+  "curso_codigo": "LEI",
+  "ano_letivo": "2025/2026",
+  "origem": "DGES",
+  "processo_matricula_id": 42
+}
+```
+**Resposta:** `201 Created`
+```json
+{
+  "id": 845,
+  "numero_aluno": "8250123",
+  "nif": "123456789",
+  "nome": "João Silva",
+  "curso_codigo": "LEI",
+  "ano_letivo": "2025/2026",
+  "estado": "ATIVO",
+  "created_at": "2025-09-01T10:00:00Z"
+}
+```
+
+### 4.2. Webhook/Evento de Matrícula Concluída
+
+O microserviço de **Candidaturas** publica um evento quando `processos_matricula.estado = MATRICULADO`:
+
+**Evento publicado:**
+```json
+{
+  "event_type": "student.enrolled",
+  "timestamp": "2025-09-01T10:00:00Z",
+  "data": {
+    "processo_matricula_id": 42,
+    "nif": "123456789",
+    "nome": "João Silva",
+    "curso_codigo": "LEI",
+    "ano_letivo": "2025/2026",
+    "origem": "DGES"
+  }
+}
+```
+
+**O microserviço de Gestão Académica:**
+1. Consome este evento
+2. Cria o aluno na tabela `alunos`
+3. Gera o `numero_aluno`
+4. Publica evento de confirmação (opcional)

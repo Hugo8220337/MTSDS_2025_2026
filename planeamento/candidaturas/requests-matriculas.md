@@ -2,7 +2,7 @@
 
 ## Processos de Matrícula
 
-## POST /api/create-enrollment
+## POST /api/enrollments/create
 Cria novo processo de matrícula
 ```json
 {
@@ -14,8 +14,7 @@ Cria novo processo de matrícula
 }
 ```
 
-### GET /api/matriculas/{id}
-## /api/enrollments/{id}
+## GET/api/enrollments/{id}
 Obtém detalhes do processo de matrícula
 
 ### POST /api/enrollments/{id}/upload-document
