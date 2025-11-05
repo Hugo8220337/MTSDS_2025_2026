@@ -71,6 +71,23 @@ table Excecao {
   note: 'Regista exceções ao horário normal (feriados, alterações pontuais)'
 }
 
+table Reserva {
+  id int [pk, increment]
+  sala_id int [ref: > Sala.id, not null]
+  titulo varchar(255) [not null, note: 'ex: Teste de Programação Web']
+  data_hora_inicio timestamp [not null]
+  data_hora_fim timestamp [not null]
+  responsavel_id int [note: 'Docente/funcionário que reservou']
+  observacoes text
+  
+  indexes {
+    (sala_id, data_hora_inicio)
+    (data_hora_inicio)
+  }
+  
+  note: 'Reservas pontuais de salas para testes, reuniões, eventos, etc.'
+}
+
 //--------------------------------------------------------------------
 // Representação de Entidades de Microserviços Externos
 //--------------------------------------------------------------------

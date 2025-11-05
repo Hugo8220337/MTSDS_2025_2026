@@ -212,6 +212,7 @@ Content-Type: application/json
 
 ```http
 DELETE /api/v1/admin/users/123/roles/{roleId}/delete?escola_id=10
+
 Authorization: Bearer <token>
 ```
 **Resposta:** `204 No Content`

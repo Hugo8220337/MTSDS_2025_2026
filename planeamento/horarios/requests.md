@@ -4,6 +4,8 @@ Este ficheiro detalha os endpoints da API para gestão de salas, horários e aul
 
 ---
 
+base URL: `/api/v1/schedules`
+
 ## Processo 1: Gestão de Salas (Fluxo do Admin)
 
 ### 1.1. Criar e Gerir Salas
@@ -218,3 +220,111 @@ Authorization: Bearer <token>
   ]
 }
 ```
+
+
+## Reservas de Sala (Eventos Pontuais)
+
+### Criar uma reserva de sala
+Reserva uma sala para um evento pontual (teste, reunião, etc.)
+
+```http
+POST /api/v1/reservate-classrom
+
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "sala_id": 15,
+  "titulo": "Teste de Programação Web",
+  "data_hora_inicio": "2025-11-15T14:30:00Z",
+  "data_hora_fim": "2025-11-15T16:30:00Z",
+  "observacoes": "Teste de frequência - 1º semestre"
+}
+```
+
+**Resposta:** `201 Created`
+```json
+{
+  "id": 456,
+  "sala": {
+    "id": 15,
+    "numero": "Lab-1",
+    "edificio": "A"
+  },
+  "titulo": "Teste de Programação Web",
+  "data_hora_inicio": "2025-11-15T14:30:00Z",
+  "data_hora_fim": "2025-11-15T16:30:00Z",
+  "responsavel_id": 78,
+  "created_at": "2025-11-05T10:30:00Z"
+}
+```
+
+
+### Obter detalhes de uma reserva
+
+```http
+GET /api/v1/reservation/{reservationId}
+Authorization: Bearer <token>
+```
+
+**Resposta:** `200 OK`
+```json
+{
+  "id": 456,
+  "sala": {
+    "id": 15,
+    "numero": "Lab-1",
+    "edificio": "A",
+    "piso": 2,
+    "capacidade": 30
+  },
+  "titulo": "Teste de Programação Web",
+  "data_hora_inicio": "2025-11-15T14:30:00Z",
+  "data_hora_fim": "2025-11-15T16:30:00Z",
+  "responsavel": {
+    "id": 78,
+    "nome": "Prof. João Silva"
+  },
+  "observacoes": "Teste de frequência - 1º semestre",
+  "created_at": "2025-11-05T10:30:00Z"
+}
+```
+
+### Atualizar uma reserva
+
+```http
+PUT /api/v1/reservatoin/{reservationId}
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "titulo": "Teste de Programação Web (Remarcado)",
+  "data_hora_inicio": "2025-11-22T14:30:00Z",
+  "data_hora_fim": "2025-11-22T16:30:00Z",
+  "sala_id": 16
+}
+```
+
+**Resposta:** `200 OK`
+```json
+{
+  "id": 456,
+  "titulo": "Teste de Programação Web (Remarcado)",
+  "sala": {
+    "id": 16,
+    "numero": "Lab-2"
+  },
+  "data_hora_inicio": "2025-11-22T14:30:00Z",
+  "data_hora_fim": "2025-11-22T16:30:00Z",
+  "updated_at": "2025-11-06T09:15:00Z"
+}
+```
+
+### Cancelar uma reserva
+
+```http
+DELETE /api/v1/reservation/{reservationId}/delete
+Authorization: Bearer <token>
+```
+
+**Resposta:** `204 No Content`
