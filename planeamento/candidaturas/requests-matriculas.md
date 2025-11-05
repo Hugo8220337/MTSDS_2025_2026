@@ -2,8 +2,7 @@
 
 ## Processos de Matrícula
 
-### POST /api/matriculas
-## /api/enrollments
+## POST /api/create-enrollment
 Cria novo processo de matrícula
 ```json
 {
@@ -19,8 +18,7 @@ Cria novo processo de matrícula
 ## /api/enrollments/{id}
 Obtém detalhes do processo de matrícula
 
-### POST /api/matriculas/{id}/documentos
-## /api/enrollments/{id}/documents
+### POST /api/enrollments/{id}/upload-document
 Upload de documento de matrícula
 ```json
 {
@@ -33,19 +31,6 @@ Upload de documento de matrícula
 ## /api/enrollments/{id}/documents
 Lista documentos do processo
 
-### GET /api/matriculas/{id}/pagamentos
-## /api/enrollments/{id}/payments
-Lista pagamentos do processo
-
-### POST /api/matriculas/{id}/pagamentos/gerar-referencia
-## /api/enrollments/{id}/payments/
-Gera referência para pagamento
-```json
-{
-  "valor": 50.00,
-  "descricao": "Taxa de Matrícula"
-}
-```
 
 ### PUT /api/matriculas/{id}/atualizar-estado
 ## PUT /api/enrollments/{id}/update-state

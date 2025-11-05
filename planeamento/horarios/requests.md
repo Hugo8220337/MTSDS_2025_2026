@@ -10,8 +10,8 @@ Este ficheiro detalha os endpoints da API para gestão de salas, horários e aul
 
 #### Criar uma nova sala
 ```http
-POST /api/v1/admin/escolas/estg/salas
-/api/v1/admin/schools/estg/classrooms
+POST /api/v1/admin/schools/{schoolAcronym}/create-classroom
+
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -36,8 +36,8 @@ Content-Type: application/json
 
 #### Obter disponibilidade de uma sala
 ```http
-GET /api/v1/admin/salas/A201/disponibilidade?data=2025-11-01
-/api/v1/admin/classrooms/A201/available?date=2025-11-01
+GET/api/v1/admin/classrooms/{classroomNumber}/available?date=2025-11-01
+
 Authorization: Bearer <token>
 ```
 **Resposta:** `200 OK`
@@ -64,8 +64,8 @@ Authorization: Bearer <token>
 
 #### Criar um novo slot horário
 ```http
-POST /api/v1/admin/slots-horario
-/api/v1/admin/schedule-slots
+POST /api/v1/admin/create-schedule-slot
+
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -89,8 +89,8 @@ Content-Type: application/json
 
 #### Criar uma aula regular
 ```http
-POST /api/v1/admin/turmas/LEI1A/aulas
-/api/v1/admin/classes/LEI1A/lessons
+/api/v1/admin/classes/{classNumber}/lessons
+
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -117,8 +117,8 @@ Content-Type: application/json
 
 #### Registrar uma exceção (alteração pontual)
 ```http
-POST /api/v1/admin/aulas/1/excecoes
-/api/v1/admin/lessons/1/exceptions
+POST /api/v1/admin/lessons/{lessonNumber}/create-schedule-exception
+
 Authorization: Bearer <token>
 Content-Type: application/json
 

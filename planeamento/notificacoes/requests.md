@@ -13,8 +13,8 @@ Este é o principal endpoint a ser consumido por outros microserviços (Candidat
 Cria um registo na tabela `Notificacao` que será processado por um worker para o envio efetivo.
 
 ```http
-POST /api/v1/notificacoes/enviar
-/api/v1/notifications/send
+POST /api/v1/notifications/send
+
 Content-Type: application/json
 // Este endpoint seria chamado internamente, possivelmente sem um token de utilizador,
 // mas com um token de serviço-para-serviço.
@@ -46,7 +46,7 @@ Endpoints para administradores criarem e gerirem os modelos de mensagens.
 ### 2.1. Criar um novo Template
 
 ```http
-POST /api/v1/notifications/templates
+POST /api/v1/notifications/create-template
 Authorization: Bearer <token>
 Content-Type: application/json
 

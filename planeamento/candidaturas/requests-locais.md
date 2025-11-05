@@ -5,12 +5,10 @@ Base URL: `/api/v1/candidaturas`
 
 ## Concursos
 
-### GET /api/v1/candidaturas/concursos
-## /api/v1/applications/admissions
+## GET /api/v1/applications/admission-competitions
 Lista concursos disponíveis
 
-### POST /api/v1/candidaturas/concursos
-## /api/v1/applications/admissions
+## POST /api/v1/applications/create-admission-competition
 Cria novo concurso
 ```json
 {
@@ -22,8 +20,7 @@ Cria novo concurso
 }
 ```
 
-### POST /api/v1/candidaturas/concursos/{id}/fases
-## /api/v1/applications/admissions/{id}/phases
+## POST /api/v1/applications/admission-competitions/{id}/create-phase
 Cria nova fase do concurso
 ```json
 {
@@ -36,8 +33,7 @@ Cria nova fase do concurso
 
 ## Candidaturas
 
-### POST /api/v1/candidaturas
-## /api/v1/applications
+## POST /api/v1/applications/submit-aplication
 Submete nova candidatura
 ```json
 {
@@ -53,12 +49,10 @@ Submete nova candidatura
 }
 ```
 
-### GET /api/v1/candidaturas/{id}
-## /api/v1/applications/{id}
+## GET /api/v1/applications/{id}
 Obtém detalhes de uma candidatura
 
-### POST /api/v1/candidaturas/{id}/documentos
-## /api/v1/applications/{id}/documents
+## POST /api/v1/applications/{id}/upload-document
 
 Upload de documento
 ```json
@@ -68,8 +62,7 @@ Upload de documento
 }
 ```
 
-### PUT /api/v1/candidaturas/{id}/atualizar-estado
-## /api/v1/applications/{id}/update-state
+## PUT /api/v1/applications/{id}/update-state
 Atualiza estado da candidatura
 ```json
 {

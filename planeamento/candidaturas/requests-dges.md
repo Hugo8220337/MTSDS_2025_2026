@@ -1,12 +1,10 @@
 # API Candidaturas DGES
 
-Base URL: `/api/v1/candiaturas-dges`
-`/applications-dges`
+Base URL: `/api/v1/applications-dges`
 
 ## Importação DGES
 
-### POST /api/v1/candiaturas-dges/importar
-## /import
+### POST /api/v1/applications-dges/import
 Importa arquivo CSV/XML com colocações DGES
 ```json
 {
@@ -16,12 +14,10 @@ Importa arquivo CSV/XML com colocações DGES
 }
 ```
 
-### GET /api/v1/candidaturas-dges/cursos/mapeamentos
-## /api/v1/applications-dges/courses/mappings
+### GET /api/v1/applications-dges/courses/mappings
 Lista mapeamento de cursos DGES → internos
 
-### POST /api/v1/candidaturas-dges/cursos/mapeamentos
-## /api/v1/applications-dges/courses/mappings
+### POST /api/v1/applications-dges/courses/add-mapping
 Cria/atualiza mapeamento de curso
 ```json
 {
@@ -31,19 +27,8 @@ Cria/atualiza mapeamento de curso
 }
 ```
 
-### GET /api/v1/candidaturas-dges/colocacoes
-## /api/v1/applications-dges/placements
+### GET /api/v1/applications-dges/placements
 Lista colocações importadas
-```json
-{
-  "ano_letivo": "2025/2026",
-  "fase": 1
-}
-```
-
-### GET /api/v1/candidaturas-dges/estatisticas
-## /api/v1/applications-dges/statistics
-Obtém estatísticas de importação
 ```json
 {
   "ano_letivo": "2025/2026",

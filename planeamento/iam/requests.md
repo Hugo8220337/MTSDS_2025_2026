@@ -144,7 +144,7 @@ Authorization: Bearer <token>
 Permite a um administrador criar um novo utilizador (ex: um docente ou funcionário) e atribuir-lhe um papel inicial.
 
 ```http
-POST /api/v1/admin/users
+POST /api/v1/admin/create-user
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -190,7 +190,7 @@ Authorization: Bearer <token>
 Associa um papel a um utilizador, opcionalmente no contexto de uma escola. Apenas para `ADMIN_SISTEMA` ou `ADMIN_ESCOLA`.
 
 ```http
-POST /api/v1/admin/users/123/roles
+POST /api/v1/admin/users/123/add-role
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -211,7 +211,7 @@ Content-Type: application/json
 #### Remover um papel de um utilizador
 
 ```http
-DELETE /api/v1/admin/users/123/roles/2?escola_id=10
+DELETE /api/v1/admin/users/123/roles/{roleId}/delete?escola_id=10
 Authorization: Bearer <token>
 ```
 **Resposta:** `204 No Content`

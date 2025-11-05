@@ -1,11 +1,11 @@
 # API de Pautas
 
 Base URL: `/api/v1/pautas`
+Base URL: `/api/v1/grades-report`
 
 ## Gestão de Pautas
 
-### POST /api/v1/pautas
-## /grades
+## POST /create-grade-report
 Cria nova pauta
 ```json
 {
@@ -16,12 +16,10 @@ Cria nova pauta
 }
 ```
 
-### POST /api/v1/pautas/{id}/gerar
-## /grades/{id}/generate
+## /{id}/generate
 Gera resultados da pauta
 
-### PUT /api/v1/pautas/{id}/publicar
-## /grades/{id}/publish
+## PUT /{id}/publish
 Publica pauta (provisória ou definitiva)
 ```json
 {
@@ -29,12 +27,10 @@ Publica pauta (provisória ou definitiva)
 }
 ```
 
-### PUT /api/v1/pautas/{id}/fechar
-## /grades/{id}/close
+## /{id}/close
 Fecha pauta definitivamente
 
-### POST /api/v1/pautas/{id}/assinaturas
-## /grades/{id}/sign
+### POST /{id}/sign
 Adiciona assinatura à pauta
 ```json
 {
@@ -44,14 +40,11 @@ Adiciona assinatura à pauta
 
 ## Consultas
 
-### GET /api/v1/pautas/{id}
-## /grades/{id}
+### /{id}
 Obtém detalhes de uma pauta
 
-### GET /api/v1/pautas/{id}/resultados
-## /grades/{id}/results
+### GET /{id}/results
 Lista resultados de uma pauta
 
-### GET /api/v1/pautas/{ucId}
-## /grade/{udId}
+### GET curricular-unit/{udId}
 Lista pautas de uma UC

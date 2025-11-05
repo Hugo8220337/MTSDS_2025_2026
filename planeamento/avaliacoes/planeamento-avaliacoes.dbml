@@ -3,34 +3,21 @@
 // Responsável pela definição da estrutura de avaliação das UCs
 //--------------------------------------------------------------------
 
-Table escalas_classificacao {
+
+
+Table componentes_avaliacao {
   id int [pk, increment]
-  unidade_curricular_id int [not null, note: 'ID da UC no serviço de Gestão Académica']
-  ano_letivo_id int [not null, note: 'ID do ano letivo']
-  descricao text [note: 'Descrição da fórmula de avaliação']
-  estado estado_escala [not null, default: 'RASCUNHO']
-  data_aprovacao timestamp
-  versao int [not null, default: 1, note: 'Controle de versão da escala']
+  unidade_curricular_id int [not null]
+  ano_letivo_id int [not null]
+  nome varchar(100) [not null]
+  peso decimal(5,4) [not null]
+  nota_minima decimal(4,2)
   created_at timestamp
   updated_at timestamp
   
   indexes {
-    (unidade_curricular_id, ano_letivo_id) [unique]
+    (unidade_curricular_id, ano_letivo_id)
   }
-
-  note: 'Define as regras de avaliação para uma UC num ano letivo'
-}
-
-Table componentes_avaliacao {
-  id int [pk, increment]
-  escala_id int [ref: > escalas_classificacao.id]
-  nome varchar(100) [not null, note: 'Nome da componente']
-  peso decimal(5,4) [not null, note: 'Peso na nota final (0-1)']
-  nota_minima decimal(4,2) [note: 'Nota mínima necessária, se aplicável']
-  created_at timestamp
-  updated_at timestamp
-
-  note: 'Componentes que formam a avaliação (ex: frequência, exame)'
 }
 
 Table momentos_avaliacao {
@@ -44,7 +31,7 @@ Table momentos_avaliacao {
   created_at timestamp
   updated_at timestamp
   
-  note: 'Momentos específicos de avaliação'
+  note: 'Momentos específicos de avaliação dentro de um componente ()'
 }
 
 Enum estado_escala {
