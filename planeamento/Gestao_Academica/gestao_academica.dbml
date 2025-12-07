@@ -16,11 +16,11 @@ table Escola {
 
 table Curso {
   id int [pk, increment]
-  escola_id int [ref: > Escola.id, not null]
   nome varchar(255) [not null, note: 'ex: Engenharia Informática']
   codigo_curso varchar(20) [unique, not null, note: 'código interno do curso']
   grau varchar(50) [not null, note: 'ex: Licenciatura, Mestrado, CTESP']
-  
+  tipo varchar(50) [not null, note: 'ex: DIURNO, NOTURNO, POS_LABORAL']
+
   note: 'Tabela de cursos oferecidos pela instituição.'
 }
 
@@ -36,9 +36,10 @@ table UnidadeCurricular {
 table PlanoEstudos {
   id int [pk, increment]
   curso_id int [ref: > Curso.id, not null]
+  escola_id int [ref: > Escola.id, not null]
+  unidade_curricular_id int [ref: > UnidadeCurricular.id, not null]
   ano_curricular int [not null, note: 'ex: 1, 2, 3']
   semestre int [not null, note: 'ex: 1, 2']
-  unidade_curricular_id int [ref: > UnidadeCurricular.id, not null]
   
   indexes {
     (curso_id, unidade_curricular_id) [unique]
@@ -56,7 +57,6 @@ table Aluno {
   numero_aluno varchar(50) [unique, not null, note: 'Número mecanográfico gerado internamente']
   curso_id int [ref: > Curso.id, not null, note: 'Curso em que o aluno está inscrito']
   estado varchar(50) [not null, default: 'ATIVO', note: 'ex: ATIVO, CONCLUIDO, INTERROMPIDO']
-
   nome_completo varchar(255) [not null]
   data_nascimento date
   nif varchar(20) [unique, note: 'Nº de Identificação Fiscal']
@@ -69,7 +69,6 @@ table Docente {
   id int [pk, increment]
   utilizador_id int [unique, not null, note: 'FK para a tabela Utilizador no serviço de Identidade']
   numero_mecanografico varchar(50) [unique, not null, note: 'Número de funcionário']
-  
   note: 'Representa o registo académico de um docente/funcionário.'
 }
 
@@ -97,53 +96,29 @@ table DocenteUnidadeCurricular {
   note: 'Associa um docente a uma UC num determinado ano letivo (lecionação).'
 }
 
-table Inscricao {
-  id int [pk, increment]
-  aluno_id int [ref: > Aluno.id, not null]
-  unidade_curricular_id int [ref: > UnidadeCurricular.id, not null]
-  ano_letivo_id int [ref: > AnoLetivo.id, not null]
-  estado varchar(50) [not null, default: 'INSCRITO', note: 'ex: INSCRITO, APROVADO, REPROVADO']
-  data_inscricao timestamp [default: `now()`]
-  
-  indexes {
-    (aluno_id, unidade_curricular_id, ano_letivo_id) [unique]
-  }
-  
-  note: 'Regista a inscrição de um aluno numa UC num ano letivo.'
-}
+
 
 // --- Entidades de Gestão de Turmas ---
 
 table Turma {
   id int [pk, increment]
-  unidade_curricular_id int [ref: > UnidadeCurricular.id, not null]
   ano_letivo_id int [ref: > AnoLetivo.id, not null]
   codigo_turma varchar(20) [not null, note: 'ex: LEI1A, MEI2N (curso + ano + turma)']
-  tipo varchar(50) [not null, note: 'ex: DIURNO, NOTURNO, POS_LABORAL']
   vagas_max int [not null, note: 'Número máximo de alunos']
   
-  indexes {
-    (unidade_curricular_id, ano_letivo_id, codigo_turma) [unique]
-  }
   
-  note: 'Grupo de alunos inscritos numa UC'
+  note: 'Grupo de alunos inscrito'
 }
 
-table AlunoTurma {
-  turma_id int [ref: > Turma.id]
-  inscricao_id int [ref: > Inscricao.id, not null]
-  data_inscricao timestamp [default: `now()`]
-  
+table Turma_UC_Aluno {
+  id int [pk, increment]
+  ano_letivo_id int [ref: > AnoLetivo.id, not null]
+  aluno_id int [ref: > Aluno.id, not null]
+  turma_id int [ref: > Turma.id, not null]
+  unidade_curricular_id int [ref: > UnidadeCurricular.id, not null]
+
   indexes {
-    (turma_id, inscricao_id) [pk]
+    (aluno_id, turma_id, unidade_curricular_id, ano_letivo_id) [pk]
   }
-  
-  note: 'Associação entre alunos (via inscrição) e turmas'
-  nota_final decimal(4,2) [note: 'Nota final da UC, pode ser gerida pelo serviço de Avaliações']
-  
-  indexes {
-    (aluno_id, unidade_curricular_id, ano_letivo_id) [unique]
-  }
-  
-  note: 'Registo da inscrição de um aluno numa unidade curricular para um ano letivo.'
 }
+

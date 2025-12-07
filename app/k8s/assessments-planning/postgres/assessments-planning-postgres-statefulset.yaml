@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: assessments-planning-postgres
+  namespace: assessments-planning
+spec:
+  serviceName: assessments-planning-postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app: assessments-planning-postgres
+  template:
+    metadata:
+      labels:
+        app: assessments-planning-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:13-alpine
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: assessments-planning-db
+            - name: POSTGRES_USER
+              value: myuser
+            - name: POSTGRES_PASSWORD
+              value: secret
+          volumeMounts:
+            - name: assessments-planning-postgres-data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: assessments-planning-postgres-init
+          configMap:
+            name: assessments-planning-postgres-init
+  volumeClaimTemplates:
+    - metadata:
+        name: assessments-planning-postgres-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 2Gi

@@ -1,0 +1,554 @@
+{
+	"info": {
+		"_postman_id": "3b561d8f-84e7-4c8b-a3ae-7ce1bbb0ca58",
+		"name": "Applications",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "50053153",
+		"_collection_link": "https://huguito-ricardo-9985597.postman.co/workspace/Hugo-bpc's-Workspace~aeb8c8e9-8d22-43d5-856d-e95fdc0b15fe/collection/50053153-3b561d8f-84e7-4c8b-a3ae-7ce1bbb0ca58?action=share&source=collection_link&creator=50053153"
+	},
+	"item": [
+		{
+			"name": "Create Competition",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{    \r\n    \"name\": \"Uma competição muito gira\",\r\n    \"status\": \"OPEN\",\r\n    \"type\": \"M23\",\r\n    \"academicYear\": \"2024/2025\",\r\n    \"period\": {\r\n        \"startDate\": \"2024-05-01\",\r\n        \"endDate\": \"2024-06-10\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/applications/competitions",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"applications",
+						"competitions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Phase",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"phaseNumber\": 2,\r\n    \"period\": {\r\n        \"startDate\": \"2024-06-01\",\r\n        \"endDate\": \"2024-07-01\"\r\n    },\r\n    \"totalVacancies\": 120\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/v1/applications/competitions/1/phases",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"applications",
+						"competitions",
+						"1",
+						"phases"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Draft",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{   \r\n    \"phaseId\": \"1\",\r\n    \"applicantInfo\": {\r\n        \"fin\": \"1\",\r\n        \"fullName\": \"Hugo Guimarães\"\r\n    },\r\n    \"origin\": \"LOCAL\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/applications/create-draft",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"applications",
+						"create-draft"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Draft",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"phaseId\": 1,\r\n    \"applicantInfo\": {\r\n        \"fin\": \"912635832\",\r\n        \"fullName\": \"Hugo Guimarães\"\r\n    },\r\n    \"origin\": \"LOCAL\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/applications/1/update-draft",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"applications",
+						"1",
+						"update-draft"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Submit Application",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/applications/1/submit",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"applications",
+						"1",
+						"submit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Course Option",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"courseId\": 1,\r\n    \"preferenceOrder\": 1 \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/applications/1/add-course-option",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"applications",
+						"1",
+						"add-course-option"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Application Course Options",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"courseId\": 1,\r\n    \"preferenceOrder\": 1 \r\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/applications/1/course-options",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"applications",
+						"1",
+						"course-options"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remove Application Course Option",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"courseId\": 1,\r\n    \"preferenceOrder\": 1 \r\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/applications/1/course-options/1/remove",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"applications",
+						"1",
+						"course-options",
+						"1",
+						"remove"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Application Course Status",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"status\": \"APPROVED\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/applications/1/course-options/2/update-status",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"applications",
+						"1",
+						"course-options",
+						"2",
+						"update-status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Application By Id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"status\": \"APPROVED\"\r\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/applications/1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"applications",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Application Status",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"status\": \"APPROVED\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/applications/1/update-state",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"applications",
+						"1",
+						"update-state"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Phases By Competition Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/applications/competitions/1/phases",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"applications",
+						"competitions",
+						"1",
+						"phases"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Competition By Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/applications/competitions/1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"applications",
+						"competitions",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Competition",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{    \r\n    \"name\": \"Uma competição muito fixe\",\r\n    \"status\": \"OPEN\",\r\n    \"type\": \"M23\",\r\n    \"academicYear\": \"2024/2025\",\r\n    \"period\": {\r\n        \"startDate\": \"2024-05-01\",\r\n        \"endDate\": \"2024-06-10\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/applications/competitions/1/update",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"applications",
+						"competitions",
+						"1",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Import from DGES",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"placements\": [\r\n    { \"name\": \"Joana Carvalho\", \"nif\": \"123123123\", \"courseId\": 1 },\r\n    { \"name\": \"Luis Andrade\", \"nif\": \"987987987\", \"courseId\": 2 },\r\n    { \"name\": \"Sofia Ramos\", \"nif\": \"456456456\", \"courseId\": 1 },\r\n    { \"name\": \"Hugo Batista\", \"nif\": \"789789789\", \"courseId\": 2 },\r\n    { \"name\": \"Patricia Silva\", \"nif\": \"147258369\", \"courseId\": 3 },\r\n    { \"name\": \"Ricardo Lopes\", \"nif\": \"369258147\", \"courseId\": 1 }\r\n  ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/applications/competitions/1/phases/3/dges-import",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"applications",
+						"competitions",
+						"1",
+						"phases",
+						"3",
+						"dges-import"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Submit Document for Application",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "documentType",
+							"value": "DO_BOM",
+							"type": "text"
+						},
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/Users/Hugo/Pictures/8ehkuxtcdsk91-1221631903.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/applications/1/documents",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"applications",
+						"1",
+						"documents"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Application Documents",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/applications/1/documents",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"applications",
+						"1",
+						"documents"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get One Application Document",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/applications/1/documents/1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"applications",
+						"1",
+						"documents",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Application Document",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/applications/1/documents/5",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"applications",
+						"1",
+						"documents",
+						"5"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "baseUrl",
+			"value": "",
+			"type": "default"
+		}
+	]
+}

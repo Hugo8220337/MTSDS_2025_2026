@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  eureka-server:
+    build:
+      context: ../EurekaServer
+      dockerfile: Dockerfile
+    container_name: eureka
+    ports:
+      - "8761:8761"
+    restart: unless-stopped
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gateway-api
+    depends_on:
+      - eureka
+    ports:
+      - "8080:8080"
+    environment:
+      - EUREKA_URL=http://eureka-server:8761/eureka/
+      - SCHEDULES_SERVICE=Schedules
+      - APPLICATIONS_SERVICE=Applications
+      - ACADEMINS_SERVICE=Academins
+      - ENROLLMENTS_SERVICE=enrollments
+      - NOTIFICATIONS_SERVICE=Notifications
+      - ASSESSMENTS_SERVICE=Assessments
+      - GRADES_REPORT_SERVICE=GradeReport
+      - ASSESSMENTS_PLANNING_SERVICE=assessments-planning
+    restart: unless-stopped

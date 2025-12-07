@@ -1,0 +1,3 @@
+services:
+  academins:
+    url: ${SERVICES_ACADEMINS_URL:http://localhost:8084/api/v1/academins}

@@ -1,15 +1,53 @@
-# API de Revisões
+# Grade Reviews API
 
-Base URL: `/api/v1/revisions`
+Base URL: `/api/v1/grade-reviews`
 
-## Pedidos de Revisão
+This API follows a DDD approach, where endpoints represent clear business commands.
 
-### POST /make-requests
-Submete pedido de revisão
+---
+
+## 1. Requesting a Review (Student)
+
+### `POST submit-request`
+Submits a new request for a grade review.
+
+**Use Case:** A student disagrees with a grade and wants to formally request a review.
+**State Transition:** `(none)` -> `PENDING_APPROVAL`
+
+**Request Body:**
 ```json
 {
-  "classificacao_id": 123,
-  "justificacao": "Erro na soma das pontuações da questão 3"
+  "grade_id": 123,
+  "justification": "I believe the sum of the points for question 3 is incorrect."
+}
+```
+
+**Response (201 Created):**
+```json
+{
+  "id": 456,
+  "grade_id": 123,
+  "student_id": 789,
+  "status": "PENDING_APPROVAL",
+  "created_at": "2025-11-05T10:30:00Z"
+}
+```
+
+---
+
+## 2. Managing the Review (Lecturer)
+
+### `PATCH /{id}/schedule-meeting`
+Schedules the in-person meeting with the student to discuss the review.
+
+**Use Case:** The lecturer accepts the request and sets a date/time for the meeting.
+**State Transition:** `PENDING_APPROVAL` -> `MEETING_SCHEDULED`
+
+**Request Body:**
+```json
+{
+  "meeting_datetime": "2025-11-10T15:00:00Z",
+  "meeting_location": "Lecturer's Office - Room 3.21"
 }
 ```
 
@@ -17,136 +55,114 @@ Submete pedido de revisão
 ```json
 {
   "id": 456,
-  "estado": "AGUARDA_APROVACAO",
-  "prazo_resposta": "2025-11-12T23:59:59Z",
-  "data_submissao": "2025-11-05T10:30:00Z"
+  "status": "MEETING_SCHEDULED",
+  "meeting_datetime": "2025-11-10T15:00:00Z",
+  "meeting_location": "Lecturer's Office - Room 3.21",
+  "updated_at": "2025-11-06T11:00:00Z"
 }
 ```
 
-### GET /requests/{id}
-Obtém detalhes de um pedido
-```json
-{
-  "id": 456,
-  "classificacao_id": 123,
-  "aluno_id": 789,
-  "docente_responsavel_id": 101,
-  "justificacao": "Erro na soma...",
-  "estado": "EM_REVISAO",
-  "aprovado": true,
-  "justificacao_docente": "Pedido deferido para reanálise",
-  "nota_original": 14.5,
-  "nota_revista": 16.0,
-  "data_submissao": "2025-11-05T10:30:00Z"
-}
-```
+---
+## 3. Conclusão da Revisão (Docente)
 
-### GET /requests
-Lista pedidos (com filtros)
-```
-Query params:
-- aluno_id (optional)
-- docente_responsavel_id (optional)
-- estado (optional): AGUARDA_APROVACAO, REJEITADO, EM_REVISAO, CONCLUIDO, CANCELADO
-- classificacao_id (optional)
-```
+Após a reunião, o docente pode concluir o processo de duas formas, usando comandos explícitos que refletem a intenção.
 
-### PATCH /requests/{id}/cancel
-Cancela pedido (só o aluno, antes de aprovação)
-```json
-{
-  "estado": "CANCELADO"
-}
-```
+### `PATCH /{id}/change-grade`
+**Altera a nota** e conclui o processo de revisão.
 
-## Aprovação/Rejeição (Docente)
+**Use Case:** O docente concorda com o aluno e identifica um erro, corrigindo a nota.
+**State Transition:** `REUNIAO_AGENDADA` -> `CONCLUIDO`
 
-### PATCH /requests/{id}/approve
-Aprova pedido para revisão
-```json
-{
-  "justificacao_docente": "Pedido válido, vou reanalisar a correção"
-}
-```
-
-**Response:**
-```json
-{
-  "id": 456,
-  "estado": "EM_REVISAO",
-  "aprovado": true,
-  "data_decisao_aprovacao": "2025-11-06T14:00:00Z"
-}
-```
-
-### PATCH /requests/{id}/reject
-Rejeita pedido
-```json
-{
-  "justificacao_docente": "Correção está correta, sem motivos para revisão"
-}
-```
-
-**Response:**
-```json
-{
-  "id": 456,
-  "estado": "REJEITADO",
-  "aprovado": false,
-  "data_decisao_aprovacao": "2025-11-06T14:00:00Z"
-}
-```
-
-## Revisão da Prova (Docente)
-
-### PUT /requests/{id}/finish-revisoin
-Conclui revisão e define nova nota
+**Request Body:**
 ```json
 {
   "nota_revista": 16.0,
-  "observacoes_revisao": "Erro identificado na questão 3: soma estava incorreta. Nota corrigida de 14.5 para 16.0"
+  "observacoes_revisao": "Após análise conjunta, foi identificado um erro na soma da pontuação da questão 3. A nota foi corrigida."
 }
 ```
 
-**Response:**
+**Response (200 OK):**
 ```json
 {
   "id": 456,
   "estado": "CONCLUIDO",
   "nota_original": 14.5,
   "nota_revista": 16.0,
-  "data_revisao": "2025-11-08T16:30:00Z"
+  "data_revisao": "2025-11-10T15:30:00Z",
+  "updated_at": "2025-11-10T15:30:00Z"
 }
 ```
 
-**Evento gerado:**
+### `PATCH /{id}/keep-grade`
+**Mantém a nota original** e conclui o processo de revisão.
+
+**Use Case:** O docente esclarece a dúvida do aluno, mas conclui que a correção original estava correta.
+**State Transition:** `REUNIAO_AGENDADA` -> `CONCLUIDO`
+
+**Request Body:**
+```json
+{
+  "observacoes_revisao": "A correção foi reavaliada com o aluno e não foram encontrados erros. A nota original foi mantida."
+}
+```
+
+**Response (200 OK):**
+```json
+{
+  "id": 456,
+  "estado": "CONCLUIDO",
+  "nota_original": 14.5,
+  "nota_revista": 14.5,
+  "data_revisao": "2025-11-10T15:30:00Z",
+  "updated_at": "2025-11-10T15:30:00Z"
+}
+```
+
+**Evento Gerado (em ambos os casos):**
 ```json
 {
   "event": "revisao.concluida",
   "data": {
-    "pedido_revisao_id": 456,
+    "revisao_id": 456,
     "classificacao_id": 123,
     "nota_antiga": 14.5,
-    "nota_nova": 16.0,
+    "nota_nova": 16.0, // ou 14.5 se a nota for mantida
     "aluno_id": 789
   }
 }
 ```
 
-## Documentos
+---
 
-### POST /requests/{id}/add.document
-Anexa documento ao pedido
+## 4. Querying Reviews
+
+### `GET /{id}`
+Retrieves the details of a specific grade review request.
+
+**Response:**
 ```json
 {
-  "tipo": "RESOLUCAO",
-  "nome_ficheiro": "prova_questao3.pdf",
-  "documento": "base64_encoded_file"
+  "id": 456,
+  "grade_id": 123,
+  "student_id": 789,
+  "lecturer_id": 101,
+  "status": "MEETING_SCHEDULED",
+  "meeting_datetime": "2025-11-10T15:00:00Z",
+  "meeting_location": "Lecturer's Office - Room 3.21",
+  "original_grade": 14.5,
+  "revised_grade": null,
+  "review_remarks": null,
+  "created_at": "2025-11-05T10:30:00Z",
+  "updated_at": "2025-11-06T11:00:00Z"
 }
 ```
 
-### GET /requests/{id}/documents
-Lista documentos de um pedido
+### `GET /`
+Lists all grade review requests, with filtering options.
 
-### DELETE /documents/{documentId}
-Remove documento
+**Query Parameters:**
+- `student_id` (optional)
+- `lecturer_id` (optional)
+- `status` (optional): `PENDING_APPROVAL`, `MEETING_SCHEDULED`, `CONCLUDED`
+
+---

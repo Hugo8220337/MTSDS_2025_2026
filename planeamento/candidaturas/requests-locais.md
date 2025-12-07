@@ -3,13 +3,30 @@
 Base URL: `/api/v1/candidaturas`
 `/api/v1/applications`
 
-## Concursos
 
-## GET /api/v1/applications/admission-competitions
-Lista concursos disponíveis
+# Concursos e Fases (Competicions BC)
 
-## POST /api/v1/applications/create-admission-competition
-Cria novo concurso
+## Criar Rascunho
+```
+POST /api/v1/applications/create-draft
+```
+
+## Atualizar Rascunho
+```
+PUT /api/v1/applications/{id}/update-draft
+```
+
+## Listar Concursos
+```
+GET /api/v1/candidaturas/competitions
+```
+
+## Criar Concursos
+```
+POST /api/v1/candidaturas/competitions
+```
+
+body:
 ```json
 {
   "nome": "Mestrado em Engenharia Informática 2025/26",
@@ -20,8 +37,17 @@ Cria novo concurso
 }
 ```
 
-## POST /api/v1/applications/admission-competitions/{id}/create-phase
-Cria nova fase do concurso
+## Obter Concuso por ID
+```
+GET /api/v1/candidaturas/competitions/{id}
+```
+
+## Criar fase num concurso 
+```
+POST /api/v1/candidaturas/competitions/{id}/phases
+```
+
+body:
 ```json
 {
   "numero": 1,
@@ -31,10 +57,19 @@ Cria nova fase do concurso
 }
 ```
 
-## Candidaturas
+## Listar fases
+```
+GET /api/v1/candidaturas/competitions/{id}/phases
+```
 
-## POST /api/v1/applications/submit-aplication
-Submete nova candidatura
+# Candidaturas (Applications BC)
+
+## Submeter Candidatura
+```
+POST /api/v1/applications/{applicationId}/submit
+```
+
+body:
 ```json
 {
   "fase_id": 123,
@@ -49,12 +84,19 @@ Submete nova candidatura
 }
 ```
 
-## GET /api/v1/applications/{id}
-Obtém detalhes de uma candidatura
+## Obter Candudatura
+```
+GET /api/v1/candidaturas/applications/{id}
+```
 
-## POST /api/v1/applications/{id}/upload-document
+# Documentos
 
-Upload de documento
+## Upload de documento
+```
+POST /api/v1/candidaturas/applications/{id}/documents
+```
+
+body:
 ```json
 {
   "tipo_documento": "CERTIFICADO_HABILITACOES",
@@ -62,8 +104,18 @@ Upload de documento
 }
 ```
 
-## PUT /api/v1/applications/{id}/update-state
-Atualiza estado da candidatura
+## Listar docuemtnos de uma candidatura
+```
+GET /api/v1/candidaturas/applications/{id}/documents
+```
+
+# Estado da candidatura
+## Atualizar Estado
+```
+PUT /api/v1/candidaturas/applications/{id}/state
+```
+
+body:
 ```json
 {
   "estado": "APROVADA",
@@ -71,12 +123,14 @@ Atualiza estado da candidatura
 }
 ```
 
-## Seriação
+# Import DGES
+```
+POST /api/v1/candidaturas/competitions/{id}/phases/{fase}/dges-import
+```
 
-### POST /api/v1/candidaturas/concursos/{id}/fases/{fase_id}/seriar
-## POST /api/v1/applications/admissions/{id}/phases/{phase_id}/filtering
-Inicia processo de seriação da fase
-
-### GET /api/v1/candidaturas/concursos/{id}/fases/{fase_id}/resultados
-## GET /api/v1/applications/admissions/{id}/phases/{phase_id}/results
-Obtém resultados da seriação
+body:
+```json
+{
+  "arquivo": "base64_do_ficheiro"
+}
+```

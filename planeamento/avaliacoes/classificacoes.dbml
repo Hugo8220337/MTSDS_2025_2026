@@ -22,20 +22,6 @@ Table classificacoes {
   note: 'Notas dos alunos em cada momento de avaliação'
 }
 
-Table historico_classificacoes {
-  id int [pk, increment]
-  classificacao_id int [ref: > classificacoes.id]
-  valor_anterior decimal(4,2)
-  valor_novo decimal(4,2)
-  docente_id int [not null, note: 'Docente que fez a alteração']
-  motivo text [not null]
-  data_alteracao timestamp [not null]
-  created_at timestamp
-  updated_at timestamp
-
-  note: 'Histórico de alterações em classificações'
-}
-
 Table medias_componentes {
   id int [pk, increment]
   componente_id int [not null, note: 'ID do componente no serviço de Config']
@@ -51,6 +37,41 @@ Table medias_componentes {
   
   note: 'Médias calculadas por componente de avaliação'
 }
+
+Table revisao {
+  id int [pk, increment]
+  classificacao_id int [not null, ref: > classificacoes.id, note: 'ID da classificação a ser revista']
+  aluno_id int [not null]
+  docente_responsavel_id int [not null]
+  estado estado_revisao [not null, default: 'AGUARDA_APROVACAO']
+
+  // Dados da reunião
+  data_reuniao timestamp [note: 'Data/hora da reunião presencial']
+  local_reuniao varchar(255) [note: 'Local da reunião']
+
+  // Resultado da revisão (se aprovado)
+  nota_original decimal(4,2)
+  nota_revista decimal(4,2)
+  observacoes_revisao text
+  data_revisao timestamp
+
+  created_at timestamp
+  updated_at timestamp
+
+  indexes {
+    (classificacao_id)
+    (aluno_id)
+    (estado)
+  }
+}
+
+
+Enum estado_revisao {
+  AGUARDA_APROVACAO [note: 'Reunião marcada entre aluno e docente']
+  REUNIAO_AGENDADA [note: 'Pedido submetido, aguardar decisão do docente']
+  CONCLUIDO [note: 'Revisão feita, nota atualizada']
+}
+
 
 Enum estado_classificacao {
   LANCADA [note: 'Nota lançada normalmente']

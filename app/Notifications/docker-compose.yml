@@ -1,0 +1,58 @@
+services:
+  db:
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=notifications-db
+    healthcheck:
+      test: [ "CMD-SHELL", "mongosh --username myuser --password secret --authenticationDatabase admin --eval \"db.adminCommand({ ping: 1 })\" || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - db_data:/data/db
+
+  rabbitmq:
+    image: rabbitmq:3.12.9-management-alpine
+    container_name: rabbit_container
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=123
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: [ "CMD-SHELL", "rabbitmq-diagnostics -q ping || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  notifications-app:
+    build: .
+    environment:
+      - SPRING_APPLICATION_NAME=Notifications
+      - SPRING_MONGO_URI=mongodb://db:27017/notifications-db?authSource=admin
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=user
+      - SPRING_RABBITMQ_PASSWORD=123
+    volumes:
+      - ./config:/config
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  rabbitmq_data:
+    driver: local
+  db_data:
+    driver: local

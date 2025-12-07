@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: enrollments-postgres
+  namespace: enrollments
+spec:
+  serviceName: enrollments-postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app: enrollments-postgres
+  template:
+    metadata:
+      labels:
+        app: enrollments-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:13-alpine
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: enrollments-db
+            - name: POSTGRES_USER
+              value: myuser
+            - name: POSTGRES_PASSWORD
+              value: secret
+          volumeMounts:
+            - name: enrollments-postgres-data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: enrollments-postgres-init
+          configMap:
+            name: enrollments-postgres-init
+  volumeClaimTemplates:
+    - metadata:
+        name: enrollments-postgres-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 2Gi

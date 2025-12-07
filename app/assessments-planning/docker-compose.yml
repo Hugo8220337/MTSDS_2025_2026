@@ -1,0 +1,64 @@
+services:
+  # 1. PostgreSQL Service (Relational Data)
+  db:
+    image: postgres:15-alpine
+    ports:
+      - "5431:5432" # External:5431, Internal:5432
+    environment:
+      - POSTGRES_DB=applications-db
+      - POSTGRES_USER=myuser
+      - POSTGRES_PASSWORD=secret
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U myuser -d applications-db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # 2. MongoDB Service (Content Data - Was missing previously)
+  mongo:
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  # 3. RabbitMQ Service (Messaging - Added for completeness)
+  rabbitmq:
+    image: rabbitmq:3.12-management-alpine
+    ports:
+      - "5672:5672"   # AMQP port
+      - "15672:15672" # Management UI
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  # 4. Spring Boot Application
+  app:
+    build: .
+    ports:
+      - "8082:8082" # Matches server.port in application.yml
+    environment:
+      # OVERRIDES: Connect to containers by service name, NOT localhost
+      - SPRING_APPLICATION_NAME=assessments-planning
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/assessments-planning-db
+      - SPRING_DATASOURCE_USERNAME=myuser
+      - SPRING_DATASOURCE_PASSWORD=secret
+      - SPRING_MONGO_URI=mongodb://mongo:27017/assessments_content_db
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      # If you have a separate Eureka container, uncomment below:
+      # - EUREKA_URI=http://eureka-server:8761/eureka
+    depends_on:
+      db:
+        condition: service_healthy
+      mongo:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  mongo_data:

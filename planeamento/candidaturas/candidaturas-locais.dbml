@@ -37,6 +37,7 @@ Table candidaturas {
   nif string [note: 'NIF/Documento de identificação do candidato']
   nome string [note: 'Nome completo do candidato']
   estado estado_candidatura [note: 'Estado atual da candidatura']
+  origem origem_candidatura [not null]
   data_submissao timestamp [note: 'Data e hora da submissão da candidatura']
   created_at timestamp
   updated_at timestamp
@@ -74,9 +75,15 @@ Enum tipo_concurso {
   M23
   CTESP
   MESTRADO
+  LICENCIATURA
   POS_GRADUACAO
   REINGRESSO
   MUDANCA_CURSO
+}
+
+Enum origem_candidatura {
+  DGES
+  LOCAL
 }
 
 Enum estado_concurso {

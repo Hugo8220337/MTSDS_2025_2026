@@ -1,0 +1,295 @@
+services:
+  db:
+    image: postgres:13-alpine
+    ports:
+      - "5431:5432"
+    environment:
+      - POSTGRES_DB=development-db
+      - POSTGRES_USER=myuser
+      - POSTGRES_PASSWORD=secret
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U myuser -d development-db" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./docker/init/postgres:/docker-entrypoint-initdb.d
+
+  db-mongo:
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    command: mongod --noauth  # DESABILITAR AUTENTICAÇÃO
+    environment:
+      - MONGO_INITDB_DATABASE=notifications-db
+    healthcheck:
+      test: [ "CMD-SHELL", "mongosh --quiet --eval \"db.adminCommand({ ping: 1 })\"" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    volumes:
+      - mongo_data:/data/db
+      - ./docker/init/mongo:/docker-entrypoint-initdb.d
+
+  eureka-server:
+    build: ./EurekaServer
+    ports:
+      - "8761:8761"
+    restart: on-failure
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:8761/actuator/health || curl -f http://localhost:8761/ || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api-gateway:
+    build: ./GatewayAPI
+    ports:
+      - "8080:8080"
+    environment:
+      - EUREKA_URL=http://eureka-server:8761/eureka/
+      - SCHEDULES_SERVICE=Schedules
+      - APPLICATIONS_SERVICE=Applications
+      - ACADEMINS_SERVICE=Academins
+      - ENROLLMENTS_SERVICE=enrollments
+      - NOTIFICATIONS_SERVICE=Notifications
+      - ASSESSMENTS_SERVICE=Assessments
+      - GRADES_REPORT_SERVICE=GradeReport
+      - ASSESSMENTS_PLANNING_SERVICE=assessments-planning
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+    restart: on-failure
+
+  rabbitmq:
+    image: rabbitmq:3.12.9-management-alpine
+    ports:
+      - "5671:5672"
+      - "15671:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=123
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: [ "CMD-SHELL", "rabbitmq-diagnostics -q ping || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: on-failure
+
+  applications-service:
+    build: ./Applications
+    ports:
+      - "8081:8080"
+      - "9081:9081" # port for debugging purposes
+    environment:
+      - JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9081"       # - "9081:9081" for debugging purpusses
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SERVICES_ACADEMINS_URL=http://academins-service:8080/api/v1/academins
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/development-db
+      - SPRING_DATASOURCE_USERNAME=myuser
+      - SPRING_DATASOURCE_PASSWORD=secret
+      - SPRING_APPLICATION_NAME=Applications
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=user
+      - SPRING_RABBITMQ_PASSWORD=123
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: on-failure
+
+  enrollments-service:
+    build: ./enrollments
+    ports:
+      - "8082:8080"
+      - "9082:9082"
+    environment:
+      - JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9082"       # - "9082:9082" for debugging purpusses
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/development-db
+      - SPRING_DATASOURCE_USERNAME=myuser
+      - SPRING_DATASOURCE_PASSWORD=secret
+      - SPRING_APPLICATION_NAME=enrollments
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=user
+      - SPRING_RABBITMQ_PASSWORD=123
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: on-failure
+
+  schedules-service:
+    build: ./Schedules
+    ports:
+      - "8083:8080"
+      - "9083:9083" # port for debugging purposes
+    environment:
+      - JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9083"       # for debugging purpusses
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SERVICES_ACADEMINS_URL=http://academins-service:8080/api/v1/academins
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/development-db
+      - SPRING_DATASOURCE_USERNAME=myuser
+      - SPRING_DATASOURCE_PASSWORD=secret
+      - SPRING_APPLICATION_NAME=Schedules
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=user
+      - SPRING_RABBITMQ_PASSWORD=123
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: on-failure
+
+  academins-service:
+    build: ./Academins
+    ports:
+      - "8084:8080"
+      - "9084:9084" # port for debugging purposes
+    environment:
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/development-db
+      - SPRING_DATASOURCE_USERNAME=myuser
+      - SPRING_DATASOURCE_PASSWORD=secret
+      - SPRING_APPLICATION_NAME=Academins
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=user
+      - SPRING_RABBITMQ_PASSWORD=123
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: on-failure
+
+
+  notifications-service:
+    build: ./Notifications
+    ports:
+      - "8085:8080"
+      - "9085:9085" # port for debugging purposes
+    environment:
+      - JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9085"       # - "9085:9085" for debugging purpusses
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_APPLICATION_NAME=Notifications
+      - SPRING_MONGO_URI=mongodb://db-mongo:27017/development-db
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=user
+      - SPRING_RABBITMQ_PASSWORD=123
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      db-mongo:
+        condition: service_healthy
+    restart: on-failure
+
+  assessments-planning-service:
+    build: ./assessments-planning
+    ports:
+      - "8086:8080"
+      - "9086:9086" # port for debugging purposes
+    environment:
+      - JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9086"       # - "9086:9086" for debugging purpusses
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SERVICES_ACADEMINS_URL=http://academins-service:8080/api/v1/academins
+      - SPRING_MONGO_URI=mongodb://db-mongo:27017/development-db
+      - SPRING_APPLICATION_NAME=assessments-planning
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/development-db
+      - SPRING_DATASOURCE_USERNAME=myuser
+      - SPRING_DATASOURCE_PASSWORD=secret
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=user
+      - SPRING_RABBITMQ_PASSWORD=123
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+      db-mongo:
+        condition: service_healthy
+
+  assessments-service:
+    build: ./assessments
+    ports:
+      - "8087:8080"
+      - "9087:9087" # port for debugging purposes
+    environment:
+      - JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9087"       # - "9086:9086" for debugging purpusses
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_MONGO_URI=mongodb://db-mongo:27017/development-db
+      - SPRING_APPLICATION_NAME=Assessments
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/development-db
+      - SPRING_DATASOURCE_USERNAME=myuser
+      - SPRING_DATASOURCE_PASSWORD=secret
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=user
+      - SPRING_RABBITMQ_PASSWORD=123
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+      db-mongo:
+        condition: service_healthy
+
+  grade-report-service:
+    build: ./grade-report
+    ports:
+      - "8088:8080"
+      - "9088:9088" # port for debugging purposes
+    environment:
+      - JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9088"       # - "9088:9088" for debugging purpusses
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SERVICES_ACADEMINS_URL=http://academins-service:8080/api/v1/academins
+      - SPRING_APPLICATION_NAME=GradeReport
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/development-db
+      - SPRING_DATASOURCE_USERNAME=myuser
+      - SPRING_DATASOURCE_PASSWORD=secret
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=user
+      - SPRING_RABBITMQ_PASSWORD=123
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+
+
+volumes:
+  rabbitmq_data:
+    driver: local
+  db_data:
+    driver: local
+  mongo_data:
+    driver: local

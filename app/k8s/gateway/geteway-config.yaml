@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-config
+  namespace: gateway
+data:
+  EUREKA_URL: "http://eureka.eureka-server.svc.cluster.local:8761/eureka/"
+  SCHEDULES_SERVICE: Schedules
+  APPLICATIONS_SERVICE: Applications
+  ACADEMINS_SERVICE: Academins
+  ENROLLMENTS_SERVICE: enrollments
+  NOTIFICATIONS_SERVICE: Notifications
+  ASSESSMENTS_SERVICE: Assessments
+  GRADES_REPORT_SERVICE: GradeReport
+  ASSESSMENTS_PLANNING_SERVICE: assessments-planning

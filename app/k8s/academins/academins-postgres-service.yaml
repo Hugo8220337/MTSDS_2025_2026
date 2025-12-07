@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: academins-postgres
+  namespace: academins
+spec:
+  selector:
+    app: academins-postgres
+  ports:
+    - port: 5432
+      targetPort: 5432

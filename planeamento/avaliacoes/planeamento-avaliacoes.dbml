@@ -18,6 +18,8 @@ Table componentes_avaliacao {
   indexes {
     (unidade_curricular_id, ano_letivo_id)
   }
+
+  note: 'Componentes de avaliação de uma unidade curricular (ex: exame, trabalhos, etc)'
 }
 
 Table momentos_avaliacao {
@@ -31,15 +33,9 @@ Table momentos_avaliacao {
   created_at timestamp
   updated_at timestamp
   
-  note: 'Momentos específicos de avaliação dentro de um componente ()'
+  note: 'Momentos específicos de avaliação dentro de um componente (onde se vai realizar o exame, teste, etc)'
 }
 
-Enum estado_escala {
-  RASCUNHO [note: 'Em elaboração']
-  SUBMETIDA [note: 'Aguardando aprovação']
-  APROVADA [note: 'Aprovada e em vigor']
-  ARQUIVADA [note: 'Versão anterior arquivada']
-}
 
 Enum estado_momento {
   AGENDADO [note: 'Programado para realização']

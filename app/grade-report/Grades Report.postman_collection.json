@@ -1,0 +1,263 @@
+{
+	"info": {
+		"_postman_id": "d111a96d-f8d0-4531-897a-78399bf43ea7",
+		"name": "Grades Report",
+		"description": "Collection for testing the Assessments Sheet Microservice (PostgreSQL Only Version)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "50053153",
+		"_collection_link": "https://huguito-ricardo-9985597.postman.co/workspace/Hugo-bpc's-Workspace~aeb8c8e9-8d22-43d5-856d-e95fdc0b15fe/collection/50053153-d111a96d-f8d0-4531-897a-78399bf43ea7?action=share&source=collection_link&creator=50053153"
+	},
+	"item": [
+		{
+			"name": "1. Create Grade Report (Pauta)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"teacher_id\": 1,\n  \"unidade_curricular_id\": 101,\n  \"ano_letivo_id\": 2024,\n  \"tipo\": \"NORMAL\",\n  \"epoca\": \"NORMAL\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/grade-reports/create-grade-report",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"grade-reports",
+						"create-grade-report"
+					]
+				},
+				"description": "Creates a new grade report metadata entry."
+			},
+			"response": []
+		},
+		{
+			"name": "2. Generate Results (Lines)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/v1/grade-reports/:id/generate",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"grade-reports",
+						":id",
+						"generate"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1",
+							"description": "ID of the created Report"
+						}
+					]
+				},
+				"description": "Triggers the generation of student lines (StudentGrade entities) for the report."
+			},
+			"response": []
+		},
+		{
+			"name": "3. Get Report Details",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/v1/grade-reports/:id",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"grade-reports",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Fetches the header/metadata of a specific grade report."
+			},
+			"response": []
+		},
+		{
+			"name": "4. Get Report Results (Student Grades)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/v1/grade-reports/:id/results",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"grade-reports",
+						":id",
+						"results"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Fetches the list of students and their grades associated with this report."
+			},
+			"response": []
+		},
+		{
+			"name": "5. Publish Report",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"estado\": \"PROVISORIA\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/grade-reports/:id/publish",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"grade-reports",
+						":id",
+						"publish"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Changes the state of the report to PROVISIONAL or DEFINITIVE."
+			},
+			"response": []
+		},
+		{
+			"name": "6. Sign Report",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"tipo_assinatura\": \"REGENTE\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/grade-reports/:id/sign",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"grade-reports",
+						":id",
+						"sign"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Adds a digital signature/approval to the report."
+			},
+			"response": []
+		},
+		{
+			"name": "7. Close Report",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/v1/grade-reports/:id/close",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"grade-reports",
+						":id",
+						"close"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Finalizes and closes the report."
+			},
+			"response": []
+		},
+		{
+			"name": "8. List Reports by Curricular Unit",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/v1/grade-reports/curricular-unit/:ucId",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"grade-reports",
+						"curricular-unit",
+						":ucId"
+					],
+					"variable": [
+						{
+							"key": "ucId",
+							"value": "101"
+						}
+					]
+				},
+				"description": "Lists all reports associated with a specific Curricular Unit ID."
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080/api/v1/grade-reports",
+			"type": "string"
+		}
+	]
+}

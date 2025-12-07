@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: enrollments-deployment
+  namespace: enrollments
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: enrollments
+  template:
+    metadata:
+      labels:
+        app: enrollments
+    spec:
+      containers:
+        - name: enrollments
+          image: hugobpc/mtds_2025_2026-enrollments:latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: enrollments-config
+            - secretRef:
+                name: enrollments-secret
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 12
+            periodSeconds: 10
+            failureThreshold: 6

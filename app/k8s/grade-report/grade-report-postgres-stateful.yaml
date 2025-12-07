@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: grade-report-postgres
+  namespace: grade-report
+spec:
+  serviceName: grade-report-postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grade-report-postgres
+  template:
+    metadata:
+      labels:
+        app: grade-report-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:13-alpine
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: grade-report-db
+            - name: POSTGRES_USER
+              value: myuser
+            - name: POSTGRES_PASSWORD
+              value: secret
+          volumeMounts:
+            - name: grade-report-postgres-data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: grade-report-postgres-init
+          configMap:
+            name: grade-report-postgres-init # Opcional: Criar se precisares de scripts SQL iniciais
+  volumeClaimTemplates:
+    - metadata:
+        name: grade-report-postgres-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 2Gi

@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:open-bpmn="http://open-bpmn.org/XMLSchema" id="Definitions_2" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.40.1">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:open-bpmn="http://open-bpmn.org/XMLSchema" id="Definitions_2" targetNamespace="http://bpmn.io/schema/bpmn" exporter="bpmn-js (https://demo.bpmn.io)" exporterVersion="18.6.1">
   <bpmn:process id="Process_LancamentoClassificacoes" processType="Public" isExecutable="false">
     <bpmn:documentation id="documentation_9MgO2g" />
     <bpmn:extensionElements>
       <open-bpmn:auto-align />
     </bpmn:extensionElements>
-    <bpmn:startEvent id="StartEvent_MomentoRealizado" name="Momento de Avaliação Realizado">
+    <bpmn:startEvent id="StartEvent_MomentoRealizado" name="Momento de Avaliação Criada/Alterada">
       <bpmn:documentation id="documentation_Qq1bsw" />
       <bpmn:outgoing>Flow_5</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:intermediateThrowEvent id="Event_NotasLancadas" name="Evento: Classificações Lançadas">
       <bpmn:documentation id="documentation_TouZ1g" />
       <bpmn:incoming>Flow_6</bpmn:incoming>
-      <bpmn:outgoing>Flow_7</bpmn:outgoing>
+      <bpmn:outgoing>Flow_00z1eyx</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_1" />
     </bpmn:intermediateThrowEvent>
     <bpmn:endEvent id="EndEvent_MediaAtualizada" name="Média Atualizada">
       <bpmn:documentation id="documentation_h0MenQ" />
-      <bpmn:incoming>Flow_8</bpmn:incoming>
+      <bpmn:incoming>Flow_10od6ss</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_5" sourceRef="StartEvent_MomentoRealizado" targetRef="Task_LancarNotas">
       <bpmn:documentation id="documentation_FCGe0g" />
@@ -25,71 +25,211 @@
     <bpmn:sequenceFlow id="Flow_6" sourceRef="Task_LancarNotas" targetRef="Event_NotasLancadas">
       <bpmn:documentation id="documentation_DhfW4w" />
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_7" sourceRef="Event_NotasLancadas" targetRef="Task_CalcularMedia">
-      <bpmn:documentation id="documentation_rDjV5Q" />
-    </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_8" sourceRef="Task_CalcularMedia" targetRef="EndEvent_MediaAtualizada">
-      <bpmn:documentation id="documentation_g5n9sg" />
-    </bpmn:sequenceFlow>
-    <bpmn:userTask id="Task_LancarNotas" name="Lançar Classificações (Estado: LANCADA)">
-      <bpmn:documentation />
+    <bpmn:userTask id="Task_LancarNotas" name="Lançar Classificações&#10;(Estado: PROVISÓRIA)">
+      <bpmn:documentation>Estados possíveis das classificações:
+        - PROVISÓRIA: Notas inseridas como temporárias
+        - DEFINITIVA: Notas submetidas definitivamente
+    </bpmn:documentation>
       <bpmn:incoming>Flow_5</bpmn:incoming>
       <bpmn:outgoing>Flow_6</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:serviceTask id="Task_CalcularMedia" name="Calcular/Atualizar Média do Componente">
       <bpmn:documentation />
-      <bpmn:incoming>Flow_7</bpmn:incoming>
-      <bpmn:outgoing>Flow_8</bpmn:outgoing>
+      <bpmn:incoming>Flow_0dkploi</bpmn:incoming>
+      <bpmn:outgoing>Flow_10od6ss</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:userTask id="Activity_0cjvte8" name="Lançar Classificações&#10;(Estado: DEFINITIVA)">
+      <bpmn:documentation>Estados possíveis das classificações:
+        - PROVISÓRIA: Notas inseridas como temporárias
+        - DEFINITIVA: Notas submetidas definitivamente
+    </bpmn:documentation>
+      <bpmn:incoming>Flow_09wse3j</bpmn:incoming>
+      <bpmn:incoming>Flow_1l6laex</bpmn:incoming>
+      <bpmn:outgoing>Flow_1aju2ou</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:intermediateThrowEvent id="Event_0z9azvp" name="Evento: Classificações Lançadas">
+      <bpmn:documentation />
+      <bpmn:incoming>Flow_1aju2ou</bpmn:incoming>
+      <bpmn:outgoing>Flow_0dkploi</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1994u2o" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:sequenceFlow id="Flow_0dkploi" sourceRef="Event_0z9azvp" targetRef="Task_CalcularMedia" />
+    <bpmn:receiveTask id="Activity_06j24nc" name="Receber Pedido de Revisão">
+      <bpmn:incoming>Flow_00z1eyx</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ojru85</bpmn:outgoing>
+    </bpmn:receiveTask>
+    <bpmn:sequenceFlow id="Flow_00z1eyx" sourceRef="Event_NotasLancadas" targetRef="Activity_06j24nc" />
+    <bpmn:boundaryEvent id="Event_058lw0y" name="Fim de período de revisão" attachedToRef="Activity_06j24nc">
+      <bpmn:outgoing>Flow_09wse3j</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_1tr4q0j" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_09wse3j" sourceRef="Event_058lw0y" targetRef="Activity_0cjvte8" />
+    <bpmn:sequenceFlow id="Flow_1aju2ou" sourceRef="Activity_0cjvte8" targetRef="Event_0z9azvp" />
+    <bpmn:sequenceFlow id="Flow_10od6ss" sourceRef="Task_CalcularMedia" targetRef="EndEvent_MediaAtualizada" />
+    <bpmn:sequenceFlow id="Flow_1ojru85" sourceRef="Activity_06j24nc" targetRef="Activity_1tmygi1" />
+    <bpmn:userTask id="Activity_1tmygi1" name="Marcar Reunião">
+      <bpmn:incoming>Flow_1ojru85</bpmn:incoming>
+      <bpmn:outgoing>Flow_0zdzyia</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_0zdzyia" sourceRef="Activity_1tmygi1" targetRef="Activity_1w0xihu" />
+    <bpmn:sendTask id="Activity_1w0xihu" name="Notificar Aluno do agendamento da revisão">
+      <bpmn:incoming>Flow_0zdzyia</bpmn:incoming>
+      <bpmn:outgoing>Flow_0lclqu7</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:sequenceFlow id="Flow_0lclqu7" sourceRef="Activity_1w0xihu" targetRef="Activity_011oupf" />
+    <bpmn:userTask id="Activity_011oupf" name="Alterar Nota">
+      <bpmn:incoming>Flow_0lclqu7</bpmn:incoming>
+      <bpmn:outgoing>Flow_0dx1oau</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_1wavijo" name="Houve Alteração?">
+      <bpmn:incoming>Flow_0dx1oau</bpmn:incoming>
+      <bpmn:outgoing>Flow_1l6laex</bpmn:outgoing>
+      <bpmn:outgoing>Flow_09vhjof</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0dx1oau" sourceRef="Activity_011oupf" targetRef="Gateway_1wavijo" />
+    <bpmn:sequenceFlow id="Flow_1l6laex" name="Sim" sourceRef="Gateway_1wavijo" targetRef="Activity_0cjvte8" />
+    <bpmn:endEvent id="Event_0py1nhl">
+      <bpmn:incoming>Flow_09vhjof</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_09vhjof" name="Não" sourceRef="Gateway_1wavijo" targetRef="Event_0py1nhl" />
     <bpmn:textAnnotation id="textAnnotation_kSqyKA" textFormat="">
       <bpmn:documentation id="documentation_7ttmOQ" />
-      <bpmn:text>O docente utiliza o sistema (via POST /classificacoes) para inserir as notas dos alunos. As classificações são criadas com o estado inicial LANCADA</bpmn:text>
+      <bpmn:text>O docente utiliza o sistema (via POST /classificacoes)
+para inserir as notas dos alunos. As classificações são criadas inicialmente como PROVISÓRIA, podendo depois ser mudada para DEFINITIVA.
+Esta transição de estado requer aprovação do nível adequado.</bpmn:text>
     </bpmn:textAnnotation>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_2">
     <bpmndi:BPMNPlane id="BPMNPlane_2" bpmnElement="Process_LancamentoClassificacoes">
-      <bpmndi:BPMNShape id="Shape_StartEvent_MomentoRealizado" bpmnElement="StartEvent_MomentoRealizado">
-        <dc:Bounds x="180" y="102" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="167" y="145" width="62" height="40" />
-        </bpmndi:BPMNLabel>
+      <bpmndi:BPMNShape id="Activity_1o6dszm_di" bpmnElement="Task_LancarNotas">
+        <dc:Bounds x="290" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_06j24nc_di" bpmnElement="Activity_06j24nc">
+        <dc:Bounds x="520" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Shape_Event_NotasLancadas" bpmnElement="Event_NotasLancadas">
         <dc:Bounds x="432" y="102" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="415" y="145" width="71" height="40" />
+          <dc:Bounds x="413" y="145" width="74" height="40" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_StartEvent_MomentoRealizado" bpmnElement="StartEvent_MomentoRealizado">
+        <dc:Bounds x="202" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="182" y="145" width="77" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0jvk54u_di" bpmnElement="Activity_1tmygi1">
+        <dc:Bounds x="680" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Shape_EndEvent_MediaAtualizada" bpmnElement="EndEvent_MediaAtualizada">
-        <dc:Bounds x="692" y="102" width="36" height="36" />
+        <dc:Bounds x="1002" y="302" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="668" y="145" width="85" height="14" />
+          <dc:Bounds x="978" y="345" width="85" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1o6dszm_di" bpmnElement="Task_LancarNotas">
-        <dc:Bounds x="270" y="80" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_19ift35_di" bpmnElement="Task_CalcularMedia">
-        <dc:Bounds x="530" y="80" width="100" height="80" />
+        <dc:Bounds x="860" y="280" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_VS6YjA" bpmnElement="textAnnotation_kSqyKA">
-        <dc:Bounds x="265" y="186" width="111" height="51" />
+      <bpmndi:BPMNShape id="BPMNShape_16k1e1j" bpmnElement="Activity_0cjvte8">
+        <dc:Bounds x="640" y="280" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_086m9wo" bpmnElement="Event_0z9azvp">
+        <dc:Bounds x="782" y="302" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="763" y="345" width="74" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_09dae75_di" bpmnElement="Activity_1w0xihu">
+        <dc:Bounds x="850" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0x0pr25_di" bpmnElement="Activity_011oupf">
+        <dc:Bounds x="1030" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1wavijo_di" bpmnElement="Gateway_1wavijo" isMarkerVisible="true">
+        <dc:Bounds x="1205" y="95" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1186" y="63" width="88" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0py1nhl_di" bpmnElement="Event_0py1nhl">
+        <dc:Bounds x="1322" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_058lw0y_di" bpmnElement="Event_058lw0y">
+        <dc:Bounds x="552" y="142" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="575" y="186" width="90" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Edge_Flow_5" bpmnElement="Flow_5">
-        <di:waypoint x="216" y="120" />
-        <di:waypoint x="270" y="120" />
+        <di:waypoint x="238" y="120" />
+        <di:waypoint x="290" y="120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Edge_Flow_6" bpmnElement="Flow_6">
-        <di:waypoint x="370" y="120" />
+        <di:waypoint x="390" y="120" />
         <di:waypoint x="432" y="120" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Edge_Flow_7" bpmnElement="Flow_7">
+      <bpmndi:BPMNEdge id="Flow_00z1eyx_di" bpmnElement="Flow_00z1eyx">
         <di:waypoint x="468" y="120" />
-        <di:waypoint x="530" y="120" />
+        <di:waypoint x="520" y="120" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Edge_Flow_8" bpmnElement="Flow_8">
-        <di:waypoint x="630" y="120" />
-        <di:waypoint x="692" y="120" />
+      <bpmndi:BPMNEdge id="Flow_09wse3j_di" bpmnElement="Flow_09wse3j">
+        <di:waypoint x="570" y="178" />
+        <di:waypoint x="570" y="290" />
+        <di:waypoint x="640" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="BPMNShape_VS6YjA" bpmnElement="textAnnotation_kSqyKA">
+        <dc:Bounds x="160" y="200" width="378" height="90" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1ojru85_di" bpmnElement="Flow_1ojru85">
+        <di:waypoint x="620" y="120" />
+        <di:waypoint x="680" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0zdzyia_di" bpmnElement="Flow_0zdzyia">
+        <di:waypoint x="780" y="120" />
+        <di:waypoint x="850" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_10od6ss_di" bpmnElement="Flow_10od6ss">
+        <di:waypoint x="960" y="320" />
+        <di:waypoint x="1002" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0dkploi_di" bpmnElement="Flow_0dkploi">
+        <di:waypoint x="818" y="320" />
+        <di:waypoint x="860" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1aju2ou_di" bpmnElement="Flow_1aju2ou">
+        <di:waypoint x="740" y="320" />
+        <di:waypoint x="782" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0lclqu7_di" bpmnElement="Flow_0lclqu7">
+        <di:waypoint x="950" y="120" />
+        <di:waypoint x="1030" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0dx1oau_di" bpmnElement="Flow_0dx1oau">
+        <di:waypoint x="1130" y="120" />
+        <di:waypoint x="1205" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1l6laex_di" bpmnElement="Flow_1l6laex">
+        <di:waypoint x="1230" y="145" />
+        <di:waypoint x="1230" y="200" />
+        <di:waypoint x="690" y="200" />
+        <di:waypoint x="690" y="280" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1240" y="173" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09vhjof_di" bpmnElement="Flow_09vhjof">
+        <di:waypoint x="1255" y="120" />
+        <di:waypoint x="1322" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1271" y="102" width="21" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

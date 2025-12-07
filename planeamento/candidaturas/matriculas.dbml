@@ -7,18 +7,10 @@ Table processos_matricula {
   nome string [note: 'Nome completo do aluno']
   curso_id string [note: 'Código do curso no sistema interno']
   ano_letivo string [note: 'Ano letivo da matrícula']
-  colocacao_dges_id integer [null, note: 'ID da colocação DGES (se origem = DGES)']
-  candidatura_local_id integer [null, note: 'ID da candidatura local (se origem = LOCAL)']
-  origem origem_matricula [note: 'Origem do aluno (DGES ou concurso local)']
+  candidatura_id integer [null, note: 'ID da candidatura']
   estado estado_matricula [note: 'Estado atual do processo de matrícula']
-  data_criacao timestamp [note: 'Data de criação do processo de matrícula']
   created_at timestamp
   updated_at timestamp
-
-    note: 'Processos de matrícula de alunos, tanto DGES quanto concursos locais.
-  Criado automaticamente quando:
-  - colocacoes_dges.estado = COLOCADO_DGES (origem = DGES)
-  - candidaturas.estado = APROVADA e opcoes_curso.estado = COLOCADO (origem = LOCAL)'
 }
 
 // Documentos necessários para matrícula
@@ -32,13 +24,6 @@ Table documentos_matricula {
   updated_at timestamp
 
   note: 'Documentos necessários para efetivação da matrícula'
-}
-
-
-
-Enum origem_matricula {
-  DGES
-  LOCAL
 }
 
 Enum estado_matricula {

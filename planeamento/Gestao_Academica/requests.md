@@ -197,6 +197,17 @@ Authorization: Bearer <token>
 
 Estes endpoints gerem os registos académicos. A criação é tipicamente acionada por eventos de outros serviços.
 
+### Obter dados de uma escola
+```http
+GET /api/v1/academics/school/{schoolAcronym}
+Authorization: Bearer <token>
+```
+**Resposta:** `200 OK`
+```json
+
+```
+
+
 #### Obter dados de um Aluno
 ```http
 GET /api/v1/admin/alunos/8220337
@@ -404,3 +415,5 @@ O microserviço de **Candidaturas** publica um evento quando `processos_matricul
 2. Cria o aluno na tabela `alunos`
 3. Gera o `numero_aluno`
 4. Publica evento de confirmação (opcional)
+
+
