@@ -1,0 +1,236 @@
+{
+	"info": {
+		"_postman_id": "3eecbfe7-6f78-4064-8fa0-009c78cb68fd",
+		"name": "Assessments",
+		"description": "Collection to test the Assessments Service (Spring MVC) endpoints including Grading and Review workflows.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "50053153",
+		"_collection_link": "https://huguito-ricardo-9985597.postman.co/workspace/Hugo-bpc's-Workspace~aeb8c8e9-8d22-43d5-856d-e95fdc0b15fe/collection/50053153-3eecbfe7-6f78-4064-8fa0-009c78cb68fd?action=share&source=collection_link&creator=50053153"
+	},
+	"item": [
+		{
+			"name": "1. Create/Update Grade",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"studentId\": 789,\n    \"evaluationMomentId\": 101,\n    \"gradeValue\": 14.5,\n    \"teacherId\": 55\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/assessments/grades",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"assessments",
+						"grades"
+					]
+				},
+				"description": "Creates a grade for Student 789. If run again, it updates the existing grade."
+			},
+			"response": []
+		},
+		{
+			"name": "2. Get Grades by Student",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/assessments/grades/student/789",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"assessments",
+						"grades",
+						"student",
+						"789"
+					]
+				},
+				"description": "Fetches all grades for a specific student ID."
+			},
+			"response": []
+		},
+		{
+			"name": "3. Get Grades by Evaluation Moment",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/assessments/grades/moment/101",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"assessments",
+						"grades",
+						"moment",
+						"101"
+					]
+				},
+				"description": "Fetches all grades assigned for a specific evaluation moment ID."
+			},
+			"response": []
+		},
+		{
+			"name": "4. Request Review (Student)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"gradeId\": 1,\n    \"justification\": \"I believe the calculation for question 2 was incorrect.\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/assessments/reviews/submit-request",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"assessments",
+						"reviews",
+						"submit-request"
+					]
+				},
+				"description": "Submits a review request. NOTE: Ensure 'gradeId' matches the ID returned in Request #1."
+			},
+			"response": []
+		},
+		{
+			"name": "5. Get Review Details",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/assessments/reviews/1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"assessments",
+						"reviews",
+						"1"
+					]
+				},
+				"description": "Retrieves the status and details of a specific review."
+			},
+			"response": []
+		},
+		{
+			"name": "6. Schedule Review Meeting (Teacher)",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"meetingDatetime\": \"2025-12-10T14:30:00\",\n    \"meetingLocation\": \"Office 304\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/assessments/reviews/1/schedule-meeting",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"assessments",
+						"reviews",
+						"1",
+						"schedule-meeting"
+					]
+				},
+				"description": "Updates review status to MEETING_SCHEDULED and sets time/location."
+			},
+			"response": []
+		},
+		{
+			"name": "7. Close Review & Update Grade (Teacher)",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"observations\": \"After discussion, the grade was adjusted.\",\n    \"newGrade\": 16.0\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/assessments/reviews/1/close",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"assessments",
+						"reviews",
+						"1",
+						"close"
+					]
+				},
+				"description": "Closes the review, updates the grade in Postgres, logs to Mongo, and emits a RabbitMQ event."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "",
+			"type": "default"
+		}
+	]
+}

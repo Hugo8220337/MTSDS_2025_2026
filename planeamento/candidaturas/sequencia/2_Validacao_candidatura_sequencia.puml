@@ -1,0 +1,63 @@
+@startuml
+' Ficheiro: planeamento/candidaturas/sequencia/2_validacao_candidatura.puml
+title Diagrama de Sequência - Processo 2: Validação da Candidatura
+
+actor "Admin (Back-office)" as Admin
+participant "Backend API" as BE
+database "Base de Dados" as DB
+actor "Candidato (Frontend)" as FE
+participant "Email Service" as Email
+
+autonumber
+
+Admin -> BE: GET /api/v1/admin/candidaturas?estado=SUBMETIDA
+activate BE
+BE -> DB: Consulta candidaturas com estado 'SUBMETIDA'
+activate DB
+DB --> BE: Lista de candidaturas
+deactivate DB
+BE --> Admin: 200 OK (lista de candidaturas)
+deactivate BE
+
+Admin -> BE: GET /api/v1/admin/candidaturas/{id}/documentos
+activate BE
+BE -> DB: Consulta DocumentoSubmetido para a candidatura
+activate DB
+DB --> BE: Lista de documentos
+deactivate DB
+BE --> Admin: 200 OK (lista de documentos submetidos)
+deactivate BE
+
+loop Para cada documento
+    Admin -> BE: PUT /api/v1/admin/documentos_submetidos/{id_doc}\n(body: { "estado_validacao": "VALIDADO" | "REJEITADO" })
+    activate BE
+    BE -> DB: Atualiza DocumentoSubmetido.estado_validacao
+    activate DB
+    DB --> BE: Confirmação da atualização
+    deactivate DB
+    BE --> Admin: 200 OK
+    deactivate BE
+end
+
+Admin -> BE: PUT /api/v1/admin/candidaturas/{id}\n(body: { "estado": "VALIDADA" | "INVALIDADA" })
+activate BE
+BE -> DB: Verifica se todos os docs obrigatórios estão 'VALIDADO'
+activate DB
+DB --> BE: Resultado da verificação
+deactivate DB
+alt Se todos os docs OK
+    BE -> DB: Atualiza Candidatura.estado para 'VALIDADA'
+    activate DB
+    deactivate DB
+    BE --> Admin: 200 OK
+else Se algum doc obrigatório foi 'REJEITADO'
+    BE -> DB: Atualiza Candidatura.estado para 'INVALIDADA'
+    activate DB
+    deactivate DB
+    BE -> Email: Notifica candidato para corrigir (se dentro do prazo)
+    activate Email
+    Email -> FE: Email("Candidatura com pendências")
+    deactivate Email
+    BE --> Admin: 200 OK
+end
+deactivate BE

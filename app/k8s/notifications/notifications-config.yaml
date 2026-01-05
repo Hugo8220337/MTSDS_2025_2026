@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: notifications-config
+  namespace: notifications
+data:
+  SPRING_RABBITMQ_HOST: "rabbitmq.rabbitmq.svc.cluster.local"
+  SPRING_RABBITMQ_PORT: "5672"
+  EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka.eureka-server.svc.cluster.local:8761/eureka/"

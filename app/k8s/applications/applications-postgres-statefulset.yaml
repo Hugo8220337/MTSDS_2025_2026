@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: applications-postgres
+  namespace: applications
+spec:
+  serviceName: applications-postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app: applications-postgres
+  template:
+    metadata:
+      labels:
+        app: applications-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:13-alpine
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: applications-db
+            - name: POSTGRES_USER
+              value: myuser
+            - name: POSTGRES_PASSWORD
+              value: secret
+          volumeMounts:
+            - name: applications-postgres-data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: applications-postgres-init
+          configMap:
+            name: applications-postgres-init
+  volumeClaimTemplates:
+    - metadata:
+        name: applications-postgres-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 2Gi

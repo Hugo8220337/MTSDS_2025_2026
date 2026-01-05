@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: assessments-config
+  namespace: assessments
+data:
+  SPRING_APPLICATION_NAME: "Assessments"
+  SPRING_DATASOURCE_URL: "jdbc:postgresql://assessments-postgres:5432/assessments_db"
+  SPRING_DATASOURCE_USERNAME: "myuser"
+  SPRING_RABBITMQ_HOST: "rabbitmq.rabbitmq.svc.cluster.local"
+  SPRING_RABBITMQ_PORT: "5672"
+  EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka.eureka-server.svc.cluster.local:8761/eureka/"

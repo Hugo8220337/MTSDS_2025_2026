@@ -1,0 +1,155 @@
+//--------------------------------------------------------------------
+// Tabelas para o Microserviço de Horários
+// Responsável por gerir alocação de salas e horários das aulas.
+//--------------------------------------------------------------------
+
+// --- Entidades Estruturais ---
+
+table Sala {
+  id int [pk, increment]
+  edificio varchar(50) [not null, note: 'ex: A, B, C']
+  piso int [not null]
+  numero varchar(20) [not null, note: 'ex: 201, LAB1']
+  tipo varchar(50) [not null, note: 'ex: SALA_AULA, LABORATORIO, AUDITORIO']
+  capacidade int [not null]
+  escola_id int [not null, note: 'FK para Escola no serviço de Gestão Académica']
+  
+  indexes {
+    (edificio, piso, numero) [unique]
+  }
+  
+  note: 'Espaços físicos onde decorrem as aulas'
+}
+
+table Equipamento {
+  id int [pk, increment]
+  nome varchar(100) [not null, note: 'ex: Projetor, Quadro Interativo, Computador']
+  descricao text [note: 'Descrição detalhada do equipamento']
+  
+  indexes {
+    (nome) [unique]
+  }
+  
+  note: 'Tipos de equipamentos disponíveis'
+}
+
+table SalaEquipamento {
+  id int [pk, increment]
+  sala_id int [ref: > Sala.id, not null]
+  equipamento_id int [ref: > Equipamento.id, not null]
+  quantidade int [not null, default: 1, note: 'Número de unidades deste equipamento na sala']
+  observacoes text [note: 'ex: Projetor com defeito, Computador com software específico']
+  
+  indexes {
+    (sala_id, equipamento_id) [unique]
+  }
+  
+  note: 'Associação entre salas e equipamentos disponíveis'
+}
+
+table HorarioTurma {
+  id int [pk, increment]
+  turma_id int [not null, note: 'FK para Turma no serviço de Gestão Académica']
+  unidade_curricular_id int [not null, note: 'FK para UC no serviço de Gestão Académica']
+  ano_letivo_id int [not null, note: 'FK para AnoLetivo no serviço de Gestão Académica']
+  semestre int [not null, note: '1 ou 2']
+  data_inicio date [not null, note: 'Início do período letivo']
+  data_fim date [not null, note: 'Fim do período letivo']
+
+  indexes {
+    (turma_id, unidade_curricular_id, ano_letivo_id) [unique, note: 'Cada turma tem um horário por UC e ano letivo']
+  }
+  
+  note: 'Contexto temporal de um horário (semestre)'
+}
+
+table Aula {
+  id int [pk, increment]
+  horario_turma_id int [ref: > HorarioTurma.id, not null]
+  docente_id int [not null, note: 'FK para Docente no serviço de Gestão Académica']
+  sala_id int [ref: > Sala.id, not null]
+  dia_semana int [not null, note: '1=Segunda, 2=Terça, ..., 5=Sexta, 6=Sábado']
+  hora_inicio time [not null, note: 'ex: 08:00, 09:20, 14:30 (intervalos de 10min)']
+  hora_fim time [not null, note: 'ex: 09:30, 10:50, 16:00']
+  duracao_minutos int [not null, note: 'Calculado automaticamente']
+  tipo_aula varchar(50) [not null, note: 'ex: TEORICA, PRATICA, TEORICO_PRATICA, LABORATORIAL']
+  
+  indexes {
+    (horario_turma_id, dia_semana, hora_inicio) [unique]
+    (sala_id, dia_semana, hora_inicio, hora_fim) [note: 'Detectar conflitos de sala']
+    (docente_id, dia_semana, hora_inicio, hora_fim) [note: 'Detectar conflitos de docente']
+  }
+  
+  note: 'Aula que se repete semanalmente (ex: Segundas 08:00-09:30). O utilizador escolhe hora_inicio e hora_fim livremente (intervalos de 10min)'
+}
+
+table Excecao {
+  id int [pk, increment]
+  aula_id int [ref: > Aula.id]
+  data date [not null, note: 'Data específica da exceção']
+  tipo varchar(50) [not null, note: 'ex: CANCELAMENTO, MUDANCA_SALA, MUDANCA_HORARIO, MUDANCA_DOCENTE, REPOSICAO, FERIADO']
+  
+  // Campos opcionais para alterações
+  sala_alternativa_id int [ref: > Sala.id, note: 'Nova sala (se MUDANCA_SALA)']
+  hora_inicio_alternativa time [note: 'Novo horário de início (se MUDANCA_HORARIO)']
+  hora_fim_alternativa time [note: 'Novo horário de fim (se MUDANCA_HORARIO)']
+  docente_substituto_id int [note: 'FK para Docente substituto (se MUDANCA_DOCENTE)']
+  observacoes text
+  
+  indexes {
+    (aula_id, data) [unique]
+    (data) [note: 'Consultas por data']
+  }
+  
+  note: 'Exceções pontuais ao horário periódico'
+}
+
+table Reserva {
+  id int [pk, increment]
+  sala_id int [ref: > Sala.id, not null]
+  titulo varchar(255) [not null, note: 'ex: Teste de Programação Web']
+  data_inicio date [not null]
+  data_fim date [not null]
+  hora_inicio time [not null]
+  hora_fim time [not null]
+  responsavel_id int [note: 'Docente/funcionário que reservou']
+  observacoes text
+  
+  indexes {
+    (sala_id, data_inicio, hora_inicio, hora_fim) [note: 'Detectar conflitos de reserva']
+  }
+  
+  note: 'Reservas pontuais de salas para testes, reuniões, eventos, etc.'
+}
+
+//--------------------------------------------------------------------
+// Representação de Entidades de Microserviços Externos
+//--------------------------------------------------------------------
+
+table UnidadeCurricular_Externo as UnidadeCurricular {
+  id int [pk]
+  codigo_uc varchar
+  nome varchar
+}
+
+table AnoLetivo_Externo as AnoLetivo {
+  id int [pk]
+  ano varchar
+}
+
+table Docente_Externo as Docente {
+  id int [pk]
+  numero_mecanografico varchar
+}
+
+table Inscricao_Externo as Inscricao {
+  id int [pk]
+  aluno_id int
+  unidade_curricular_id int
+  ano_letivo_id int
+}
+
+table Escola_Externo as Escola {
+  id int [pk]
+  sigla varchar
+}

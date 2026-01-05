@@ -1,0 +1,112 @@
+@startuml diagrama
+title Arquitetura Global de Microserviços - Sistema Académico
+
+!define RECTANGLE class
+skinparam rectangle {
+  BackgroundColor #FDFDFD
+  BorderColor #333
+  RoundCorner 10
+}
+
+actor "Utilizador" as User
+
+rectangle "Cluster Kubernetes" {
+    
+    component "API Gateway\n(Spring Cloud Gateway)" as Gateway
+    component "Eureka Server\n(Service Discovery)" as Eureka
+    component "RabbitMQ\n(Message Broker)" as RabbitMQ
+
+    package "Gestão de Utilizadores" {
+        component "IAM Service\n(Autenticação e Permissões)" as IAM
+        database "iamDB" as IAMDB
+    }
+
+    package "Processo de Candidatura" {
+        component "Candidaturas Service\n(Gestão de concursos e DGES)" as CAND
+        database "candDB" as CANDDB
+
+        component "Matrículas Service\n(Registo e admissão final)" as MAT
+        database "matDB" as MATDB
+    }
+
+    package "Gestão Académica" {
+        component "Gestão Académica Service\n(Cursos, UC, turmas, inscrições)" as GA
+        database "gaDB" as GADB
+
+        component "Horários Service\n(Gestão de horários e salas)" as HOR
+        database "horDB" as HORDB
+    }
+
+    package "Serviços de Avaliação e Administração" {
+        component "Planeamento de Avaliações\n(Configuração de componentes e escalas)" as PLAN
+        database "planDB" as PLANDB
+
+        component "Avaliações Service\n(Registo e gestão de notas)" as AVAL
+        database "avalDB" as AVALDB
+
+        component "Pautas Service\n(Geração e validação de resultados)" as PAUT
+        database "pautDB" as PAUTDB
+
+        component "Notificações Service\n(Envio de alertas e comunicações)" as NOTIF
+        database "notifDB" as NOTIFDB
+    }
+}
+
+' === Ligações principais ===
+User --> Gateway : HTTP Requests
+
+' Registo no Eureka
+IAM --> Eureka
+CAND --> Eureka
+MAT --> Eureka
+GA --> Eureka
+HOR --> Eureka
+PLAN --> Eureka
+AVAL --> Eureka
+PAUT --> Eureka
+NOTIF --> Eureka
+
+' Comunicação via Gateway
+Gateway --> IAM
+Gateway --> CAND
+Gateway --> MAT
+Gateway --> GA
+Gateway --> HOR
+Gateway --> PLAN
+Gateway --> AVAL
+Gateway --> PAUT
+Gateway --> NOTIF
+
+' Comunicação entre serviços
+CAND --> IAM : GET /user/{id}
+MAT --> CAND : GET /application/{id}
+AVAL --> GA : GET /student/{id}
+PLAN --> GA : GET /course/{id}
+PAUT --> AVAL : GET /grades/{uc}
+CAND --> RabbitMQ : "emit candidatura.created"
+RabbitMQ --> NOTIF : "consume candidatura.created"
+AVAL --> RabbitMQ : "emit grade.updated"
+RabbitMQ --> NOTIF : "consume grade.updated"
+
+' Ligações às bases de dados
+IAM --> IAMDB
+CAND --> CANDDB
+MAT --> MATDB
+GA --> GADB
+HOR --> HORDB
+PLAN --> PLANDB
+AVAL --> AVALDB
+PAUT --> PAUTDB
+NOTIF --> NOTIFDB
+
+note right of RabbitMQ
+  RabbitMQ assegura comunicação assíncrona
+  entre microserviços através de eventos.
+end note
+
+note bottom of Eureka
+  O Eureka gere o registo e descoberta dinâmica
+  de serviços dentro do cluster Kubernetes.
+end note
+
+@enduml

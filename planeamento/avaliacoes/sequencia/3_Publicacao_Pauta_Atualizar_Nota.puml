@@ -1,0 +1,49 @@
+@startuml
+!theme plain
+
+title 2. Lançamento de Classificações pelo Docente
+
+actor Docente
+participant Frontend
+box "Backend" #LightBlue
+  participant "API Gateway" as Gateway
+  participant "Microserviço\nAvaliações" as MS_Aval
+  participant "Microserviço\nGestão Académica" as MS_GA
+end box
+database "DB Avaliações" as DB_Aval
+
+autonumber
+
+Docente -> Frontend: Seleciona "1º Teste" para lançar notas
+Frontend -> Gateway: GET /avaliacoes/10/classificacoes
+Gateway -> MS_Aval: Encaminha pedido
+
+activate MS_Aval
+MS_Aval -> MS_GA: GET /unidades-curriculares/POO/inscricoes?ano_letivo=...
+note right: Pede a lista de alunos inscritos na UC
+
+activate MS_GA
+MS_GA --> MS_Aval: Retorna lista de inscrições (aluno_id, nome, etc.)
+deactivate MS_GA
+
+MS_Aval -> DB_Aval: Consulta `Classificacao` para ver notas já existentes
+DB_Aval --> MS_Aval: Retorna notas (se houver)
+
+MS_Aval --> Gateway: 200 OK (com lista de alunos e notas existentes)
+Gateway --> Frontend: Retorna resposta
+deactivate MS_Aval
+
+Frontend -> Docente: Apresenta a pauta para preenchimento
+
+Docente -> Frontend: Preenche as notas e submete
+Frontend -> Gateway: POST /avaliacoes/10/classificacoes\n(com lista de [inscricao_id, valor])
+Gateway -> MS_Aval: Encaminha pedido
+
+activate MS_Aval
+MS_Aval -> DB_Aval: Insere/Atualiza múltiplos registos em `Classificacao`
+DB_Aval --> MS_Aval: Confirma operação
+MS_Aval --> Gateway: 201 Created
+Gateway --> Frontend: Retorna sucesso
+deactivate MS_Aval
+
+@enduml

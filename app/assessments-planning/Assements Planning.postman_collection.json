@@ -1,0 +1,109 @@
+{
+	"info": {
+		"_postman_id": "c4563736-ddbe-4cda-883a-6067bdd99a90",
+		"name": "Assements Planning",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "50053153",
+		"_collection_link": "https://huguito-ricardo-9985597.postman.co/workspace/Hugo-bpc's-Workspace~aeb8c8e9-8d22-43d5-856d-e95fdc0b15fe/collection/50053153-c4563736-ddbe-4cda-883a-6067bdd99a90?action=share&source=collection_link&creator=50053153"
+	},
+	"item": [
+		{
+			"name": "Create Assement Planning",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"courseUnitId\": 1,\n    \"academicYear\": \"2024/2025\",\n    \"semester\": 1,\n    \"regenteId\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/assessments-planning/create-assement-planning",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"assessments-planning",
+						"create-assement-planning"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Assement Planning By Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/assessments-planning/1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"assessments-planning",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Assement Planning Content",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/assessments-planning/1/update-content",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"assessments-planning",
+						"1",
+						"update-content"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Submit Assement Planning",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/assessments-planning/1/submit",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"assessments-planning",
+						"1",
+						"submit"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "",
+			"type": "default"
+		}
+	]
+}

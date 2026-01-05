@@ -1,0 +1,90 @@
+//--------------------------------------------------------------------
+// Microserviço de Pautas
+// Responsável pela geração e publicação de pautas
+//--------------------------------------------------------------------
+
+Table pautas {
+  id int [pk, increment]
+  unidade_curricular_id int [not null]
+  ano_letivo_id int [not null]
+  tipo tipo_pauta [not null]
+  epoca epoca_avaliacao [not null]
+  estado estado_pauta [not null, default: 'EM_PREPARACAO']
+  data_geracao timestamp
+  data_publicacao timestamp
+  data_fechamento timestamp
+  versao int [not null, default: 1]
+  created_at timestamp
+  updated_at timestamp
+
+  indexes {
+    (unidade_curricular_id, ano_letivo_id, tipo, epoca) [unique]
+  }
+
+  note: 'Pautas de avaliação das UCs'
+}
+
+Table resultados_pauta {
+  id int [pk, increment]
+  pauta_id int [ref: > pautas.id]
+  inscricao_id int [not null]
+  nota_final decimal(4,2)
+  estado_aprovacao estado_aprovacao
+  observacoes text
+  created_at timestamp
+  updated_at timestamp
+
+  indexes {
+    (pauta_id, inscricao_id) [unique]
+  }
+
+  note: 'Resultados individuais em cada pauta'
+}
+
+Table assinaturas_pauta {
+  id int [pk, increment]
+  pauta_id int [ref: > pautas.id]
+  docente_id int [not null]
+  tipo_assinatura tipo_assinatura [not null]
+  data_assinatura timestamp [not null]
+  created_at timestamp
+  updated_at timestamp
+
+  note: 'Registo de assinaturas/validações da pauta'
+}
+
+Enum tipo_pauta {
+  NORMAL [note: 'Pauta regular']
+  RECURSO [note: 'Pauta de recurso']
+  ESPECIAL [note: 'Pauta de época especial']
+  MELHORIA [note: 'Pauta de melhoria de nota']
+}
+
+Enum epoca_avaliacao {
+  NORMAL
+  RECURSO
+  ESPECIAL
+  MELHORIA
+}
+
+Enum estado_pauta {
+  EM_PREPARACAO [note: 'Em elaboração']
+  PROVISORIA [note: 'Publicada provisoriamente']
+  PUBLICADA [note: 'Publicada definitivamente']
+  FECHADA [note: 'Fechada e arquivada']
+}
+
+Enum estado_aprovacao {
+  APROVADO
+  REPROVADO
+  FALTOU
+  DESISTIU
+  ANULOU
+}
+
+Enum tipo_assinatura {
+  REGENTE [note: 'Assinatura do regente da UC']
+  DOCENTE [note: 'Assinatura de docente']
+  COORDENADOR [note: 'Assinatura do coordenador de curso']
+  DIRETOR [note: 'Assinatura do diretor']
+}

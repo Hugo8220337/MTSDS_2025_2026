@@ -1,0 +1,629 @@
+{
+	"info": {
+		"_postman_id": "36ce1d01-7469-47e7-9461-4c1373fee5a0",
+		"name": "Schedules",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "50053153",
+		"_collection_link": "https://huguito-ricardo-9985597.postman.co/workspace/Hugo-bpc's-Workspace~aeb8c8e9-8d22-43d5-856d-e95fdc0b15fe/collection/50053153-36ce1d01-7469-47e7-9461-4c1373fee5a0?action=share&source=collection_link&creator=50053153"
+	},
+	"item": [
+		{
+			"name": "Create Classroom",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"location\": {\n    \"building\": \"A\",\n    \"floor\": 2,\n    \"roomNumber\": \"201\"\n  },\n  \"type\": \"LABORATORY\",\n  \"capacity\": 30,\n  \"schoolId\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/v1/schedules/admin/schools/1/create-classroom",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"schedules",
+						"admin",
+						"schools",
+						"1",
+						"create-classroom"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Classroom Availability",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/v1/schedules/admin/classrooms/1/availability?startDate=2025-01-01&endDate=2025-09-06",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"schedules",
+						"admin",
+						"classrooms",
+						"1",
+						"availability"
+					],
+					"query": [
+						{
+							"key": "startDate",
+							"value": "2025-01-01"
+						},
+						{
+							"key": "endDate",
+							"value": "2025-09-06"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Equipment To Classroom",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"equipmentId\": 2,\n  \"quantity\": 2,\n  \"observations\": \"Projetor instalado no teto\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/v1/schedules/admin/classrooms/1/equipment",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"schedules",
+						"admin",
+						"classrooms",
+						"1",
+						"equipment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remove Equipment From Classroom",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/v1/schedules/admin/classrooms/1/equipments/1",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"schedules",
+						"admin",
+						"classrooms",
+						"1",
+						"equipments",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getClassroomEquipment",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/v1/schedules/admin/classrooms/1/equipment",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"schedules",
+						"admin",
+						"classrooms",
+						"1",
+						"equipment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllEquipment",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/v1/schedules/admin/equipment",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"schedules",
+						"admin",
+						"equipment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get my reservations",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/v1/schedules/teachers/me/reservations?teacher_id=1&startDate=2023-01-01&endDate=2025-01-31",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"schedules",
+						"teachers",
+						"me",
+						"reservations"
+					],
+					"query": [
+						{
+							"key": "teacher_id",
+							"value": "1"
+						},
+						{
+							"key": "startDate",
+							"value": "2023-01-01"
+						},
+						{
+							"key": "endDate",
+							"value": "2025-01-31"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Lesson Exception",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"date\": \"2025-02-21\",\r\n  \"type\": \"ROOM_CHANGE\",\r\n  \"alternativeClassroomId\": 1,\r\n  \"observations\": \"Sala original em manutenção\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/v1/schedules/admin/lessons/1/create-exception",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"schedules",
+						"admin",
+						"lessons",
+						"1",
+						"create-exception"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Lesson Exception",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"date\": \"2025-03-20\",\r\n  \"type\": \"ROOM_CHANGE\",\r\n  \"alternativeClassroomId\": 1,\r\n  \"observations\": \"Sala mudada devido a obras urgentes ALATERADO\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/v1/schedules/admin/exception/1/update",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"schedules",
+						"admin",
+						"exception",
+						"1",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Lesson Exceptions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/v1/schedules/admin/lessons/1/exceptions",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"schedules",
+						"admin",
+						"lessons",
+						"1",
+						"exceptions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Periodic Lesson",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"classGroupScheduleId\": 1,\r\n    \"instructorId\": 1,\r\n    \"classroomId\": 1,  \r\n    \"dayOfWeek\": 1,\r\n    \"timeSlot\": {\r\n        \"startTime\": \"15:00\",\r\n        \"endTime\": \"17:00\"\r\n    },\r\n    \"durationMinutes\": 120,\r\n    \"lessonType\": \"THEORETICAL\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/v1/schedules/admin/class-schedules/1/create-periodic-lesson",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"schedules",
+						"admin",
+						"class-schedules",
+						"1",
+						"create-periodic-lesson"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Class Schedule",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"classGroupId\": 1,\r\n    \"courseUnitId\": 2,\r\n    \"academicYearId\": 1,\r\n    \"academicPeriod\": {\r\n        \"startDate\": \"2024-03-12\",\r\n        \"endDate\": \"2024-07-12\" ,\r\n        \"semester\": 2\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/v1/schedules/admin/create-class-schedule",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"schedules",
+						"admin",
+						"create-class-schedule"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Schedule Lessons",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/v1/schedules/admin/class-schedules/1/lessons",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"schedules",
+						"admin",
+						"class-schedules",
+						"1",
+						"lessons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cancel Reservation",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/v1/schedules/reservations/1",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"schedules",
+						"reservations",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Reservation",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"classroomId\": 1,\r\n    \"title\": \"Aula de coisas\",\r\n    \"date\": \"2024-04-01\",\r\n    \"startTime\": \"13:00\",\r\n    \"endTime\": \"14:00\",\r\n    \"responsibleId\": 1,\r\n    \"observations\": \"Não faço a mínima do que se vai passar aqui\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/v1/schedules/reservate-classroom",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"schedules",
+						"reservate-classroom"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Reservation",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/v1/schedules/reservations/2",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"schedules",
+						"reservations",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Reservation",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"classroomId\": 1,\r\n    \"title\": \"Aula de coisas2\",\r\n    \"date\": \"2024-04-02\",\r\n    \"startTime\": \"14:00\",\r\n    \"endTime\": \"16:00\",\r\n    \"responsibleId\": 1,\r\n    \"observations\": \"Não faço a mínima\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/v1/schedules/reservations/2",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"schedules",
+						"reservations",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Classroom Occupation",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/v1/schedules/schools/1/classrooms/occupation?date=2025-03-20",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"schedules",
+						"schools",
+						"1",
+						"classrooms",
+						"occupation"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "2025-03-20"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Equipments",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/v1/schedules/admin/equipments",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"schedules",
+						"admin",
+						"equipments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Equipment",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Projetor\",\n    \"description\": \"Projeta cenas\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/v1/schedules/admin/equipments",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"schedules",
+						"admin",
+						"equipments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Equipment",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Projetor 2\",\n    \"description\": \"Projeta cenas 2\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/v1/schedules/admin/equipments/1/update-equipment",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"schedules",
+						"admin",
+						"equipments",
+						"1",
+						"update-equipment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Equipment By Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/v1/schedules/admin/equipments/1",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"schedules",
+						"admin",
+						"equipments",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "",
+			"type": "default"
+		}
+	]
+}

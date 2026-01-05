@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: applications-deployment
+  namespace: applications
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: applications
+  template:
+    metadata:
+      labels:
+        app: applications
+    spec:
+      containers:
+        - name: applications
+          image: hugobpc/mtds_2025_2026-applications:latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: applications-config
+            - secretRef:
+                name: applications-secret
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 12
+            periodSeconds: 10
+            failureThreshold: 6

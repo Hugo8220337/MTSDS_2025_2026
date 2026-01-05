@@ -1,0 +1,190 @@
+{
+	"info": {
+		"_postman_id": "1782f3ab-d086-4fe9-ac5a-eb8442c7d1a7",
+		"name": "Enrollments",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49444665",
+		"_collection_link": "https://douartsampike-6332484.postman.co/workspace/4cf27c36-6a73-4028-88eb-24541d162bf5/collection/49444665-1782f3ab-d086-4fe9-ac5a-eb8442c7d1a7?action=share&source=collection_link&creator=49444665"
+	},
+	"item": [
+		{
+			"name": "Enrollment",
+			"item": [
+				{
+					"name": "create-enrollment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nif\":\"987654321\",\r\n    \"name\":\"João da Esquina\",\r\n    \"courseId\":1,\r\n    \"schoolYear\":\"2025/2026\",\r\n    \"applicationId\":\"1234\",\r\n    \"enrollmentState\":\"CREATED\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/enrollments/create-enrollment",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"enrollments",
+								"create-enrollment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Enrollment",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/enrollments/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"enrollments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Enrollments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/enrollments/all",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"enrollments",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Enrollment",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"enrollmentState\":\"ENROLLED\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/enrollments/1/update-state",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"enrollments",
+								"1",
+								"update-state"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "EnrollmentDocuments",
+			"item": [
+				{
+					"name": "Submit document",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/Duarte/Downloads/G6dpAxYWUAAjyfv.jpg"
+								},
+								{
+									"key": "documentType",
+									"value": "Cartão Cidadão",
+									"type": "text"
+								},
+								{
+									"key": "documentState",
+									"value": "PENDING",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/enrollments/1/upload-document",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"enrollments",
+								"1",
+								"upload-document"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Documents By EnrollmentId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/enrollments/1/documents",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"enrollments",
+								"1",
+								"documents"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "",
+			"type": "default"
+		}
+	]
+}

@@ -1,0 +1,78 @@
+{
+	"info": {
+		"_postman_id": "25fee13a-576b-491e-b9fd-ebc035acf022",
+		"name": "Notifications",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "50053153",
+		"_collection_link": "https://huguito-ricardo-9985597.postman.co/workspace/Hugo-bpc's-Workspace~aeb8c8e9-8d22-43d5-856d-e95fdc0b15fe/collection/50053153-25fee13a-576b-491e-b9fd-ebc035acf022?action=share&source=collection_link&creator=50053153"
+	},
+	"item": [
+		{
+			"name": "Get all notfications",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/notifications",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"notifications"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get notifications by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/notifications/6931d4869d8bc8424d8eedee",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"notifications",
+						"6931d4869d8bc8424d8eedee"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Notifications",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\": 1,\n    \"email\": \"ze.damanga@gmail.com\",\n    \"channel\": \"EMAIL\",// \"EMAIL\" | \"PUSH\" | \"SMS\"\n    \"title\": \"Urgente\",\n    \"message\": \"Acabou o papel higiénico\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/notifications",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"notifications"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

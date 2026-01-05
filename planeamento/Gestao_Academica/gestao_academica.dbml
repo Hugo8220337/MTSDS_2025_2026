@@ -1,0 +1,124 @@
+//--------------------------------------------------------------------
+// Tabelas para o Microserviço de Gestão Académica
+// Responsável por gerir Escolas, Cursos, Alunos, Docentes,
+// Unidades Curriculares, Turmas e as suas respetivas associações.
+//--------------------------------------------------------------------
+
+// --- Entidades Estruturais ---
+
+table Escola {
+  id int [pk, increment]
+  nome varchar(255) [not null, note: 'ex: Escola Superior de Tecnologia e Gestão']
+  sigla varchar(20) [unique, not null, note: 'ex: ESTG, ESE']
+  
+  note: 'Tabela principal das escolas/institutos do grupo.'
+}
+
+table Curso {
+  id int [pk, increment]
+  nome varchar(255) [not null, note: 'ex: Engenharia Informática']
+  codigo_curso varchar(20) [unique, not null, note: 'código interno do curso']
+  grau varchar(50) [not null, note: 'ex: Licenciatura, Mestrado, CTESP']
+  tipo varchar(50) [not null, note: 'ex: DIURNO, NOTURNO, POS_LABORAL']
+
+  note: 'Tabela de cursos oferecidos pela instituição.'
+}
+
+table UnidadeCurricular {
+  id int [pk, increment]
+  nome varchar(255) [not null, note: 'ex: Programação Orientada a Objetos']
+  codigo_uc varchar(20) [unique, not null, note: 'código interno da UC']
+  ects decimal(4,1) [not null, note: 'Créditos ECTS']
+  
+  note: 'Tabela de unidades curriculares (disciplinas).'
+}
+
+table PlanoEstudos {
+  id int [pk, increment]
+  curso_id int [ref: > Curso.id, not null]
+  escola_id int [ref: > Escola.id, not null]
+  unidade_curricular_id int [ref: > UnidadeCurricular.id, not null]
+  ano_curricular int [not null, note: 'ex: 1, 2, 3']
+  semestre int [not null, note: 'ex: 1, 2']
+  
+  indexes {
+    (curso_id, unidade_curricular_id) [unique]
+  }
+  
+  note: 'Define a estrutura de um curso, associando UCs a um ano e semestre.'
+}
+
+
+// --- Entidades de Pessoas (com ligação ao Microserviço de Identidade) ---
+
+table Aluno {
+  id int [pk, increment]
+  utilizador_id varchar(36) [unique, not null, note: 'FK para a tabela Utilizador no serviço de Identidade']
+  numero_aluno varchar(50) [unique, not null, note: 'Número mecanográfico gerado internamente']
+  curso_id int [ref: > Curso.id, not null, note: 'Curso em que o aluno está inscrito']
+  estado varchar(50) [not null, default: 'ATIVO', note: 'ex: ATIVO, CONCLUIDO, INTERROMPIDO']
+  nome_completo varchar(255) [not null]
+  data_nascimento date
+  nif varchar(20) [unique, note: 'Nº de Identificação Fiscal']
+  telefone varchar(20)
+  
+  note: 'Representa o registo académico de um aluno.'
+}
+
+table Docente {
+  id int [pk, increment]
+  utilizador_id int [unique, not null, note: 'FK para a tabela Utilizador no serviço de Identidade']
+  numero_mecanografico varchar(50) [unique, not null, note: 'Número de funcionário']
+  note: 'Representa o registo académico de um docente/funcionário.'
+}
+
+
+// --- Entidades de Ligação e Contexto Anual ---
+
+table AnoLetivo {
+  id int [pk, increment]
+  ano varchar(9) [unique, not null, note: 'ex: 2025/2026']
+  data_inicio date [not null]
+  data_fim date [not null]
+  
+  note: 'Define os anos letivos para contextualizar inscrições e turmas.'
+}
+
+table DocenteUnidadeCurricular {
+  docente_id int [ref: > Docente.id]
+  unidade_curricular_id int [ref: > UnidadeCurricular.id]
+  ano_letivo_id int [ref: > AnoLetivo.id]
+  
+  indexes {
+    (docente_id, unidade_curricular_id, ano_letivo_id) [pk]
+  }
+  
+  note: 'Associa um docente a uma UC num determinado ano letivo (lecionação).'
+}
+
+
+
+// --- Entidades de Gestão de Turmas ---
+
+table Turma {
+  id int [pk, increment]
+  ano_letivo_id int [ref: > AnoLetivo.id, not null]
+  codigo_turma varchar(20) [not null, note: 'ex: LEI1A, MEI2N (curso + ano + turma)']
+  vagas_max int [not null, note: 'Número máximo de alunos']
+  
+  
+  note: 'Grupo de alunos inscrito'
+}
+
+table Turma_UC_Aluno {
+  id int [pk, increment]
+  ano_letivo_id int [ref: > AnoLetivo.id, not null]
+  aluno_id int [ref: > Aluno.id, not null]
+  turma_id int [ref: > Turma.id, not null]
+  unidade_curricular_id int [ref: > UnidadeCurricular.id, not null]
+
+  indexes {
+    (aluno_id, turma_id, unidade_curricular_id, ano_letivo_id) [pk]
+  }
+}
+

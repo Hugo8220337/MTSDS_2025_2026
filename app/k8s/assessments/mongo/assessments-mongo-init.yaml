@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: assessments-mongo-init
+  namespace: assessments
+data:
+  init.js: |
+    // Cria a base de dados de logs
+    db = db.getSiblingDB("assessments_logs_db");
+    db.createCollection("init_collection");

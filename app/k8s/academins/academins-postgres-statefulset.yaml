@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: academins-postgres
+  namespace: academins
+spec:
+  serviceName: academins-postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app: academins-postgres
+  template:
+    metadata:
+      labels:
+        app: academins-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:13-alpine
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: academins-db
+            - name: POSTGRES_USER
+              value: myuser
+            - name: POSTGRES_PASSWORD
+              value: secret
+          volumeMounts:
+            - name: academins-postgres-data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: academins-postgres-init
+          configMap:
+            name: academins-postgres-init
+  volumeClaimTemplates:
+    - metadata:
+        name: academins-postgres-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 2Gi

@@ -1,0 +1,22 @@
+//--------------------------------------------------------------------
+// Tabelas para o Microserviço de Notificações
+// Responsável por gerir templates, envios e histórico de notificações
+//--------------------------------------------------------------------
+
+table Notificacao {
+  id int [pk, increment]
+  utilizador_id long [not null, note: 'FK para Utilizador no serviço de Identidade']
+  titulo varchar(100) [not null, note: 'Título da notificação']
+  message text [not null, note: 'Conteúdo da notificação a ser enviada']
+  canal varchar(20) [not null, note: 'ex: EMAIL, SMS, PUSH']
+  estado varchar(50) [not null, default: 'PENDENTE', note: 'ex: PENDENTE, ENVIADA, FALHOU']
+  erro text [note: 'Detalhes do erro, se houver']
+  data_criacao timestamp [default: `now()`]
+  data_envio timestamp
+  
+  note: 'Registo de todas as notificações enviadas ou a enviar'
+}
+
+//--------------------------------------------------------------------
+// Representação de Entidades de Microserviços Externos
+//--------------------------------------------------------------------

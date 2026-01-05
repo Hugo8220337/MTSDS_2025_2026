@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: schedules-postgres
+  namespace: schedules
+spec:
+  serviceName: schedules-postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app: schedules-postgres
+  template:
+    metadata:
+      labels:
+        app: schedules-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:13-alpine
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: schedules-db
+            - name: POSTGRES_USER
+              value: myuser
+            - name: POSTGRES_PASSWORD
+              value: secret
+          volumeMounts:
+            - name: schedules-postgres-data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: schedules-postgres-init
+          configMap:
+            name: schedules-postgres-init
+  volumeClaimTemplates:
+    - metadata:
+        name: schedules-postgres-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 2Gi

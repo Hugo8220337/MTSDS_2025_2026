@@ -1,0 +1,51 @@
+@startuml
+' Ficheiro: planeamento/candidaturas/sequencia/4_matricula.puml
+title Diagrama de Sequência - Processo 4: Matrícula
+
+actor "Admin (Back-office)" as Admin
+participant "Backend API" as BE
+database "Base de Dados" as DB
+actor "Candidato (Frontend)" as FE
+participant "Email Service" as Email
+participant "Sistema de Gestão Académica (SGA)" as SGA
+
+autonumber
+
+Admin -> BE: POST /api/v1/admin/fases/{id}/publicar-resultados
+activate BE
+BE -> Email: Envia email a todos os candidatos com o resultado
+activate Email
+Email -> FE: Email("Resultado da Candidatura")
+deactivate Email
+BE --> Admin: 202 Accepted
+deactivate BE
+
+FE -> BE: GET /api/v1/candidaturas/{id}
+activate BE
+BE -> DB: Consulta estado da Candidatura e OpcaoCurso
+activate DB
+DB --> BE: Dados da candidatura
+deactivate DB
+BE --> FE: 200 OK (estado: 'COLOCADO')
+deactivate BE
+
+FE -> BE: POST /api/v1/candidaturas/{id}/matricular
+activate BE
+BE -> DB: Verifica se está dentro do prazo de matrícula
+activate DB
+DB --> BE: Resultado da verificação
+deactivate DB
+alt Se dentro do prazo
+    BE -> DB: Atualiza Candidatura.estado para 'MATRICULADO'
+    activate DB
+    deactivate DB
+    BE -> SGA: (API Call) Cria registo de aluno, gera nº de aluno, etc.
+    activate SGA
+    SGA --> BE: Sucesso (com nº de aluno)
+    deactivate SGA
+    BE --> FE: 200 OK (message: "Matrícula realizada com sucesso. Nº Aluno: ...")
+else Se fora do prazo
+    BE --> FE: 400 Bad Request (message: "Prazo de matrícula expirado.")
+end
+deactivate BE
+@enduml

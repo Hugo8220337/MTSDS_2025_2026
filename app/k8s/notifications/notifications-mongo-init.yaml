@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: notifications-mongo-init
+  namespace: notifications
+data:
+  init.js: |
+    // executed only on empty DB by official mongo image
+    db = db.getSiblingDB("notifications-db");
+    db.createCollection("init_collection");
+    // Adicione aqui outros comandos se necessário, ex: criar índices

@@ -1,0 +1,41 @@
+@startuml
+!theme plain
+
+title 4. Consulta e Pedido de Revisão pelo Aluno
+
+actor Aluno
+participant Frontend
+box "Backend" #LightBlue
+  participant "API Gateway" as Gateway
+  participant "Microserviço\nAvaliações" as MS_Aval
+end box
+database "DB Avaliações" as DB_Aval
+
+autonumber
+
+Aluno -> Frontend: Acede à página da UC "POO"
+Frontend -> Gateway: GET /alunos/me/unidades-curriculares/POO/classificacoes
+Gateway -> MS_Aval: Encaminha pedido
+
+activate MS_Aval
+MS_Aval -> DB_Aval: Consulta `Escala`, `Componente`, `Avaliacao` e `Classificacao`
+DB_Aval --> MS_Aval: Retorna todos os dados de avaliação do aluno
+MS_Aval -> MS_Aval: Calcula as médias das componentes e a nota final
+MS_Aval --> Gateway: 200 OK (com a estrutura completa de notas)
+Gateway --> Frontend: Retorna resposta
+deactivate MS_Aval
+
+Frontend -> Aluno: Mostra todas as classificações detalhadas
+
+Aluno -> Frontend: Clica para pedir revisão da nota do "1º Teste"
+Frontend -> Gateway: POST /alunos/me/revisoes\n(com classificacao_id e justificação)
+Gateway -> MS_Aval: Encaminha pedido
+
+activate MS_Aval
+MS_Aval -> DB_Aval: Cria registo em `PedidoRevisaoClassificacao`
+DB_Aval --> MS_Aval: Confirma criação
+MS_Aval --> Gateway: 201 Created
+Gateway --> Frontend: Retorna sucesso
+deactivate MS_Aval
+
+@enduml

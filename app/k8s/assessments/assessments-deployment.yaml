@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: assessments-deployment
+  namespace: assessments
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: assessments
+  template:
+    metadata:
+      labels:
+        app: assessments
+    spec:
+      containers:
+        - name: assessments
+          image: hugobpc/mtds_2025_2026-assessments:latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: assessments-config
+            - secretRef:
+                name: assessments-secret
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 40
+            periodSeconds: 10
+            failureThreshold: 6
